@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">wallify</string>
+    <string name="onboarding_title_1">Enhance Your Device with Artistic Wallpapers</string>
+    <string name="onboarding_subtitle_1">Wallpapers are created according to your devices screen resolution.</string>
+    <string name="onboarding_title_2">Discover Artists That Make The Content</string>
+    <string name="onboarding_subtitle_2">Look out for verified artists that offer exclusive content.</string>
+    <string name="onboarding_title_3">Different Ways to Find FREE Wallpaper Content</string>
+    <string name="onboarding_subtitle_3">You can set the app to surprise you with a new wallpaper hourly or daily.</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="get_stated">Get Stated</string>
 </resources>
