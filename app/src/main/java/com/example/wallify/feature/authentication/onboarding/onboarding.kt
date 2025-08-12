@@ -35,9 +35,7 @@ fun OnBoardingScreen(
 ){
     val pageCount = 3
     var currentPage by remember { mutableIntStateOf(0) }
-
     Box(modifier = Modifier.fillMaxSize()) {
-        // Fake pager: just show one screen at a time
         when (currentPage) {
             0 -> OnBoardingPage(
                 imageRes = R.drawable.onboarding_image1,

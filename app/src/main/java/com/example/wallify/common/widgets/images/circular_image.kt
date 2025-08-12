@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -36,7 +37,8 @@ fun TCircularImage(
     overlayColor: Color? = null,
     backgroundColor: Color? = null,
     isNetworkImage: Boolean = false,
-    drawableResId: Int? = null, // Optional: for drawable usage
+    drawableResId: Int? = null,
+    onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val isDark = THelperFunctions.isDarkMode()
@@ -46,7 +48,8 @@ fun TCircularImage(
             .size(width, height)
             .background(actualBackground, shape = CircleShape)
             .clip(CircleShape)
-            .padding(padding),
+            .padding(padding)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (isNetworkImage) {
@@ -75,7 +78,7 @@ fun TCircularImage(
                             .then(
                                 if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
                             ),
-                        contentScale = fit
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
@@ -97,7 +100,7 @@ fun TCircularImage(
                     .then(
                         if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
                     ),
-                contentScale = fit
+                contentScale = ContentScale.Crop
             )
         }
     }
