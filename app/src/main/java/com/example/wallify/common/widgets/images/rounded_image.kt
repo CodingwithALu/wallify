@@ -28,14 +28,13 @@ import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun TRoundedImage(
-    imageUrl: String,
+    imageUrl: String = "",
     modifier: Modifier = Modifier,
     width: Dp? = null,
     height: Dp? = null,
-    applyImageRadius: Boolean = true,
+    applyImageRadius: Boolean = false,
     borderColor: Color? = null,
     borderWidth: Dp = 1.dp,
-    backgroundColor: Color = onPrimaryLight,
     fit: ContentScale = ContentScale.Fit,
     padding: Dp = 0.dp,
     isNetworkImage: Boolean = false,
@@ -51,7 +50,6 @@ fun TRoundedImage(
             .then(if (width != null && height != null) Modifier.size(width, height) else Modifier)
             .padding(padding)
             .clip(shape)
-            .background(backgroundColor, shape)
             .then(
                 if (borderColor != null) Modifier.border(borderWidth, borderColor, shape)
                 else Modifier

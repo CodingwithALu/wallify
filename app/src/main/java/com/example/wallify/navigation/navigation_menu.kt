@@ -27,12 +27,14 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.core_model.BottomNavItem
 import com.example.wallify.utlis.route.Screen
+import com.example.wallify.R
 
 @Composable
 fun NavigationMenu(
@@ -55,7 +57,7 @@ fun NavigationMenu(
         selectedIndex = navItems.indexOfFirst { it.label == currentRoute }
     }
     Box(
-        modifier = Modifier.padding(bottom = 50.dp)
+        modifier = Modifier.padding(bottom = 46.dp)
     ) {
         if (currentRoute !in Screen.routesToHideBottomBar) {
             Row(
@@ -119,7 +121,7 @@ fun NavigationMenu(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.ShoppingCart,
+                        painter = painterResource(R.drawable.input_circle),
                         contentDescription = "Center Action",
                         tint = Color.White,
                         modifier = Modifier.size(32.dp)

@@ -19,18 +19,16 @@ fun TCircularContainer(
     width: Dp = 400.dp,
     height: Dp = 400.dp,
     radius: Dp = 400.dp,
-    padding: Dp = 0.dp,
-    margin: Dp = 0.dp,
+    padding: Dp = 4.dp,
     backgroundColor: Color = onSurfaceDark,
     content: @Composable () -> Unit = {}
 ){
     Box(
         modifier = modifier
-            .padding(margin)
             .size(width = width, height = height)
             .clip(RoundedCornerShape(radius))
             .background(backgroundColor)
-            .padding(padding)
+            .padding(horizontal = padding)
     ){
         content()
     }

@@ -1,5 +1,6 @@
 package com.example.wallify.common.widgets.custom_shapes.container
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import com.example.wallify.ui.theme.scrimDark
 import com.example.wallify.ui.theme.surfaceBrightDark
 import com.example.wallify.utlis.constants.TSizes
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun TSearchContainer(
     text: String,
@@ -33,7 +35,7 @@ fun TSearchContainer(
     onTap: (() -> Unit)? = null,
     paddingHorizontal: Dp = TSizes.defaultSpace,
     containerPadding: Dp = TSizes.md,
-    borderRadius: Dp = TSizes.cardRadiusLg,
+    borderRadius: Dp = TSizes.defaultSpace,
     borderColor: Color = outlineVariantDark,
     backgroundLight: Color = onSurfaceDark,
     backgroundDark: Color = scrimDark,
