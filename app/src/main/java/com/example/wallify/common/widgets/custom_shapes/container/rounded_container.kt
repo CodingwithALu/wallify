@@ -2,6 +2,7 @@ package com.example.wallify.common.widgets.custom_shapes.container
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,11 +25,12 @@ fun TRoundedContainer(
     borderColor: Color = onSurfaceDark,
     backgroundColor: Color = onBackgroundDark,
     padding: PaddingValues = PaddingValues(0.dp),
-    margin: PaddingValues = PaddingValues(0.dp),
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    onTap: () -> Unit = {}
 ){
     var m = modifier
-        .padding(margin)
+        .clickable { onTap() }
+        .padding(padding)
         .clip(RoundedCornerShape(radius))
         .background(backgroundColor)
     if (showBorder) {
@@ -40,7 +42,7 @@ fun TRoundedContainer(
         m = m.then(Modifier.height(height))
     }
     Box(
-        modifier = m.padding(padding)
+        modifier = m
     ){
         content()
     }

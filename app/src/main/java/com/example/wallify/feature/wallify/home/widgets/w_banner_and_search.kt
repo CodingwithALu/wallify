@@ -38,7 +38,7 @@ fun BannerCarousel(
         ) { page ->
             Image(
                 painter = painterResource(id = banners[page]),
-                contentDescription = "Banner $page",
+                contentDescription = "Banner",
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(36.dp))
