@@ -23,7 +23,7 @@ fun TAppBar(
     leadingIcon: ImageVector? = null,
     actions: List<@Composable RowScope.() -> Unit>? = null,
     leadingOnPressed: (() -> Unit)? = null,
-    horizontalPadding: Dp = TSizes.md
+    horizontalPadding: Dp = TSizes.xs
 ) {
     TopAppBar(
         modifier = Modifier.padding(horizontal = horizontalPadding),

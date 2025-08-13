@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.core_model.ProductModel
 import com.example.wallify.common.widgets.products.WProductCardVertical
 import com.example.wallify.R
 @Composable
 fun ProductListScreen(
-    products: List<ProductModel>
+    products: List<ProductModel>,
+    navController: NavController
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -28,7 +30,7 @@ fun ProductListScreen(
 
     ) {
         items(products) { product ->
-            WProductCardVertical(product = product)
+            WProductCardVertical(product = product, navController = navController)
         }
     }
 }

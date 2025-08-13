@@ -9,9 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.core_model.Category
+import com.example.core_model.ProductModel
 import com.example.wallify.feature.authentication.onboarding.OnBoardingScreen
 import com.example.wallify.feature.wallify.collections.CollectionScreen
 import com.example.wallify.feature.wallify.favorites.FavoritesScreen
+import com.example.wallify.feature.wallify.product.all_product.widgets.ProductListScreen
+import com.example.wallify.feature.wallify.product.product_details.ProductDetailsScreen
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 
@@ -44,6 +47,12 @@ fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostControll
             val categoryJson = backStackEntry.arguments?.getString("item")
             val item = Gson().fromJson(categoryJson, Category::class.java)
             AllProductScreen(item.title, navController)
+        }
+        // ProductDetails
+        composable(Screen.ProductDetails.route){ backStackEntry ->
+            val product = backStackEntry.arguments?.getString("items")
+            val items = Gson().fromJson(product, ProductModel::class.java)
+            ProductDetailsScreen(items, navController)
         }
     }
 }

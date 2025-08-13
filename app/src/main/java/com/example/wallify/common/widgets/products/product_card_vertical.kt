@@ -1,6 +1,8 @@
 package com.example.wallify.common.widgets.products
 
 import TRoundedImage
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,18 +19,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.core_model.ProductModel
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.R
+import com.google.gson.Gson
 
 @Composable
 fun WProductCardVertical(
     product: ProductModel,
-    onclick: (Int) -> Unit = {}
+    onclick: (Int) -> Unit = {},
+    navController: NavController
 ){
     TRoundedContainer(
         height = 280.dp,
         width = 80.dp,
+        onTap = {
+            Log.d("TRoundedContainer", "Clicked!")
+            navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(product))}")
+        },
         content = {
             Box {
                 TRoundedImage(
@@ -43,7 +52,6 @@ fun WProductCardVertical(
                             .padding(6.dp)
                             .size(28.dp)
                     ) {
-//                        val isLiked = likedIds!!.contains(product.id!!)
                         Icon(
                             painter = painterResource(R.drawable.favorite),
                             contentDescription = "favorite",

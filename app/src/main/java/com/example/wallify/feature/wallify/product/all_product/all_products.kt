@@ -29,7 +29,10 @@ fun AllProductScreen(
                         fontWeight = FontWeight.Bold
                     )
                 },
-                showBackArrow = true
+                showBackArrow = true,
+                leadingOnPressed = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { innerPadding ->
@@ -37,7 +40,7 @@ fun AllProductScreen(
         Box(modifier = Modifier.fillMaxSize()
             .padding(innerPadding)
             .clip(RoundedCornerShape(24.dp))){
-            ProductListScreen(mobileWallpapers)
+            ProductListScreen(mobileWallpapers, navController)
         }
     }
 }
