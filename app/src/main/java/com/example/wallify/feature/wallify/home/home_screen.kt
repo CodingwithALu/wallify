@@ -46,7 +46,7 @@ fun HomeScreen(navController: NavController){
             )
             Spacer(modifier = Modifier.height(TSizes.xs))
             // brand
-            BrandHorizontalScroll(items = brandList)
+            BrandHorizontalScroll(items = brandList, navController = navController)
             Spacer(modifier = Modifier.height(TSizes.sm))
             // category
             CategoryMasonryList(sampleCategories, navController)

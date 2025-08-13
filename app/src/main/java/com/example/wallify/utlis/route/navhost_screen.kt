@@ -6,7 +6,7 @@ sealed class Screen(val route: String) {
     data object Streak : Screen("Streaks")
     data object Collection : Screen("Collections")
     data object Favorite : Screen("Favorites")
-    data object ProductList: Screen("ProductList/{item}")
+    data object ProductList: Screen("allProducts/{item}")
 
     companion object {
         val routesToHideBottomBar = listOf(

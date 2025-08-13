@@ -35,7 +35,7 @@ fun CategoryMasonryList(categories: List<Category>,
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        itemsIndexed(categories.chunked(4)) { index, chunk ->
+        items(categories.chunked(4)) { chunk ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

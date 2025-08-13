@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.home.widgets
 
 import TRoundedImage
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -19,14 +20,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavController
 import com.example.core_model.BrandItem
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.R
+import com.google.gson.Gson
 
 @Composable
 fun BrandHorizontalScroll(
     items: List<BrandItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     Row(
         modifier = modifier
@@ -40,7 +44,11 @@ fun BrandHorizontalScroll(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
-                    .clickable {  }
+                    .clickable {
+                        val gson = Gson()
+                        val brands = Uri.encode(gson.toJson(item))
+                        navController.navigate("allProducts/$brands")
+                    }
             ) {
 
                 TRoundedImage(

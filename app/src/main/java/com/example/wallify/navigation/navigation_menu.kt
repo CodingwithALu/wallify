@@ -42,10 +42,10 @@ fun NavigationMenu(
     navController: NavController
 ) {
     val navItems = listOf(
-        BottomNavItem(Screen.Home.route, Icons.Default.Home),
-        BottomNavItem(Screen.Streak.route, Icons.Default.ShoppingCart),
-        BottomNavItem(Screen.Collection.route, Icons.Default.Favorite),
-        BottomNavItem(Screen.Favorite.route, Icons.Default.Person)
+        BottomNavItem(Screen.Home.route, icon = null, imageRes = R.drawable.home),
+        BottomNavItem(Screen.Streak.route,icon = null, imageRes = R.drawable.public_01),
+        BottomNavItem(Screen.Collection.route,icon = null, imageRes = R.drawable.cards_star),
+        BottomNavItem(Screen.Favorite.route, icon = null, imageRes = R.drawable.favorite)
     )
     var selectedIndex by remember {
         mutableIntStateOf(0)
@@ -83,7 +83,7 @@ fun NavigationMenu(
                             }
                     ) {
                         Icon(
-                            imageVector = item.icon,
+                            painter = painterResource(item.imageRes),
                             contentDescription = item.label,
                             tint = if (selectedIndex == index) Color(0xFF19D44B) else Color.Gray,
                             modifier = Modifier.size(28.dp)

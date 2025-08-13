@@ -1,6 +1,6 @@
 package com.example.wallify.navigation
 
-import AllProductScreen
+import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
 import StreakScreen
 import com.example.wallify.feature.wallify.home.HomeScreen
 import androidx.compose.runtime.Composable
