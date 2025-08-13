@@ -3,6 +3,7 @@ package com.example.wallify.common.widgets.products
 import TRoundedImage
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,14 +35,13 @@ fun WProductCardVertical(
     TRoundedContainer(
         height = 280.dp,
         width = 80.dp,
-        onTap = {
-            Log.d("TRoundedContainer", "Clicked!")
-            navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(product))}")
-        },
         content = {
             Box {
                 TRoundedImage(
                     drawableResId = product.imageRes,
+                    onPressed = {
+                        navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(product))}")
+                    },
                     applyImageRadius = true,
                     fit = ContentScale.Crop
                 )

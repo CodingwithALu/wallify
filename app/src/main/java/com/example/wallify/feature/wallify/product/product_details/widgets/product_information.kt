@@ -21,20 +21,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.core_model.ProductModel
 import com.example.wallify.R
+import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun ProductInformation(
     items: ProductModel,
-    navController: NavController,
+    modifier: Modifier = Modifier,
     onSave: () -> Unit = {},
     onSet: () -> Unit = {},
 ){
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
             .background(Color(0xFF16708D))
@@ -46,13 +49,13 @@ fun ProductInformation(
             Icon(
                 painter = painterResource(id = R.drawable.logo_app),
                 contentDescription = null,
-                tint = Color.White,
                 modifier = Modifier.size(48.dp)
             )
             Spacer(Modifier.width(16.dp))
             Column {
                 Text(
                     text = items.title ?: "",
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = items.author ?: "",
@@ -62,31 +65,31 @@ fun ProductInformation(
             Icon(
                 painter = painterResource(id = R.drawable.release_alert),
                 contentDescription = null,
-                tint = Color(0xFF2EE59D),
                 modifier = Modifier.size(32.dp)
             )
             Spacer(Modifier.width(8.dp))
             Icon(
                 painter = painterResource(id = R.drawable.favorite),
                 contentDescription = null,
-                tint = Color.White.copy(alpha = 0.88f),
                 modifier = Modifier.size(28.dp)
             )
         }
         Spacer(Modifier.height(12.dp))
         Text(
             text = items.description ?: "",
-            style = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
             modifier = Modifier.padding(bottom = 16.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
         ) {
-            Text("Downloads: ${items.downloads ?: 0}", color = Color.White.copy(alpha = 0.85f))
-            Text("${items.width ?: 0} x ${items.height ?: 0}", color = Color.White.copy(alpha = 0.85f))
-            Text("${items.fileSizeMB ?: 0.0} MB", color = Color.White.copy(alpha = 0.85f))
+            Text("Downloads: ${items.downloads ?: 0}")
+            Text("${items.width ?: 0} x ${items.height ?: 0}")
+            Text("${items.fileSizeMB ?: 0.0} MB")
         }
+        Spacer(Modifier.height(TSizes.spaceBtwSections))
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
@@ -103,12 +106,13 @@ fun ProductInformation(
                 Icon(
                     painter = painterResource(id = R.drawable.download), // icon tải
                     contentDescription = null,
-                    tint = Color(0xFF2EE59D)
+                    tint = Color(0xFF2EE59D),
+                    modifier = Modifier.size(32.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text("Save")
             }
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.weight(0.5f))
             OutlinedButton(
                 onClick = onSet,
                 border = BorderStroke(2.dp, Color.Cyan),
@@ -121,7 +125,8 @@ fun ProductInformation(
                 Icon(
                     painter = painterResource(id = R.drawable.set), // icon đặt hình nền
                     contentDescription = null,
-                    tint = Color.Cyan
+                    tint = Color.Cyan,
+                    modifier = Modifier.size(32.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text("Set")

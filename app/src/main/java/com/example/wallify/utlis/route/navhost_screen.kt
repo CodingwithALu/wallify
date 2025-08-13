@@ -12,7 +12,7 @@ sealed class Screen(val route: String) {
         val routesToHideBottomBar = listOf(
             OnBoarding.route,
             ProductList.route,
-            ProductList.route
+            ProductDetails.route
         )
     }
 }

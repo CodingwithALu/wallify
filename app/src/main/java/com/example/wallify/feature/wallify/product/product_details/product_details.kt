@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.product.product_details
 
 import ProductInformation
+import TRoundedImage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,44 +36,46 @@ fun ProductDetailsScreen(
     onSave: () -> Unit = {},
     onSet: () -> Unit = {},
 ){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF10181A))
-    ) {
-        Image(
-            painter = painterResource(id = items.imageRes!!),
-            contentDescription = items.title,
-            contentScale = ContentScale.Crop,
+    Scaffold  { innerPadding ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.73f)
-                .clip(RoundedCornerShape(bottomEnd = 32.dp, bottomStart = 32.dp))
-        )
-
-        // close
-        IconButton(
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(32.dp)
-                .background(Color.Black.copy(alpha = 0.55f), shape = CircleShape)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Close",
-                tint = Color.White
+            TRoundedImage(
+                drawableResId = items.imageRes!!,
+                fit = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp)
+                    .fillMaxHeight(0.73f)
+                    .clip(RoundedCornerShape(topEnd = 24.dp, topStart = 24.dp))
+            )
+
+            // close
+            IconButton(
+                onClick = {
+                    navController.popBackStack()
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = Color.White
+                )
+            }
+            // information
+            ProductInformation(
+                items = items,
+                onSave = onSave,
+                onSet = onSet,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
             )
         }
-        // information
-        ProductInformation(
-            items = items,
-            navController = navController,
-            onSave = onSave,
-            onSet = onSet
-        )
     }
 }
