@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.wallify.R
-
 val Montserrat = FontFamily(
     Font(R.font.montserrat_thin, FontWeight.Thin),
     Font(R.font.montserrat_extralight, FontWeight.ExtraLight),
