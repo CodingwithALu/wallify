@@ -42,7 +42,7 @@ fun ProductListScreen(
     ) {
         items(images) { product ->
             Log.d("ProductCheck", "Product URL: ${product.url}")
-            WProductCardVertical(url = product, navController = navController)
+            WProductCardVertical(product, navController = navController)
         }
     }
 }

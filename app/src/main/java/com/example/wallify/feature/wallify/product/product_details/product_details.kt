@@ -59,8 +59,9 @@ fun ProductDetailsScreen(
                 .padding(innerPadding)
         ) {
             TRoundedImage(
-                drawableResId = items.imageRes!!,
+                imageUrl = items.url,
                 fit = ContentScale.Crop,
+                isNetworkImage = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp)

@@ -57,14 +57,9 @@ fun TRoundedImage(
             .clickable(enabled = onPressed != null) { onPressed?.invoke() },
         contentAlignment = Alignment.Center
     ) {
-        if (isNetworkImage && imageUrl.isNotBlank()) {
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(context)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build()
-            )
-            when (val state = painter.state) {
+        if (isNetworkImage && imageUrl.isNotEmpty()) {
+            val painter = rememberAsyncImagePainter(imageUrl)
+            when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {
                     TShimmerEffect(
                         width = width ?: 158.dp,
@@ -79,14 +74,14 @@ fun TRoundedImage(
                     )
                 }
                 else -> {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        contentScale = fit,
-                        modifier = Modifier.fillMaxSize()
-                    )
                 }
             }
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = fit,
+                modifier = Modifier.fillMaxSize()
+            )
         } else {
             val localPainter: Painter =
                 if (drawableResId != null) {
