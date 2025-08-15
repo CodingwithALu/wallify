@@ -28,7 +28,7 @@ import com.google.gson.Gson
 
 @Composable
 fun WProductCardVertical(
-    product: ProductModel,
+    item: ProductModel,
     onclick: (Int) -> Unit = {},
     navController: NavController
 ){
@@ -38,15 +38,16 @@ fun WProductCardVertical(
         content = {
             Box {
                 TRoundedImage(
-                    drawableResId = product.imageRes,
+                    imageUrl = item.url,
+                    isNetworkImage = true,
                     onPressed = {
-                        navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(product))}")
+//                        navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(product))}")
                     },
                     applyImageRadius = true,
                     fit = ContentScale.Crop
                 )
                     IconButton(
-                        onClick = { onclick(product.id!!.toInt()) },
+                        onClick = { onclick(item.id.toInt()) },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(6.dp)
@@ -59,7 +60,7 @@ fun WProductCardVertical(
                         )
                     }
                 Text(
-                    text = product.title!!,
+                    text = item.title,
                     color = Color.White,
                     fontSize = 13.sp,
                     maxLines = 1,

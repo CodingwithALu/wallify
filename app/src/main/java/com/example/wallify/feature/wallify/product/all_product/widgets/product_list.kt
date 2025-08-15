@@ -1,5 +1,8 @@
 package com.example.wallify.feature.wallify.product.all_product.widgets
 
+import android.content.Context
+import android.util.Log
+import androidx.annotation.RawRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,18 +11,26 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.core_model.ProductModel
 import com.example.wallify.common.widgets.products.WProductCardVertical
 import com.example.wallify.R
+import org.json.JSONArray
+
 @Composable
 fun ProductListScreen(
-    products: List<ProductModel>,
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val json = remember {
+        readJsonFromRaw(context, rawResId = R.raw.images)
+    }
+    val images = remember { parseJson(json) }
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
@@ -29,10 +40,18 @@ fun ProductListScreen(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
 
     ) {
-        items(products) { product ->
-            WProductCardVertical(product = product, navController = navController)
+        items(images) { product ->
+            Log.d("ProductCheck", "Product URL: ${product.url}")
+            WProductCardVertical(url = product, navController = navController)
         }
     }
+}
+fun readJsonFromRaw(context: Context, @RawRes rawResId: Int): String {
+    return context.resources.openRawResource(rawResId).bufferedReader().use { it.readText() }
+}
+fun parseJson(json: String): List<ProductModel> {
+    val arr = JSONArray(json)
+    return List(arr.length()) { i -> ProductModel(url = arr.getJSONObject(i).getString("url")) }
 }
 val mobileWallpapers = listOf(
     ProductModel(

@@ -5,9 +5,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.example.wallify.R
 @Composable
-fun BellIcon(onClick: () -> Unit = {}) {
+fun NotificationIcon(onClick: () -> Unit = {},
+                     navController: NavController) {
     IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(id = R.drawable.point),

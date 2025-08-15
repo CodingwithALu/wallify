@@ -10,20 +10,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.core_model.Category
 import com.example.core_model.ProductModel
-import com.example.wallify.feature.authentication.onboarding.OnBoardingScreen
+import com.example.wallify.feature.authentication.screen.onboarding.OnBoardingScreen
 import com.example.wallify.feature.wallify.collections.CollectionScreen
 import com.example.wallify.feature.wallify.favorites.FavoritesScreen
-import com.example.wallify.feature.wallify.product.all_product.widgets.ProductListScreen
 import com.example.wallify.feature.wallify.product.product_details.ProductDetailsScreen
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 
 @Composable
 fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.OnBoarding.route) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.OnBoarding.route) {
             OnBoardingScreen(
-                onNext = {
+                onSkip = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.OnBoarding.route) { inclusive = true }
                     }
@@ -31,10 +30,10 @@ fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostControll
             )
         }
         composable(Screen.Home.route) {
-            HomeScreen(navController)
+            HomeScreen(navController = navController, modifier = modifier)
         }
         composable(Screen.Streak.route){
-            StreakScreen()
+            StreakScreen(navController = navController, modifier = modifier)
         }
         composable(Screen.Collection.route){
             CollectionScreen()

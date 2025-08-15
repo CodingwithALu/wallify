@@ -1,4 +1,4 @@
-package com.example.wallify.feature.authentication.onboarding.widgets
+package com.example.wallify.feature.authentication.screen.onboarding.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

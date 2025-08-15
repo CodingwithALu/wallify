@@ -20,7 +20,7 @@ fun TSectionHeading(
     showActionButton: Boolean = true,
     buttonTitle: String? = null,
     onPressed: (() -> Unit)? = null,
-    viewAllText: String = "View All" // pass localized "view all" text here
+    viewAllText: String = "View All"
 ) {
     Row(modifier = modifier) {
         Text(
@@ -28,7 +28,7 @@ fun TSectionHeading(
             style = MaterialTheme.typography.headlineSmall.copy(
                 color = textColor ?: MaterialTheme.colorScheme.onBackground
             ),
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )

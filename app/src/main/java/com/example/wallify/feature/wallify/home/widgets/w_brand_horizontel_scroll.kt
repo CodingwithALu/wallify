@@ -38,7 +38,7 @@ fun BrandHorizontalScroll(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = TSizes.xs)
                     .clickable {
                         val gson = Gson()
                         val brands = Uri.encode(gson.toJson(item))
@@ -54,7 +54,7 @@ fun BrandHorizontalScroll(
                 Spacer(modifier = Modifier.height(TSizes.sm))
                 Text(
                     text = item.title,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )

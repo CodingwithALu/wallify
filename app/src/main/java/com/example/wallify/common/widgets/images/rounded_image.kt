@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +24,6 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.wallify.common.widgets.shimmer.TShimmerEffect
-import com.example.wallify.ui.theme.onPrimaryLight
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
@@ -57,21 +57,22 @@ fun TRoundedImage(
             .clickable(enabled = onPressed != null) { onPressed?.invoke() },
         contentAlignment = Alignment.Center
     ) {
-        if (isNetworkImage) {
+        if (isNetworkImage && imageUrl.isNotBlank()) {
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(context)
                     .data(imageUrl)
                     .crossfade(true)
                     .build()
             )
-            when (painter.state) {
+            when (val state = painter.state) {
                 is AsyncImagePainter.State.Loading -> {
                     TShimmerEffect(
                         width = width ?: 158.dp,
-                        height = height ?: 158.dp
+                        height = height ?: 380.dp
                     )
                 }
                 is AsyncImagePainter.State.Error -> {
+                    Log.e("CoilError", "Lỗi load ảnh: $imageUrl")
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Image error"

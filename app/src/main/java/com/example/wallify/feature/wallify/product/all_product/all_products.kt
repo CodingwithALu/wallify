@@ -40,7 +40,7 @@ fun AllProductScreen(
         Box(modifier = Modifier.fillMaxSize()
             .padding(innerPadding)
             .clip(RoundedCornerShape(24.dp))){
-            ProductListScreen(mobileWallpapers, navController)
+            ProductListScreen( navController)
         }
     }
 }

@@ -29,8 +29,7 @@ fun CategoryMasonryList(categories: List<Category>,
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(26.dp))
-            .background(Color.Black),
+            .clip(RoundedCornerShape(26.dp)),
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

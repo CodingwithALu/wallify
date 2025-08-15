@@ -1,4 +1,4 @@
-package com.example.wallify.feature.authentication.onboarding
+package com.example.wallify.feature.authentication.screen.onboarding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -17,36 +20,42 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wallify.R
-import com.example.wallify.feature.authentication.onboarding.widgets.OnBoardingDotNavigation
-import com.example.wallify.feature.authentication.onboarding.widgets.OnBoardingNextButton
-import com.example.wallify.feature.authentication.onboarding.widgets.OnBoardingPage
-import com.example.wallify.feature.authentication.onboarding.widgets.OnBoardingSkip
+import com.example.wallify.feature.authentication.controller.onboarding.OnBoardingViewModel
+import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingDotNavigation
+import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingNextButton
+import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingPage
+import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingSkip
 import com.example.wallify.ui.theme.onBackgroundLight
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun OnBoardingScreen(
     onSkip: () -> Unit = {},
-    onNext: () -> Unit = {},
+    viewModel: OnBoardingViewModel = viewModel(),
     modifier: Modifier = Modifier
 ){
+    val local = LocalContext.current
     val pageCount = 3
-    var currentPage by remember { mutableIntStateOf(0) }
-    Box(modifier = Modifier.fillMaxSize()) {
+    val currentPage = viewModel.currentPageIndex
+    Box(modifier = modifier.fillMaxSize()) {
         when (currentPage) {
             0 -> OnBoardingPage(
                 imageRes = R.drawable.onboarding_image1,
                 title = stringResource(id = R.string.onboarding_title_1),
                 subTitle = stringResource(id = R.string.onboarding_subtitle_1)
             )
+
             1 -> OnBoardingPage(
                 imageRes = R.drawable.onboarding_image2,
                 title = stringResource(id = R.string.onboarding_title_2),
                 subTitle = stringResource(id = R.string.onboarding_subtitle_2)
             )
+
             2 -> OnBoardingPage(
                 imageRes = R.drawable.onboarding_image3,
                 title = stringResource(id = R.string.onboarding_title_3),
@@ -57,10 +66,16 @@ fun OnBoardingScreen(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 48.dp, end = 24.dp),
-            onSkip = onSkip
+            onSkip = {
+                viewModel.skipPage(context = local){
+                    onSkip()
+                }
+
+            }
         )
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .padding(paddingValues = PaddingValues(bottom = 68.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -77,11 +92,7 @@ fun OnBoardingScreen(
                     .padding(horizontal = 48.dp)
                     .background(color = onBackgroundLight),
                 onClick = {
-                    if (currentPage < pageCount - 1) {
-                        currentPage++
-                    } else {
-                        onNext()
-                    }
+                    viewModel.nextPage(context = local) { onSkip() }
                 }
             )
         }

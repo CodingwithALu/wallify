@@ -17,6 +17,7 @@ import com.example.wallify.common.widgets.custom_shapes.container.TCircularConta
 import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
 import com.example.wallify.ui.theme.inversePrimaryDarkMediumContrast
 import com.example.wallify.ui.theme.onTertiaryLight
+import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun BannerCarousel(
@@ -67,12 +68,14 @@ fun BannerCarousel(
         ) {
             repeat(banners.size) { index ->
                 val isSelected = pagerState.currentPage == index
-                TCircularContainer(
-                    width = 20.dp,
-                    height = 4.dp,
-                    padding = 4.dp,
-                    backgroundColor = if (isSelected) onTertiaryLight else inversePrimaryDarkMediumContrast
-                )
+                Box(modifier = Modifier.padding(horizontal = TSizes.xs)) {
+                    TCircularContainer(
+                        width = if (isSelected) TSizes.appBarHeight else TSizes.xs,
+                        height = 4.dp,
+                        padding = 4.dp,
+                        backgroundColor = if (isSelected) onTertiaryLight else inversePrimaryDarkMediumContrast
+                    )
+                }
             }
         }
     }
