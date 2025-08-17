@@ -36,7 +36,7 @@ fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostControll
             StreakScreen(navController = navController, modifier = modifier)
         }
         composable(Screen.Collection.route){
-            CollectionScreen()
+            CollectionScreen(modifier = modifier, navController)
         }
         composable(Screen.Favorite.route){
             FavoritesScreen()
