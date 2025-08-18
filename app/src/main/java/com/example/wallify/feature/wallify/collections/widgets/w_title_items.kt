@@ -26,7 +26,7 @@ fun WTitleItems(
             fontSize = TSizes.fontSizeLg,
             color = Color.White
         )
-        Spacer(modifier = Modifier.height(TSizes.sm))
+        Spacer(modifier = Modifier.height(TSizes.xs))
         Text(
             text = subTitle,
             color = Color.White

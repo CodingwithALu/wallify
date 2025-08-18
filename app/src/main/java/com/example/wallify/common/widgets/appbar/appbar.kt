@@ -10,10 +10,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wallify.utlis.constants.TSizes
+import com.example.wallify.utlis.route.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,41 +29,49 @@ fun TAppBar(
     leadingIcon: ImageVector? = null,
     actions: List<@Composable RowScope.() -> Unit>? = null,
     leadingOnPressed: (() -> Unit)? = null,
-    horizontalPadding: Dp = TSizes.xs
+    horizontalPadding: Dp = TSizes.xs,
+    navController: NavController
 ) {
-    TopAppBar(
-        modifier = Modifier.padding(horizontal = horizontalPadding),
-        navigationIcon = {
-            when {
-                showBackArrow -> {
-                    IconButton(onClick = {
-                        leadingOnPressed?.invoke()
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    var currentRoute = navBackStackEntry?.destination?.route
+    LaunchedEffect(navController.currentBackStackEntry) {
+        currentRoute = navController.currentBackStackEntry?.destination?.route
+    }
+    if (currentRoute !in Screen.routesToHideBottomBar){
+        TopAppBar(
+            modifier = Modifier.padding(horizontal = horizontalPadding),
+            navigationIcon = {
+                when {
+                    showBackArrow -> {
+                        IconButton(onClick = {
+                            leadingOnPressed?.invoke()
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
                     }
-                }
-                leadingIcon != null -> {
-                    IconButton(onClick = { leadingOnPressed?.invoke() }) {
-                        Icon(
-                            imageVector = leadingIcon,
-                            contentDescription = "Leading Icon"
-                        )
+                    leadingIcon != null -> {
+                        IconButton(onClick = { leadingOnPressed?.invoke() }) {
+                            Icon(
+                                imageVector = leadingIcon,
+                                contentDescription = "Leading Icon"
+                            )
+                        }
                     }
+                    else -> {}
                 }
-                else -> {}
-            }
-        },
-        title = {
-            title?.invoke()
-        },
-        actions = {
-            actions?.forEach { action ->
-                action()
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors()
-    )
+            },
+            title = {
+                title?.invoke()
+            },
+            actions = {
+                actions?.forEach { action ->
+                    action()
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors()
+        )
+    }
 }

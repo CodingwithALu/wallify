@@ -1,5 +1,6 @@
 package com.example.wallify.navigation
 
+import SettingScreen
 import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
 import StreakScreen
 import com.example.wallify.feature.wallify.home.HomeScreen
@@ -40,6 +41,9 @@ fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostControll
         }
         composable(Screen.Favorite.route){
             FavoritesScreen()
+        }
+        composable(Screen.Setting.route){
+            SettingScreen(navController = navController)
         }
         // allProduct
         composable(Screen.ProductList.route) { backStackEntry ->

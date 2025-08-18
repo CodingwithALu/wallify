@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "wallify"
 include(":app")
 include(":core_model")
+include(":core-viewmodel")

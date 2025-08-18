@@ -78,7 +78,7 @@ fun TCircularImage(
                             .then(
                                 if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
                             ),
-                        contentScale = ContentScale.Crop
+                        contentScale = fit
                     )
                 }
             }
@@ -100,7 +100,7 @@ fun TCircularImage(
                     .then(
                         if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
                     ),
-                contentScale = ContentScale.Crop
+                contentScale = fit
             )
         }
     }

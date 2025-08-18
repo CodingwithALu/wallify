@@ -12,6 +12,7 @@ import com.example.wallify.feature.wallify.home.widgets.NotificationIcon
 import com.example.wallify.feature.wallify.home.widgets.TSubAppbarHome
 import com.example.wallify.navigation.MainNavigation
 import com.example.wallify.navigation.NavigationMenu
+import com.example.wallify.utlis.route.Screen
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
@@ -20,12 +21,16 @@ fun App(modifier: Modifier = Modifier) {
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TAppBar(
-                title = { TSubAppbarHome() },
+                title = { TSubAppbarHome(
+                    onAvatarClick = {
+                        navController.navigate(Screen.Setting.route)
+                    }
+                ) },
                 actions = listOf(
                     { PointCount(count = 0, navController) },
                     { NotificationIcon(navController = navController) }
-                )
-
+                ),
+                navController = navController
             )
         },
         bottomBar = {
