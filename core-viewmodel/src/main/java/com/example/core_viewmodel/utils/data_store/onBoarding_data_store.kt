@@ -1,4 +1,4 @@
-package com.example.wallify.feature.authentication.controller.onboarding
+package com.example.core_viewmodel.utils.data_store
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

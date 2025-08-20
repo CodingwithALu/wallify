@@ -1,9 +1,11 @@
-package com.example.wallify.feature.authentication.controller.onboarding
+package com.example.core_viewmodel.controller.onboarding
 
 import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core_viewmodel.utils.data_store.getFirstTime
+import com.example.core_viewmodel.utils.data_store.setFirstTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

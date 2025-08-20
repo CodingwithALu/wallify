@@ -14,9 +14,9 @@ import okhttp3.Request
 import java.io.InputStream
 
 class UserRepository(
-    private val context: Context,
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
 ) {
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val cloudName = "dhl2sbjo5"
     private val uploadPreset = "t_stores"
@@ -106,32 +106,32 @@ class UserRepository(
     }
 
     // Upload image to Cloudinary (optionally delete old image first)
-    suspend fun uploadImage(
-        path: String,
-        imageUri: Uri,
-        oldImageUrl: String? = null
-    ): String {
-        try {
-            if (!oldImageUrl.isNullOrEmpty()) {
-                deleteImageFromCloudinary(oldImageUrl)
-            }
-            val bytes = readBytesFromUri(imageUri)
-            val url = uploadImageToCloudinary(
-                file = bytes,
-                path = path,
-                imageName = getFileNameFromUri(imageUri)
-            )
-            return url
-        } catch (e: Exception) {
-            throw Exception("Something went wrong. Please try again!")
-        }
-    }
+//    suspend fun uploadImage(
+//        path: String,
+//        imageUri: Uri,
+//        oldImageUrl: String? = null
+//    ): String {
+//        try {
+//            if (!oldImageUrl.isNullOrEmpty()) {
+//                deleteImageFromCloudinary(oldImageUrl)
+//            }
+//            val bytes = readBytesFromUri(imageUri)
+//            val url = uploadImageToCloudinary(
+//                file = bytes,
+//                path = path,
+//                imageName = getFileNameFromUri(imageUri)
+//            )
+//            return url
+//        } catch (e: Exception) {
+//            throw Exception("Something went wrong. Please try again!")
+//        }
+//    }
 
     // Helper: read bytes from Uri
-    private fun readBytesFromUri(uri: Uri): ByteArray {
-        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-        return inputStream?.readBytes() ?: throw Exception("Cannot read image data")
-    }
+//    private fun readBytesFromUri(uri: Uri): ByteArray {
+//        val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+//        return inputStream?.readBytes() ?: throw Exception("Cannot read image data")
+//    }
 
     // Helper: get file name from Uri
     private fun getFileNameFromUri(uri: Uri): String {

@@ -70,18 +70,19 @@ fun TCircularImage(
                     )
                 }
                 else -> {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .then(
-                                if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
-                            ),
-                        contentScale = fit
-                    )
+
                 }
             }
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
+                    ),
+                contentScale = fit
+            )
         } else {
             val localPainter: Painter = if (drawableResId != null) {
                 painterResource(id = drawableResId)
