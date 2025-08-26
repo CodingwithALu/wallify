@@ -1,13 +1,12 @@
 // kotlin
 package com.example.core_viewmodel.controller.personalization
 
-import android.app.Application
 import android.net.wifi.hotspot2.pps.Credential
 import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.example.core_model.UserModel
-import com.example.core_viewmodel.reponsitory.AuthenticationRepository
-import com.example.core_viewmodel.reponsitory.UserRepository
+import com.example.core_viewmodel.repository.AuthenticationRepository
+import com.example.core_viewmodel.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

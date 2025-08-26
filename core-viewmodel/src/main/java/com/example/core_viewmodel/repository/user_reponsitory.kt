@@ -1,5 +1,4 @@
-package com.example.core_viewmodel.reponsitory
-import android.content.Context
+package com.example.core_viewmodel.repository
 import android.net.Uri
 import android.util.Base64
 import com.example.core_model.UserModel
@@ -11,13 +10,9 @@ import kotlinx.coroutines.tasks.await
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.InputStream
 
-class UserRepository(
-
-) {
+class UserRepository() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-
     private val cloudName = "dhl2sbjo5"
     private val uploadPreset = "t_stores"
 

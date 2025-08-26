@@ -15,3 +15,14 @@ to change that to your actual package name for your app.
 
 Please note that in Android Studio, the Android project view groups some directories together.
 For example, /ui/theme will appear in the ui as ui.theme .
+## Dependencies
+To use the theme, you will need to add the following dependencies to your build.gradle file:
+
+```gradle
+implementation "androidx.compose.material3:material3:1.2.0"
+implementation "androidx.compose.material3:material3-window-size-class:1.2.0"
+implementation "androidx.compose.ui:ui-tooling-preview:1.4.3"
+debugImplementation "androidx.compose.ui:ui-tooling:1.4.3"
+``` 
+## Hilt Dependency Injection
+If you are using Hilt for dependency injection, you may want to add the following dependencies to

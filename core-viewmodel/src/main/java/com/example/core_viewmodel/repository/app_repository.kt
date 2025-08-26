@@ -1,4 +1,4 @@
-package com.example.core_viewmodel.reponsitory
+package com.example.core_viewmodel.repository
 
 import android.content.Context
 import com.example.core_viewmodel.utils.data_store.getFirstTime

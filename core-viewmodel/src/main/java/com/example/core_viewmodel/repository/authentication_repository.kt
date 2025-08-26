@@ -1,24 +1,12 @@
-package com.example.core_viewmodel.reponsitory
+package com.example.core_viewmodel.repository
 
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.core_viewmodel.utils.data_store.OnboardingPrefsKeys.IS_FIRST_TIME
-import com.example.core_viewmodel.utils.data_store.getFirstTime
-import com.example.core_viewmodel.utils.data_store.setFirstTime
 import com.example.core_viewmodel.utils.exceptions.TFirebaseAuthException
 import com.example.core_viewmodel.utils.exceptions.TFirebaseException
 import com.example.core_viewmodel.utils.exceptions.TFormatException
 import com.google.firebase.auth.*
 import com.google.firebase.FirebaseException
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-class AuthenticationRepository(
-
-) {
+class AuthenticationRepository() {
     private val onCallBack: () -> Unit = {}
     private  val onBoardingClick: () -> Unit = {}
     private val firebaseAuth = FirebaseAuth.getInstance()

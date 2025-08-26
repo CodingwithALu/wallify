@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wallify.R
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
@@ -27,7 +28,7 @@ import com.example.wallify.utlis.constants.TSizes
 @Composable
 fun OnBoardingScreen(
     onSkip: () -> Unit = {},
-    viewModel: OnBoardingViewModel = viewModel(),
+    viewModel: OnBoardingViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ){
     val local = LocalContext.current

@@ -1,14 +1,15 @@
 package com.example.core_viewmodel.controller.authentiacations
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core_model.UserModel
-import com.example.core_viewmodel.reponsitory.AuthenticationRepository
-import com.example.core_viewmodel.reponsitory.UserRepository
+import com.example.core_viewmodel.repository.AuthenticationRepository
+import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.data_store.GoogleLoginInfo
 import com.example.core_viewmodel.utils.data_store.clearGoogleLoginInfo
 import com.example.core_viewmodel.utils.data_store.getGoogleLoginInfo
@@ -18,7 +19,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -74,6 +74,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             isLoading = true
             errorMessage = null
+            Log.d("SignInGoogle", "ID Token: $idToken")
             try {
                 if (!networkManager.checkConnection()) {
                     errorMessage = "No Internet Connection"

@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core_viewmodel.utils.data_store.getFirstTime
 import com.example.core_viewmodel.utils.data_store.setFirstTime
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OnBoardingViewModel : ViewModel() {
+@HiltViewModel
+class OnBoardingViewModel @Inject constructor(): ViewModel() {
     var currentPageIndex by mutableIntStateOf(0)
         private set
     private val _isFirstTime = MutableStateFlow(false)
