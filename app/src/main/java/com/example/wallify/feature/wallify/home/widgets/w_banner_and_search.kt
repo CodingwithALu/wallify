@@ -1,4 +1,5 @@
 package com.example.wallify.feature.wallify.home.widgets
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,18 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.wallify.common.widgets.custom_shapes.container.TCircularContainer
 import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
+import com.example.wallify.feature.wallify.home.model.Banner
 import com.example.wallify.ui.theme.inversePrimaryDarkMediumContrast
 import com.example.wallify.ui.theme.onTertiaryLight
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun BannerCarousel(
-    banners: List<Int>,
+    banners: List<Banner>,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
-    onBannerClick: ((Int) -> Unit)? = null
+    onBannerClick: ((Banner) -> Unit)? = null
 ) {
     Box(
         modifier = modifier
@@ -37,14 +40,14 @@ fun BannerCarousel(
             contentPadding = PaddingValues(0.dp),
             pageSpacing = 0.dp
         ) { page ->
-            Image(
-                painter = painterResource(id = banners[page]),
+            AsyncImage(
+                model = banners[page].url,
                 contentDescription = "Banner",
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(36.dp))
                     .let {
-                        if (onBannerClick != null) it.clickable { onBannerClick(page) } else it
+                        if (onBannerClick != null) it.clickable { onBannerClick(banners[page]) } else it
                     }
             )
         }

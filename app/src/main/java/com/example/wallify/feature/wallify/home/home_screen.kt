@@ -1,5 +1,6 @@
 package com.example.wallify.feature.wallify.home
 import CategoryMasonryList
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.R
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
@@ -28,12 +29,25 @@ import com.example.wallify.feature.wallify.home.widgets.brandList
 import com.example.wallify.navigation.NavigationMenu
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
+import com.example.wallify.feature.wallify.home.model.Banner
+import com.example.wallify.feature.wallify.home.viewmodel.BannerViewModel
 import sampleCategories
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier,
-               navController: NavController,
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
 ){
+    val bannerViewModel: BannerViewModel = hiltViewModel()
+    val banners by bannerViewModel.banners.collectAsState()
+    val isLoading = bannerViewModel.isLoading
+    val errorMessage = bannerViewModel.errorMessage
+    val pagerState = rememberPagerState(pageCount = { banners.size })
+
+    LaunchedEffect(banners) {
+        Log.d("BannerList", "Banners: $banners")
+    }
+
     Scaffold (
         topBar = {
             TAppBar(
@@ -58,12 +72,24 @@ fun HomeScreen(modifier: Modifier = Modifier,
                 .padding(innerPadding))
          {
             //banner and search
-            val banners = listOf(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3)
-            val pagerState = rememberPagerState(pageCount = { banners.size })
-            BannerCarousel(
-                banners = banners,
-                pagerState = pagerState
-            )
+            when {
+                isLoading -> {
+                    Text("Loading banners...")
+                }
+                errorMessage != null -> {
+                    Log.d("BannerList", "Banners: $errorMessage")
+                    Text("Error: $errorMessage")
+                }
+                banners.isEmpty() -> {
+                    Text("Không có banner nào")
+                }
+                else -> {
+                    BannerCarousel(
+                        banners = banners,
+                        pagerState = pagerState
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(TSizes.xs))
             // brand
             BrandHorizontalScroll(items = brandList, navController = navController)

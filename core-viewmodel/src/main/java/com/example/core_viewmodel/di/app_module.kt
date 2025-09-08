@@ -19,11 +19,13 @@ object AppModule {
     fun provideAuthenticationRepository(): AuthenticationRepository {
         return AuthenticationRepository()
     }
+
     @Provides
     @Singleton
-    fun provideUserRepository(): UserRepository{
+    fun provideUserRepository(): UserRepository {
         return UserRepository()
     }
+
     @Provides
     @Singleton
     fun provideNetworkManager(@ApplicationContext context: Context): NetworkManager {
