@@ -19,11 +19,11 @@ import com.example.wallify.common.widgets.texts.TSectionHeading
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
-fun CollectionScreen(modifier: Modifier = Modifier,
-                     navController: NavController){
+fun CollectionScreen(navController: NavController){
     Scaffold { innerPadding ->
         LazyColumn (
-            modifier = modifier
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding)
         ) {
             items(5){
                 // pro Collections

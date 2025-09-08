@@ -21,36 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-                AppTheme {
-                    val navController = rememberNavController()
-                    val context = LocalContext.current
-                    var isReady by remember { mutableStateOf(false) }
-
-                    val repository = remember {
-                        AppRepository(
-                            context = context,
-                            onCallBack = {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(0)
-                                }
-                            },
-                            onBoardingClick = {
-                                navController.navigate(Screen.OnBoarding.route) {
-                                    popUpTo(0)
-                                }
-                            }
-                        )
-                    }
-//                    LaunchedEffect(Unit) {
-//                        repository.onReady()
-//                        isReady = true
-//                    }
-//                    if (!isReady) {
-//                        // Splash Screen
-//                    } else {
-                        App(navController = navController)
-//                    }
-                    }
-            }
+            App()
         }
+    }
 }

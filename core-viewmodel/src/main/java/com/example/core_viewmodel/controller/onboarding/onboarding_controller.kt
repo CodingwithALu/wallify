@@ -17,8 +17,8 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(): ViewModel() {
     var currentPageIndex by mutableIntStateOf(0)
         private set
-    private val _isFirstTime = MutableStateFlow(false)
-    val isFirstTime: StateFlow<Boolean> = _isFirstTime.asStateFlow()
+    private val _isFirstTime = MutableStateFlow<Boolean?>(null)
+    val isFirstTime: StateFlow<Boolean?> = _isFirstTime.asStateFlow()
     fun loadIsFirstTime(context: Context) {
         viewModelScope.launch {
             getFirstTime(context).collect {

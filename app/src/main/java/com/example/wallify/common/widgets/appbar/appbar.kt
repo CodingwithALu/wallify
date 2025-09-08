@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
+import com.example.wallify.utlis.route.routesToHideBottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +38,7 @@ fun TAppBar(
     LaunchedEffect(navController.currentBackStackEntry) {
         currentRoute = navController.currentBackStackEntry?.destination?.route
     }
-    if (currentRoute !in Screen.routesToHideBottomBar){
+    if (currentRoute !in routesToHideBottomBar){
         TopAppBar(
             modifier = Modifier.padding(horizontal = horizontalPadding),
             navigationIcon = {

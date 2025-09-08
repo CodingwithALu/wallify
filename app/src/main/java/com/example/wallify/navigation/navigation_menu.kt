@@ -35,6 +35,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.core_model.BottomNavItem
 import com.example.wallify.utlis.route.Screen
 import com.example.wallify.R
+import com.example.wallify.utlis.route.routesToHideBottomBar
 
 @Composable
 fun NavigationMenu(
@@ -59,7 +60,7 @@ fun NavigationMenu(
     Box(
         modifier = Modifier.padding(bottom = 46.dp)
     ) {
-        if (currentRoute !in Screen.routesToHideBottomBar) {
+        if (currentRoute !in routesToHideBottomBar) {
             Row(
                 Modifier
                     .fillMaxWidth()

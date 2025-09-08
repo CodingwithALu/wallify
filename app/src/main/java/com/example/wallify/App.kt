@@ -1,6 +1,7 @@
 package com.example.wallify
 
 import PointCount
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -13,33 +14,13 @@ import com.example.wallify.feature.wallify.home.widgets.NotificationIcon
 import com.example.wallify.feature.wallify.home.widgets.TSubAppbarHome
 import com.example.wallify.navigation.MainNavigation
 import com.example.wallify.navigation.NavigationMenu
+import com.example.wallify.ui.theme.AppTheme
 import com.example.wallify.utlis.route.Screen
 
 @Composable
-fun App(navController: NavHostController) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TAppBar(
-                title = { TSubAppbarHome(
-                    onAvatarClick = {
-                        navController.navigate(Screen.Setting.route)
-                    }
-                ) },
-                actions = listOf(
-                    { PointCount(count = 0, navController) },
-                    { NotificationIcon(navController = navController) }
-                ),
-                navController = navController
-            )
-        },
-        bottomBar = {
-            NavigationMenu(
-                navController = navController
-            )
+fun App() {
+    AppTheme {
+        val navController = rememberNavController()
+        MainNavigation(navController = navController)
         }
-    ) { innerPadding ->
-        MainNavigation(modifier = Modifier.padding(innerPadding),
-            navController = navController)
-    }
 }

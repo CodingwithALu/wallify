@@ -1,4 +1,5 @@
 package com.example.wallify.feature.authentication.screen.onboarding
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wallify.R
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
 import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingDotNavigation
@@ -28,13 +27,12 @@ import com.example.wallify.utlis.constants.TSizes
 @Composable
 fun OnBoardingScreen(
     onSkip: () -> Unit = {},
-    viewModel: OnBoardingViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    viewModel: OnBoardingViewModel
 ){
     val local = LocalContext.current
     val pageCount = 3
     val currentPage = viewModel.currentPageIndex
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         when (currentPage) {
             0 -> OnBoardingPage(
                 imageRes = R.drawable.onboarding_image1,
