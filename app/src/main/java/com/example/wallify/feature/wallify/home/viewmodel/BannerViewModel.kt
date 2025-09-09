@@ -1,5 +1,4 @@
 package com.example.wallify.feature.wallify.home.viewmodel
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -50,5 +49,12 @@ class BannerViewModel @Inject constructor(
 
     init {
         fetchBanners()
+        viewModelScope.launch {
+            networkManager.isConnected.collect { isConnected ->
+                if (isConnected && errorMessage == "No Internet Connection") {
+                    fetchBanners()
+                }
+            }
+        }
     }
 }

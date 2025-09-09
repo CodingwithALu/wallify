@@ -17,9 +17,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun TShimmerEffect(
-    width: Dp,
-    height: Dp,
-    radius: Dp = 15.dp,
+    modifier: Modifier = Modifier,
     color: Color? = null
 ) {
     val dark = isSystemInDarkTheme()
@@ -37,17 +35,13 @@ fun TShimmerEffect(
             repeatMode = RepeatMode.Restart
         ), label = "shimmer_anim"
     )
-
     val brush = Brush.linearGradient(
         colors = listOf(baseColor, highlightColor, baseColor),
         start = Offset(translateAnim.value - 1000f, 0f),
         end = Offset(translateAnim.value, 0f)
     )
-
     Box(
-        modifier = Modifier
-            .size(width, height)
-            .clip(RoundedCornerShape(radius))
+        modifier = modifier
             .background(brush)
     )
 }

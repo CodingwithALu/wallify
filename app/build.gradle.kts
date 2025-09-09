@@ -70,6 +70,7 @@ dependencies {
     implementation (libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt (libs.hilt.android.compiler)
+    implementation (libs.accompanist.placeholder.material)
     // Retrofit
     implementation(libs.retrofit)
     // Gson Converter for Retrofit

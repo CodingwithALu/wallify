@@ -62,8 +62,6 @@ fun TRoundedImage(
             when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {
                     TShimmerEffect(
-                        width = width ?: 158.dp,
-                        height = height ?: 380.dp
                     )
                 }
                 is AsyncImagePainter.State.Error -> {

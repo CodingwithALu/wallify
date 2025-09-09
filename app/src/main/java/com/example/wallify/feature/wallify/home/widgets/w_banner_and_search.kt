@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -31,7 +32,8 @@ fun BannerCarousel(
 ) {
     Box(
         modifier = modifier
-            .aspectRatio(1.6f)
+            .padding(horizontal = TSizes.defaultSpace)
+            .aspectRatio(1.8f)
             .fillMaxWidth()
     ) {
         HorizontalPager(
@@ -45,23 +47,13 @@ fun BannerCarousel(
                 contentDescription = "Banner",
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(36.dp))
+                    .clip(RoundedCornerShape(24.dp))
                     .let {
                         if (onBannerClick != null) it.clickable { onBannerClick(banners[page]) } else it
-                    }
+                    },
+                contentScale = ContentScale.Crop
             )
         }
-        // Search Bar Overlay
-        TSearchContainer(
-            icon = {
-                Image(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
-            },
-            text = "Search",
-            modifier = Modifier.padding(top = 24.dp)
-        )
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,

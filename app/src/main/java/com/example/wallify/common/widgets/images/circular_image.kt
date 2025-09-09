@@ -61,7 +61,7 @@ fun TCircularImage(
             )
             when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {
-                    TShimmerEffect(width = width - padding * 2, height = height - padding * 2)
+                    TShimmerEffect()
                 }
                 is AsyncImagePainter.State.Error -> {
                     Icon(
