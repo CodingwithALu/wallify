@@ -6,4 +6,3 @@ data class Banner(
     val type: String,
     val position: Int
 )
-

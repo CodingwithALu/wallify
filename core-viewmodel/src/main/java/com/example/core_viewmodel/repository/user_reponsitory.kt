@@ -8,49 +8,19 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import okhttp3.FormBody
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 
 class UserRepository() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val cloudName = "dhl2sbjo5"
     private val uploadPreset = "t_stores"
 
-    // Save user data to Firestore
-    suspend fun saveUserRecord(user: UserModel) {
-        try {
-            firestore.collection("Users")
-                .document(user.id)
-                .set(user.toMap())
-                .await()
-        } catch (e: FirebaseException) {
-            throw Exception(TFirebaseException(e.message ?: "unknown").message)
-        } catch (e: IllegalArgumentException) {
-            throw Exception(TFormatException().message)
-        } catch (e: Exception) {
-            throw Exception("Something went wrong. Please try again")
-        }
-    }
-
-    // Fetch user details from Firestore
-    suspend fun fetchUserDetails(userId: String): UserModel {
-        try {
-            val doc = firestore.collection("Users")
-                .document(userId)
-                .get().await()
-            return if (doc.exists()) {
-                UserModel.fromSnapshot(doc)
-            } else {
-                UserModel.empty()
-            }
-        } catch (e: FirebaseException) {
-            throw Exception(TFirebaseException(e.message ?: "unknown").message)
-        } catch (e: IllegalArgumentException) {
-            throw Exception(TFormatException().message)
-        } catch (e: Exception) {
-            throw Exception("Something went wrong. Please try again")
-        }
-    }
+    // Dùng chung cho mọi request
+    private val client = OkHttpClient()
 
     // Update user data in Firestore
     suspend fun updateUserRecord(userId: String, updateUser: UserModel) {
@@ -100,6 +70,40 @@ class UserRepository() {
         }
     }
 
+    // Save user data to backend server via API
+    fun saveUserToServer(
+        googleId: String,
+        name: String,
+        email: String,
+        url: String?
+    ) {
+        try {
+            val jsonBody = """
+                {
+                    "google_id": "$googleId",
+                    "name": "$name",
+                    "email": "$email",
+                    "url": ${if (url != null) "\"$url\"" else "null"}
+                }
+            """.trimIndent()
+            val requestBody = RequestBody.create(
+                "application/json; charset=utf-8".toMediaTypeOrNull(),
+                jsonBody
+            )
+            val request = Request.Builder()
+                .url("http://192.168.1.5:3000/save-user") // Đổi IP cho phù hợp
+                .post(requestBody)
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    throw Exception("Save user error: [${response.code}] ${response.body?.string()}")
+                }
+                // Có thể parse response nếu cần
+            }
+        } catch (e: Exception) {
+            throw Exception("Failed to save user: ${e.message}")
+        }
+    }
     // Upload image to Cloudinary (optionally delete old image first)
 //    suspend fun uploadImage(
 //        path: String,

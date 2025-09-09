@@ -85,23 +85,16 @@ class LoginViewModel @Inject constructor(
                 userNames = userName
                 emails = email
                 userAvatars = avatarUrl
-                // Save DataStore
+                // Save DataStore để duy trì trạng thái đăng nhập Google
                 saveGoogleLoginInfo(context, true, email, userName, avatarUrl)
                 val firebaseUser = authResult.user
-                val userModel = if (firebaseUser != null) {
-                    UserModel(
-                        id = firebaseUser.uid,
-                        username = UserModel.generateUsername(firebaseUser.displayName ?: ""),
-                        email = firebaseUser.email ?: "",
-                        firstName = UserModel.nameParts(firebaseUser.displayName ?: "").getOrNull(0) ?: "",
-                        lastName = UserModel.nameParts(firebaseUser.displayName ?: "").drop(1).joinToString(" ").takeIf { it.isNotBlank() } ?: "",
-                        phoneNumber = firebaseUser.phoneNumber ?: "",
-                        profilePicture = firebaseUser.photoUrl?.toString() ?: ""
-                    )
-                } else {
-                    UserModel.empty()
-                }
-                userRepository.saveUserRecord(userModel)
+                // Lưu thông tin người dùng qua API thay vì Firestore
+                userRepository.saveUserToServer(
+                    googleId = firebaseUser?.uid ?: "",
+                    name = userName,
+                    email = email,
+                    url = avatarUrl
+                )
                 isLoading = false
                 onNavigate()
             } catch (e: Exception) {

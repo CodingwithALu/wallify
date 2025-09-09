@@ -22,68 +22,68 @@ class UserViewModel @Inject constructor(
     var profileLoading by mutableStateOf(false)
         private set
 
-    init {
-        fetchUserRecord()
-    }
-
-    fun fetchUserRecord() {
-        viewModelScope.launch {
-            profileLoading = true
-            try {
-                val userId = authRepository.authUser?.uid ?: ""
-                user = if (userId.isNotEmpty()) {
-                    userRepository.fetchUserDetails(userId)
-                } else {
-                    UserModel.empty()
-                }
-            } catch (e: Exception) {
-                user = UserModel.empty()
-            } finally {
-                profileLoading = false
-            }
-        }
-    }
-
-    fun saveUserRecord(userCredentials: Credential.UserCredential?) {
-        viewModelScope.launch {
-            try {
-                fetchUserRecord()
-//                if (user.id.isNotEmpty()) {
-//                    userCredentials?.let { creds ->
-//                        val nameParts = UserModel.nameParts(creds.user?.displayName ?: "")
-//                        val username = UserModel.generateUsername(creds.user?.displayName ?: "")
-//                        val newUser = UserModel(
-//                            id = creds.user?.uid ?: "",
-//                            username = username,
-//                            email = creds.user?.email ?: "",
-//                            firstName = nameParts.getOrNull(0) ?: "",
-//                            lastName = nameParts.drop(1).joinToString(" ").takeIf { it.isNotBlank() } ?: "",
-//                            phoneNumber = creds.user?.phoneNumber ?: "",
-//                            profilePicture = creds.user?.photoUrl?.toString() ?: ""
-//                        )
-//                        userRepository.saveUserRecord(newUser)
-//                        user = newUser
-//                    }
+//    init {
+//        fetchUserRecord()
+//    }
+//
+//    fun fetchUserRecord() {
+//        viewModelScope.launch {
+//            profileLoading = true
+//            try {
+//                val userId = authRepository.authUser?.uid ?: ""
+//                user = if (userId.isNotEmpty()) {
+////                    userRepository.fetchUserDetails(userId)
+//                } else {
+//                    UserModel.empty()
 //                }
-            } catch (e: Exception) {
-//                TLoaders.warningSnackBar(
-//                    title = "Data not saved",
-//                    message = "Failed to save user data"
-//                )
-            }
-        }
-    }
+//            } catch (e: Exception) {
+//                user = UserModel.empty()
+//            } finally {
+//                profileLoading = false
+//            }
+//        }
+//    }
 
-    var showDeleteDialog by mutableStateOf(false)
-        private set
-
-    fun openDeleteAccountDialog() {
-        showDeleteDialog = true
-    }
-
-    fun dismissDeleteAccountDialog() {
-        showDeleteDialog = false
-    }
+//    fun saveUserRecord(userCredentials: Credential.UserCredential?) {
+//        viewModelScope.launch {
+//            try {
+//                fetchUserRecord()
+////                if (user.id.isNotEmpty()) {
+////                    userCredentials?.let { creds ->
+////                        val nameParts = UserModel.nameParts(creds.user?.displayName ?: "")
+////                        val username = UserModel.generateUsername(creds.user?.displayName ?: "")
+////                        val newUser = UserModel(
+////                            id = creds.user?.uid ?: "",
+////                            username = username,
+////                            email = creds.user?.email ?: "",
+////                            firstName = nameParts.getOrNull(0) ?: "",
+////                            lastName = nameParts.drop(1).joinToString(" ").takeIf { it.isNotBlank() } ?: "",
+////                            phoneNumber = creds.user?.phoneNumber ?: "",
+////                            profilePicture = creds.user?.photoUrl?.toString() ?: ""
+////                        )
+////                        userRepository.saveUserRecord(newUser)
+////                        user = newUser
+////                    }
+////                }
+//            } catch (e: Exception) {
+////                TLoaders.warningSnackBar(
+////                    title = "Data not saved",
+////                    message = "Failed to save user data"
+////                )
+//            }
+//        }
+//    }
+//
+//    var showDeleteDialog by mutableStateOf(false)
+//        private set
+//
+//    fun openDeleteAccountDialog() {
+//        showDeleteDialog = true
+//    }
+//
+//    fun dismissDeleteAccountDialog() {
+//        showDeleteDialog = false
+//    }
 
 //    fun uploadUserProfilePicture(onSuccess: () -> Unit = {}) {
 //        viewModelScope.launch {

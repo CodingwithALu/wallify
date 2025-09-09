@@ -14,19 +14,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.core_model.BrandItem
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.R
+import com.example.wallify.feature.wallify.home.viewmodel.CategoryViewModel
 import com.google.gson.Gson
 
 @Composable
 fun BrandHorizontalScroll(
-    items: List<BrandItem>,
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    val viewModel: CategoryViewModel = hiltViewModel()
+    val categories by viewModel.category.collectAsState()
+    val isLoading = viewModel.isLoading
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -34,7 +40,7 @@ fun BrandHorizontalScroll(
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items.forEach { item ->
+        categories.forEach { item ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -45,13 +51,6 @@ fun BrandHorizontalScroll(
                         navController.navigate("allProducts/$brands")
                     }
             ) {
-
-                TRoundedImage(
-                    drawableResId = item.iconRes,
-                    width = 56.dp,
-                    height = 56.dp
-                )
-                Spacer(modifier = Modifier.height(TSizes.sm))
                 Text(
                     text = item.title,
                     fontSize = 16.sp,
@@ -62,40 +61,3 @@ fun BrandHorizontalScroll(
         }
     }
 }
-val brandList = listOf(
-    BrandItem(
-        id = 1,
-        backgroundColor = Color(0xFFDDDDDD),
-        iconRes = R.drawable.brand_news,
-        title = "News",
-        iconBgColor = Color(0xFFDDDDDD)
-    ),
-    BrandItem(
-        id = 2,
-        backgroundColor = Color(0xFF00E68A),
-        iconRes = R.drawable.brand_category,
-        title = "Categories",
-        iconBgColor = Color(0xFF00E68A)
-    ),
-    BrandItem(
-        id = 3,
-        backgroundColor = Color(0xFFFFD166),
-        iconRes = R.drawable.brand_solors,
-        title = "Colors",
-        iconBgColor = Color(0xFFFFD166)
-    ),
-    BrandItem(
-        id = 4,
-        backgroundColor = Color(0xFFD72660),
-        iconRes = R.drawable.brand_solors,
-        title = "Selected",
-        iconBgColor = Color(0xFFD72660)
-    ),
-    BrandItem(
-        id = 5,
-        backgroundColor = Color(0xFF48CAE4),
-        iconRes = R.drawable.brand_news,
-        title = "Popular",
-        iconBgColor = Color(0xFF48CAE4)
-    )
-    )
