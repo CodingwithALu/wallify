@@ -1,5 +1,4 @@
 package com.example.wallify.feature.wallify.home
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,31 +29,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.wallify.common.widgets.appbar.TAppBar
 import com.example.wallify.common.widgets.shimmer.TShimmerEffect
 import com.example.wallify.feature.wallify.home.viewmodel.BannerViewModel
+import com.example.wallify.feature.wallify.home.viewmodel.CategoryViewModel
 import com.example.wallify.feature.wallify.home.widgets.BannerCarousel
 import com.example.wallify.feature.wallify.home.widgets.TSubAppbarHome
 import com.example.wallify.navigation.NavigationMenu
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
-import sampleCategories
 
 @Composable
 fun HomeScreen(
     navController: NavController,
 ){
     val bannerViewModel: BannerViewModel = hiltViewModel()
+    val categoryViewModel: CategoryViewModel = hiltViewModel()
     val banners by bannerViewModel.banners.collectAsState()
     val isLoading = bannerViewModel.isLoading
     val errorMessage = bannerViewModel.errorMessage
-    val categories = sampleCategories
+    val categories by categoryViewModel.category.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(pageCount = { categories.size })
     val pagerStateBanner = rememberPagerState(pageCount = { banners.size })
@@ -65,6 +64,17 @@ fun HomeScreen(
     }
     LaunchedEffect(pagerState.currentPage) {
         selectedTabIndex = pagerState.currentPage
+    }
+
+    // Load images for selected category
+    val imagesByCategory by categoryViewModel.imagesByCategory.collectAsState()
+
+    LaunchedEffect(selectedTabIndex) {
+        val categoryId = categories.getOrNull(selectedTabIndex)?.id_cate
+        if (categoryId != null) {
+            categoryViewModel.fetchImagesForCategory(categoryId)
+            pagerState.scrollToPage(selectedTabIndex)
+        }
     }
 
     Scaffold (
@@ -120,56 +130,101 @@ fun HomeScreen(
             }
             Spacer(modifier = Modifier.height(TSizes.sm))
             // Category tabs
-            ScrollableTabRow(
-                selectedTabIndex = selectedTabIndex,
-                edgePadding = 8.dp
-            ) {
-                categories.forEachIndexed { index, category ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(category.title) }
+            when {
+                categoryViewModel.isLoading -> {
+                    TShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
+                            .padding(horizontal = TSizes.defaultSpace)
+                            .clip(RoundedCornerShape(16.dp))
                     )
                 }
-            }
-            Spacer(modifier = Modifier.height(TSizes.sm))
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-            ) { page ->
-                val category = categories[page]
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .clip(RoundedCornerShape(26.dp))
-                ) {
-                    Image(
-                        painter = painterResource(id = category.imageRes),
-                        contentDescription = category.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.matchParentSize()
-                    )
+                categories.isEmpty() -> {
                     Box(
                         modifier = Modifier
-                            .matchParentSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.5f))
-                                )
+                            .fillMaxWidth()
+                            .height(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Không có danh mục nào", color = Color.Gray)
+                    }
+                }
+                else -> {
+                    ScrollableTabRow(
+                        selectedTabIndex = selectedTabIndex,
+                        edgePadding = 8.dp
+                    ) {
+                        categories.forEachIndexed { index, category ->
+                            Tab(
+                                selected = selectedTabIndex == index,
+                                onClick = { selectedTabIndex = index },
+                                text = { Text(category.title) }
                             )
-                    )
-                    Text(
-                        text = category.title,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(TSizes.sm))
+                    HorizontalPager(
+                        state = pagerState,
                         modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(18.dp)
-                    )
+                            .fillMaxWidth()
+                            .height(220.dp)
+                    ) { page ->
+                        val category = categories[page]
+                        val images = imagesByCategory[category.id_cate] ?: emptyList()
+                        if (images.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(26.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Không có ảnh cho category này", color = Color.Gray)
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp)
+                            ) {
+                                images.forEach { image ->
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(120.dp)
+                                            .padding(vertical = 4.dp)
+                                            .clip(RoundedCornerShape(16.dp))
+                                    ) {
+                                        AsyncImage(
+                                            model = image.url,
+                                            contentDescription = image.title,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                        )
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(
+                                                    Brush.verticalGradient(
+                                                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.4f))
+                                                    )
+                                                )
+                                        )
+                                        Text(
+                                            text = image.title,
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier
+                                                .align(Alignment.BottomStart)
+                                                .padding(12.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

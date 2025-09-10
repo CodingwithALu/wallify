@@ -1,7 +1,7 @@
 package com.example.wallify.feature.wallify.home.viewmodel
 
+import com.example.wallify.feature.wallify.home.model.Image
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -24,6 +24,11 @@ class CategoryViewModel @Inject constructor(
     val category: StateFlow<List<Category>> = _category
     var isLoading by mutableStateOf(false)
         private set
+    private val _imagesByCategory = MutableStateFlow<Map<Int, List<Image>>>(emptyMap())
+    val imagesByCategory: StateFlow<Map<Int, List<Image>>> = _imagesByCategory
+    private val _allImages = MutableStateFlow<List<Image>>(emptyList())
+    val allImages: StateFlow<List<Image>> = _allImages
+
     init {
         fetchCategory()
     }
@@ -41,6 +46,34 @@ class CategoryViewModel @Inject constructor(
             } catch (e: Exception){
                 _category.value = emptyList()
                 isLoading = false
+            }
+        }
+    }
+
+    fun fetchImagesForCategory(idCate: Int) {
+        viewModelScope.launch {
+            if (!networkManager.checkConnection()) return@launch
+            try {
+                val images = categoryRepository.fetchImagesByCategory(idCate)
+                _imagesByCategory.value = _imagesByCategory.value.toMutableMap().apply {
+                    put(idCate, images)
+                }
+            } catch (e: Exception) {
+                _imagesByCategory.value = _imagesByCategory.value.toMutableMap().apply {
+                    put(idCate, emptyList())
+                }
+            }
+        }
+    }
+
+    fun fetchAllImagesForCategory(idCate: Int) {
+        viewModelScope.launch {
+            if (!networkManager.checkConnection()) return@launch
+            try {
+                val images = categoryRepository.fetchImagesByCategory(idCate)
+                _allImages.value = images
+            } catch (e: Exception) {
+                _allImages.value = emptyList()
             }
         }
     }
