@@ -1,6 +1,9 @@
 package com.example.wallify.common.widgets.appbar
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,48 +34,42 @@ fun TAppBar(
     actions: List<@Composable RowScope.() -> Unit>? = null,
     leadingOnPressed: (() -> Unit)? = null,
     horizontalPadding: Dp = TSizes.xs,
-    navController: NavController
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var currentRoute = navBackStackEntry?.destination?.route
-    LaunchedEffect(navController.currentBackStackEntry) {
-        currentRoute = navController.currentBackStackEntry?.destination?.route
-    }
-    if (currentRoute !in routesToHideBottomBar){
-        TopAppBar(
-            modifier = Modifier.padding(horizontal = horizontalPadding),
-            navigationIcon = {
-                when {
-                    showBackArrow -> {
-                        IconButton(onClick = {
-                            leadingOnPressed?.invoke()
-                        }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
+    TopAppBar(
+        modifier = Modifier.padding(horizontal = horizontalPadding),
+        navigationIcon = {
+            when {
+                showBackArrow -> {
+                    IconButton(onClick = {
+                        leadingOnPressed?.invoke()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
-                    leadingIcon != null -> {
-                        IconButton(onClick = { leadingOnPressed?.invoke() }) {
-                            Icon(
-                                imageVector = leadingIcon,
-                                contentDescription = "Leading Icon"
-                            )
-                        }
+                }
+                leadingIcon != null -> {
+                    IconButton(onClick = { leadingOnPressed?.invoke() }) {
+                        Icon(
+                            imageVector = leadingIcon,
+                            contentDescription = "Leading Icon"
+                        )
                     }
-                    else -> {}
                 }
-            },
-            title = {
-                title?.invoke()
-            },
-            actions = {
-                actions?.forEach { action ->
-                    action()
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors()
-        )
-    }
+                else -> {}
+            }
+        },
+        title = {
+            title?.invoke()
+        },
+        actions = {
+            actions?.forEach { action ->
+                action()
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors()
+    )
 }
+
+

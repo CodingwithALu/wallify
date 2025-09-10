@@ -52,16 +52,22 @@ class CategoryViewModel @Inject constructor(
 
     fun fetchImagesForCategory(idCate: Int) {
         viewModelScope.launch {
-            if (!networkManager.checkConnection()) return@launch
+            isLoading = true
+            if (!networkManager.checkConnection()) {
+                isLoading = false
+                return@launch
+            }
             try {
                 val images = categoryRepository.fetchImagesByCategory(idCate)
                 _imagesByCategory.value = _imagesByCategory.value.toMutableMap().apply {
                     put(idCate, images)
                 }
+                isLoading = false
             } catch (e: Exception) {
                 _imagesByCategory.value = _imagesByCategory.value.toMutableMap().apply {
                     put(idCate, emptyList())
                 }
+                isLoading = false
             }
         }
     }

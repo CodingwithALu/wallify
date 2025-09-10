@@ -33,7 +33,6 @@ fun AllProductScreen(
                 leadingOnPressed = {
                     navController.popBackStack()
                 },
-                navController = navController
             )
         }
     ) { innerPadding ->

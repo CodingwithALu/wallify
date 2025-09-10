@@ -1,14 +1,18 @@
 package com.example.wallify.feature.wallify.home
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +27,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,10 +47,12 @@ import com.example.wallify.feature.wallify.home.viewmodel.BannerViewModel
 import com.example.wallify.feature.wallify.home.viewmodel.CategoryViewModel
 import com.example.wallify.feature.wallify.home.widgets.BannerCarousel
 import com.example.wallify.feature.wallify.home.widgets.TSubAppbarHome
+import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.navigation.NavigationMenu
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
 
+@SuppressLint("FrequentlyChangingValue")
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -54,9 +63,22 @@ fun HomeScreen(
     val isLoading = bannerViewModel.isLoading
     val errorMessage = bannerViewModel.errorMessage
     val categories by categoryViewModel.category.collectAsState()
+    // Load images for selected category
+    val imagesByCategory by categoryViewModel.imagesByCategory.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(pageCount = { categories.size })
     val pagerStateBanner = rememberPagerState(pageCount = { banners.size })
+    val lazyListState = rememberLazyListState()
+    var showTopBar by rememberSaveable { mutableStateOf(true) }
+    var showBanner by rememberSaveable { mutableStateOf(true) }
+    val tabRowIndex = 3 // Banner = 0, TabRow = 1
+    LaunchedEffect(lazyListState.firstVisibleItemIndex, selectedTabIndex, lazyListState.firstVisibleItemScrollOffset) {
+        showTopBar = if (showTopBar) {
+            lazyListState.firstVisibleItemIndex == tabRowIndex && lazyListState.firstVisibleItemScrollOffset == 0
+        } else {
+            if (lazyListState.firstVisibleItemIndex == 0) true else showTopBar
+        }
+    }
 
     // Sync pager and tab selection
     LaunchedEffect(selectedTabIndex) {
@@ -65,10 +87,6 @@ fun HomeScreen(
     LaunchedEffect(pagerState.currentPage) {
         selectedTabIndex = pagerState.currentPage
     }
-
-    // Load images for selected category
-    val imagesByCategory by categoryViewModel.imagesByCategory.collectAsState()
-
     LaunchedEffect(selectedTabIndex) {
         val categoryId = categories.getOrNull(selectedTabIndex)?.id_cate
         if (categoryId != null) {
@@ -76,18 +94,80 @@ fun HomeScreen(
             pagerState.scrollToPage(selectedTabIndex)
         }
     }
-
     Scaffold (
         topBar = {
-            TAppBar(
-                title = {
-                    TSubAppbarHome(
-                      onAvatarClick = {
-                            navController.navigate(Screen.Setting.route)
-                      }
-                    )
+            VerticalTopBar(
+                topBar = {
+                    TSubAppbarHome {}
                 },
-                navController = navController
+                banner = {
+                    when {
+                        isLoading -> {
+                            TShimmerEffect(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(1.9f)
+                                    .padding(horizontal = TSizes.defaultSpace)
+                                    .clip(RoundedCornerShape(24.dp))
+                            )
+                        }
+                        errorMessage != null -> {
+                            Column(modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center) {
+                                Text("Error: $errorMessage")
+                            }
+                        }
+                        banners.isEmpty() -> {
+                            Text("Không có banner nào")
+                        }
+                        else -> {
+                            BannerCarousel(
+                                banners = banners,
+                                pagerState = pagerStateBanner
+                            )
+                        }
+                    }
+                },
+                tabRow = {
+                    when {
+                        categoryViewModel.isLoading -> {
+                            TShimmerEffect(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp)
+                                    .padding(horizontal = TSizes.defaultSpace)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
+                        categories.isEmpty() -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Không có danh mục nào", color = Color.Gray)
+                            }
+                        }
+                        else -> {
+                            ScrollableTabRow(
+                                selectedTabIndex = selectedTabIndex,
+                                edgePadding = 8.dp
+                            ) {
+                                categories.forEachIndexed { index, category ->
+                                    Tab(
+                                        selected = selectedTabIndex == index,
+                                        onClick = { selectedTabIndex = index },
+                                        text = { Text(category.title) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
+                showTopBar = showTopBar,
+                showBanner = showTopBar
             )
         },
         bottomBar = {
@@ -96,79 +176,25 @@ fun HomeScreen(
             )
         }
     ) { innerPadding ->
-        Column (
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPadding))
-         {
-            //banner and search
-            when {
-                isLoading -> {
-                    TShimmerEffect(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1.9f)
-                            .padding(horizontal = TSizes.defaultSpace)
-                            .clip(RoundedCornerShape(24.dp))
-                    )
-                }
-                errorMessage != null -> {
-                    Column(modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center) {
-                        Text("Error: $errorMessage")
-                    }
-                }
-                banners.isEmpty() -> {
-                    Text("Không có banner nào")
-                }
-                else -> {
-                    BannerCarousel(
-                        banners = banners,
-                        pagerState = pagerStateBanner
-                    )
-                }
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            // Banner
+            item {
+                Spacer(modifier = Modifier.height(TSizes.sm))
             }
-            Spacer(modifier = Modifier.height(TSizes.sm))
-            // Category tabs
-            when {
-                categoryViewModel.isLoading -> {
-                    TShimmerEffect(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                            .padding(horizontal = TSizes.defaultSpace)
-                            .clip(RoundedCornerShape(16.dp))
-                    )
-                }
-                categories.isEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Không có danh mục nào", color = Color.Gray)
-                    }
-                }
-                else -> {
-                    ScrollableTabRow(
-                        selectedTabIndex = selectedTabIndex,
-                        edgePadding = 8.dp
-                    ) {
-                        categories.forEachIndexed { index, category ->
-                            Tab(
-                                selected = selectedTabIndex == index,
-                                onClick = { selectedTabIndex = index },
-                                text = { Text(category.title) }
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(TSizes.sm))
+            // HorizontalPager cho ảnh từng category
+            item {
+                Spacer(modifier = Modifier.height(TSizes.sm))
+                if (categories.isNotEmpty()) {
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(220.dp)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
                     ) { page ->
                         val category = categories[page]
                         val images = imagesByCategory[category.id_cate] ?: emptyList()
@@ -192,7 +218,7 @@ fun HomeScreen(
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .height(120.dp)
+                                            .height(180.dp)
                                             .padding(vertical = 4.dp)
                                             .clip(RoundedCornerShape(16.dp))
                                     ) {
