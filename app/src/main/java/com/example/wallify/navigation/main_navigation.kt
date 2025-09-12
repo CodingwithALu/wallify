@@ -81,10 +81,12 @@ fun MainNavigation(navController: NavHostController) {
         composable("${Screen.ProductList.route}/{item}") { backStackEntry ->
             val categoryJson = backStackEntry.arguments?.getString("item")
             val item = Gson().fromJson(categoryJson, Image::class.java)
-            AllProductScreen(item.title, navController)
+            AllProductScreen(
+                item,
+                navController)
         }
         // ProductDetails
-        composable(Screen.ProductDetails.route){ backStackEntry ->
+        composable("${Screen.ProductDetails.route}/{items}"){ backStackEntry ->
             val product = backStackEntry.arguments?.getString("items")
             val items = Gson().fromJson(product, ProductModel::class.java)
             ProductDetailsScreen(items, navController)

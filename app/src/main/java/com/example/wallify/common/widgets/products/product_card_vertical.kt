@@ -28,26 +28,29 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.core_model.ProductModel
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.R
+import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.utlis.constants.TSizes
+import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 
 @Composable
 fun WProductCardVertical(
-    item: ProductModel,
-    onclick: (Int) -> Unit = {},
-    navController: NavController
+    item: Image,
+    onclick: (Image) -> Unit = {},
 ){
     Box(modifier = Modifier.height(280.dp).width(80.dp)) {
         TRoundedImage(
             imageUrl = item.url,
             isNetworkImage = true,
             onPressed = {
-                navController.navigate("ProductDetails/${Uri.encode(Gson().toJson(item))}")
+                onclick(item)
             },
+            padding = TSizes.xs/2,
             applyImageRadius = true,
             fit = ContentScale.Crop
         )
             IconButton(
-                onClick = { onclick(item.id.toInt()) },
+                onClick = {  },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(6.dp)

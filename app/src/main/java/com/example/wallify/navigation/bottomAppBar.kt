@@ -75,7 +75,8 @@ fun BottomAppBarr(
                     .fillMaxWidth()
                     .height(100.dp)
                     .clip(RoundedCornerShape(TSizes.lg)),
-                containerColor = Color.Transparent
+                containerColor = Color.Transparent,
+                tonalElevation = 0.dp
             ) {
                 if (currentRoute !in routesToHideBottomBar) {
                     Row(

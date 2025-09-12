@@ -1,3 +1,4 @@
+import android.provider.CalendarContract
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,7 +49,7 @@ fun TRoundedImage(
     Box(
         modifier = modifier
             .then(if (width != null && height != null) Modifier.size(width, height) else Modifier)
-            .padding(padding)
+            .background(Color.Black)
             .clip(shape)
             .then(
                 if (borderColor != null) Modifier.border(borderWidth, borderColor, shape)
@@ -79,6 +80,7 @@ fun TRoundedImage(
                 contentDescription = null,
                 contentScale = fit,
                 modifier = Modifier.fillMaxSize()
+                    .padding(padding)
             )
         } else {
             val localPainter: Painter =
@@ -96,6 +98,7 @@ fun TRoundedImage(
                 contentDescription = null,
                 contentScale = fit,
                 modifier = Modifier.fillMaxSize()
+                    .padding(padding)
             )
         }
     }
