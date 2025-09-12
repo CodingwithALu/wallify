@@ -12,21 +12,22 @@ import androidx.compose.material3.Text
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import com.example.wallify.feature.wallify.home.model.Category
+import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun TTabBar(
-    tabs: List<String>,
+    tabs: List<Category>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
-    appBarHeight: Dp = TSizes.lg,
+    appBarHeight: Dp = TSizes.xl,
     colors: TTabBarColors = TTabBarColors.default()
 ) {
     val dark = isSystemInDarkTheme()
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = Modifier.height(appBarHeight),
-        containerColor = if (dark) colors.backgroundDark else colors.backgroundLight,
         edgePadding = 0.dp,
         indicator = { tabPositions ->
             SecondaryIndicator(
@@ -36,13 +37,13 @@ fun TTabBar(
         },
         divider = {}
     ) {
-        tabs.forEachIndexed { index, title ->
+        tabs.forEachIndexed { index, item ->
             Tab(
                 selected = selectedTabIndex == index,
                 onClick = { onTabSelected(index) },
                 text = {
                     Text(
-                        text = title,
+                        text = item.title,
                         color = when {
                             selectedTabIndex == index -> if (dark) colors.selectedLabelDark else colors.selectedLabelLight
                             else -> colors.unselectedLabelColor

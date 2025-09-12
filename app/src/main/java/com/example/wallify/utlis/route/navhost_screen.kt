@@ -1,18 +1,19 @@
 package com.example.wallify.utlis.route
 
 sealed class Screen(val route: String) {
-    data object OnBoarding : Screen("onboarding")
-    data object Home : Screen("Home")
-    data object Streak : Screen("Streaks")
-    data object Collection : Screen("Collections")
-    data object Favorite : Screen("Favorites")
-    data object ProductList: Screen("allProducts/{item}")
-    data object ProductDetails: Screen("ProductDetails/{items}")
-    companion object {
-        val routesToHideBottomBar = listOf(
-            OnBoarding.route,
-            ProductList.route,
-            ProductList.route
-        )
-    }
+    object OnBoarding : Screen("onboarding")
+    object Home : Screen("home")
+    object Streak : Screen("streak")
+    object Collection : Screen("collection")
+    object Favorite : Screen("favorite")
+    object Setting : Screen("setting")
+    object ProductList : Screen("product_list")
+    object ProductDetails : Screen("product_details")
 }
+
+val routesToHideBottomBar = listOf(
+    Screen.OnBoarding.route,
+    "product_list",
+    "product_details",
+    "setting"
+)

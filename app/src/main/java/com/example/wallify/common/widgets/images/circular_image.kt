@@ -30,25 +30,16 @@ import com.example.wallify.utlis.helpers.THelperFunctions
 fun TCircularImage(
     modifier: Modifier = Modifier,
     image: String,
-    width: Dp = 56.dp,
-    height: Dp = 56.dp,
-    padding: Dp = TSizes.sm,
-    fit: ContentScale = ContentScale.None,
-    overlayColor: Color? = null,
-    backgroundColor: Color? = null,
+    fit: ContentScale = ContentScale.Crop,
     isNetworkImage: Boolean = false,
     drawableResId: Int? = null,
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val isDark = THelperFunctions.isDarkMode()
-    val actualBackground = backgroundColor ?: if (isDark) onSurfaceLightHighContrast else onErrorLightHighContrast
     Box(
         modifier = modifier
-            .size(width, height)
-            .background(actualBackground, shape = CircleShape)
             .clip(CircleShape)
-            .padding(padding)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -61,7 +52,7 @@ fun TCircularImage(
             )
             when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {
-                    TShimmerEffect(width = width - padding * 2, height = height - padding * 2)
+                    TShimmerEffect()
                 }
                 is AsyncImagePainter.State.Error -> {
                     Icon(
@@ -70,18 +61,16 @@ fun TCircularImage(
                     )
                 }
                 else -> {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .then(
-                                if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
-                            ),
-                        contentScale = ContentScale.Crop
-                    )
+
                 }
             }
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = modifier
+                    .fillMaxSize(),
+                contentScale = fit
+            )
         } else {
             val localPainter: Painter = if (drawableResId != null) {
                 painterResource(id = drawableResId)
@@ -95,12 +84,9 @@ fun TCircularImage(
             Image(
                 painter = localPainter,
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
-                    ),
-                contentScale = ContentScale.Crop
+                modifier = modifier
+                    .fillMaxSize(),
+                contentScale = fit
             )
         }
     }

@@ -1,3 +1,5 @@
+import android.provider.CalendarContract
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +25,6 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.wallify.common.widgets.shimmer.TShimmerEffect
-import com.example.wallify.ui.theme.onPrimaryLight
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
@@ -48,7 +49,7 @@ fun TRoundedImage(
     Box(
         modifier = modifier
             .then(if (width != null && height != null) Modifier.size(width, height) else Modifier)
-            .padding(padding)
+            .background(Color.Black)
             .clip(shape)
             .then(
                 if (borderColor != null) Modifier.border(borderWidth, borderColor, shape)
@@ -57,35 +58,30 @@ fun TRoundedImage(
             .clickable(enabled = onPressed != null) { onPressed?.invoke() },
         contentAlignment = Alignment.Center
     ) {
-        if (isNetworkImage) {
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(context)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build()
-            )
+        if (isNetworkImage && imageUrl.isNotEmpty()) {
+            val painter = rememberAsyncImagePainter(imageUrl)
             when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {
                     TShimmerEffect(
-                        width = width ?: 158.dp,
-                        height = height ?: 158.dp
                     )
                 }
                 is AsyncImagePainter.State.Error -> {
+                    Log.e("CoilError", "Lỗi load ảnh: $imageUrl")
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Image error"
                     )
                 }
                 else -> {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        contentScale = fit,
-                        modifier = Modifier.fillMaxSize()
-                    )
                 }
             }
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = fit,
+                modifier = Modifier.fillMaxSize()
+                    .padding(padding)
+            )
         } else {
             val localPainter: Painter =
                 if (drawableResId != null) {
@@ -102,6 +98,7 @@ fun TRoundedImage(
                 contentDescription = null,
                 contentScale = fit,
                 modifier = Modifier.fillMaxSize()
+                    .padding(padding)
             )
         }
     }

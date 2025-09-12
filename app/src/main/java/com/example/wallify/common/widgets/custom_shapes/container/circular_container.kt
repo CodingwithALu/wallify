@@ -28,7 +28,6 @@ fun TCircularContainer(
             .size(width = width, height = height)
             .clip(RoundedCornerShape(radius))
             .background(backgroundColor)
-            .padding(horizontal = padding)
     ){
         content()
     }
