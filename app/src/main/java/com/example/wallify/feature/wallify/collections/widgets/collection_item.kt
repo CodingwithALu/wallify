@@ -48,8 +48,6 @@ fun CollectionItemScreen(
                     TCircularImage(
                         drawableResId = R.drawable.enhanced_encryption,
                         image = "",
-                        width = 42.dp,
-                        height = 42.dp,
                         modifier = Modifier.align(Alignment.BottomEnd)
                             .padding(TSizes.defaultSpace)
                     )

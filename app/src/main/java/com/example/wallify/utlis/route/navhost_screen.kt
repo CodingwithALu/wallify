@@ -11,9 +11,8 @@ sealed class Screen(val route: String) {
     object ProductDetails : Screen("product_details")
 }
 
-// Tách routesToHideBottomBar ra ngoài companion object để tránh lỗi khởi tạo
 val routesToHideBottomBar = listOf(
-    "onboarding",
+    Screen.OnBoarding.route,
     "product_list",
     "product_details",
     "setting"

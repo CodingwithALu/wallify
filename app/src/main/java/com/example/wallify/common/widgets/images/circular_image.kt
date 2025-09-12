@@ -30,25 +30,16 @@ import com.example.wallify.utlis.helpers.THelperFunctions
 fun TCircularImage(
     modifier: Modifier = Modifier,
     image: String,
-    width: Dp = 56.dp,
-    height: Dp = 56.dp,
-    padding: Dp = TSizes.sm,
-    fit: ContentScale = ContentScale.None,
-    overlayColor: Color? = null,
-    backgroundColor: Color? = null,
+    fit: ContentScale = ContentScale.Crop,
     isNetworkImage: Boolean = false,
     drawableResId: Int? = null,
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val isDark = THelperFunctions.isDarkMode()
-    val actualBackground = backgroundColor ?: if (isDark) onSurfaceLightHighContrast else onErrorLightHighContrast
     Box(
         modifier = modifier
-            .size(width, height)
-            .background(actualBackground, shape = CircleShape)
             .clip(CircleShape)
-            .padding(padding)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -76,11 +67,8 @@ fun TCircularImage(
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
-                    ),
+                modifier = modifier
+                    .fillMaxSize(),
                 contentScale = fit
             )
         } else {
@@ -96,11 +84,8 @@ fun TCircularImage(
             Image(
                 painter = localPainter,
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (overlayColor != null) Modifier.background(overlayColor.copy(alpha = 0.5f)) else Modifier
-                    ),
+                modifier = modifier
+                    .fillMaxSize(),
                 contentScale = fit
             )
         }

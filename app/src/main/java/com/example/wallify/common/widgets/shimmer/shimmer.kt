@@ -14,10 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.isSystemInDarkTheme
+import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun TShimmerEffect(
     modifier: Modifier = Modifier,
+    clipSize: Dp = TSizes.lg,
     color: Color? = null
 ) {
     val dark = isSystemInDarkTheme()
@@ -42,6 +44,8 @@ fun TShimmerEffect(
     )
     Box(
         modifier = modifier
+            .clip(RoundedCornerShape(clipSize))
             .background(brush)
+
     )
 }

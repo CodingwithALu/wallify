@@ -3,6 +3,7 @@ package com.example.wallify.navigation
 import SettingScreen
 import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
 import StreakScreen
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import com.example.wallify.feature.wallify.home.model.Image
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -76,9 +78,9 @@ fun MainNavigation(navController: NavHostController) {
             SettingScreen(navController = navController)
         }
         // allProduct
-        composable(Screen.ProductList.route) { backStackEntry ->
+        composable("${Screen.ProductList.route}/{item}") { backStackEntry ->
             val categoryJson = backStackEntry.arguments?.getString("item")
-            val item = Gson().fromJson(categoryJson, Category::class.java)
+            val item = Gson().fromJson(categoryJson, Image::class.java)
             AllProductScreen(item.title, navController)
         }
         // ProductDetails

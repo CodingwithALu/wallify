@@ -1,11 +1,16 @@
 package com.example.wallify.feature.wallify.home.repository
 
+import com.example.wallify.feature.wallify.home.model.Banner
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.feature.wallify.home.model.Category
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface CategoryApi {
+interface HomeApi {
+    // banner
+    @GET("banners")
+    suspend fun getBanners(): List<Banner>
+
     @GET("categories")
     suspend fun getCategories(): List<Category>
 
@@ -16,9 +21,13 @@ interface CategoryApi {
     suspend fun getAllImages(): List<Image>
 }
 
-class CategoryRepository(
-    private val api: CategoryApi
+class HomeRepository(
+    private val api: HomeApi
 ) {
+    // banner
+    suspend fun fetchBanners(): List<Banner> {
+        return api.getBanners()
+    }
     suspend fun fetchCategories(): List<Category> {
         return api.getCategories()
     }

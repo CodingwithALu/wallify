@@ -33,12 +33,7 @@ fun TVerticalImageText(
     ) {
         TCircularImage(
             image = image,
-            isNetworkImage = isNetworkImage,
-            padding = TSizes.sm,
-            backgroundColor = backgroundColor,
-            fit = ContentScale.FillWidth,
-            width = imageSize,
-            height = imageSize
+            isNetworkImage = isNetworkImage
         )
         Spacer(modifier = Modifier.height(TSizes.spaceBtwItems / 2))
         Box(
