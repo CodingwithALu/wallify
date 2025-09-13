@@ -1,11 +1,9 @@
 package com.example.wallify.common.widgets.products
 
-import TRoundedImage
-import android.net.Uri
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import com.example.wallify.common.widgets.images.TRoundedImage
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,31 +21,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import com.example.core_model.ProductModel
-import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.R
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
-import com.example.wallify.utlis.route.Screen
-import com.google.gson.Gson
 
 @Composable
 fun WProductCardVertical(
     item: Image,
     onclick: (Image) -> Unit = {},
 ){
-    Box(modifier = Modifier.height(280.dp).width(80.dp)) {
+    Box(modifier = Modifier
+        .height(280.dp)
+        .width(80.dp)
+        .background(Color.Black)) {
         TRoundedImage(
             imageUrl = item.url,
             isNetworkImage = true,
             onPressed = {
                 onclick(item)
             },
-            padding = TSizes.xs/2,
-            applyImageRadius = true,
-            fit = ContentScale.Crop
+            fit = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(TSizes.xs / 2)
         )
             IconButton(
                 onClick = {  },

@@ -20,11 +20,12 @@ class ProductViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val networkManager: NetworkManager
 ) : ViewModel() {
+    // related image
     private val _allImages = MutableStateFlow<List<Image>>(emptyList())
     val allImages: StateFlow<List<Image>> = _allImages
     var isLoading by mutableStateOf(false)
         private set
-
+    //
     fun fetchRelatedImages(imageId: Int) {
         viewModelScope.launch {
             isLoading = true
@@ -38,7 +39,6 @@ class ProductViewModel @Inject constructor(
                     isLoading = false
                 }
             } else {
-                // Handle no internet connection scenario
                 isLoading = false
             }
         }

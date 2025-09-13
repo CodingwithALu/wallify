@@ -1,5 +1,6 @@
 package com.example.wallify.feature.wallify.product.all_product
 
+import BottomSheetSet
 import CenterGripButton
 import ProductVerticalEffect
 import android.annotation.SuppressLint
@@ -59,6 +60,7 @@ fun AllProductScreen(
     val animatedAlpha by animateFloatAsState(targetValue = alpha)
     val coroutineScope = rememberCoroutineScope()
     var showImage by remember { mutableStateOf(false) }
+    // BottomSheet
     LaunchedEffect(animatedAlpha) {
         if (animatedAlpha < 0.01f) {
             listState.animateScrollToItem(3)
@@ -111,6 +113,8 @@ fun AllProductScreen(
             if (!showImage) {
                 item(span = { GridItemSpan(3) }) {
                     ButtonRow(
+                        item = images,
+                        navController = navController,
                         animatedAlpha = animatedAlpha
                     )
                 }

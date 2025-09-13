@@ -3,7 +3,6 @@ package com.example.wallify.navigation
 import SettingScreen
 import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
 import StreakScreen
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -13,12 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.core_model.Category
-import com.example.core_model.ProductModel
 import com.example.wallify.feature.authentication.screen.onboarding.OnBoardingScreen
 import com.example.wallify.feature.wallify.collections.CollectionScreen
 import com.example.wallify.feature.wallify.favorites.FavoritesScreen
-import com.example.wallify.feature.wallify.product.product_details.ProductDetailsScreen
+import com.example.wallify.feature.wallify.product.product_set_wallpaper.ProductSetsScreen
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,11 +82,11 @@ fun MainNavigation(navController: NavHostController) {
                 item,
                 navController)
         }
-        // ProductDetails
-        composable("${Screen.ProductDetails.route}/{items}"){ backStackEntry ->
-            val product = backStackEntry.arguments?.getString("items")
-            val items = Gson().fromJson(product, ProductModel::class.java)
-            ProductDetailsScreen(items, navController)
+        // ProductSets
+        composable("${Screen.ProductDetails.route}/{item}"){ backStackEntry ->
+            val product = backStackEntry.arguments?.getString("item")
+            val items = Gson().fromJson(product, Image::class.java)
+            ProductSetsScreen(items, navController)
         }
     }
 }

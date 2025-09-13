@@ -39,7 +39,6 @@ import com.example.wallify.utlis.constants.TSizes
 @Composable
 fun BottomAppBarr(
     showBar: Boolean = false,
-    onCenterClick: () -> Unit = {},
     navController: NavController
 ) {
     val navItems = listOf(

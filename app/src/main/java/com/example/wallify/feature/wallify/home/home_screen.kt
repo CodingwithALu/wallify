@@ -42,6 +42,7 @@ fun HomeScreen(
     val imagesByCategory by viewModel.imagesByCategory.collectAsState()
     val isLoading = viewModel.isLoading
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    // show pager
     val pagerState = rememberPagerState(pageCount = { categories.size })
     var showTopBar by rememberSaveable { mutableStateOf(true) }
     var showBottomBar by rememberSaveable { mutableStateOf(false) }

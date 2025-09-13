@@ -1,7 +1,7 @@
 package com.example.wallify.feature.personalization.setting
 
 import TCircularImage
-import TRoundedImage
+import com.example.wallify.common.widgets.images.TRoundedImage
 import WTitleItems
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
