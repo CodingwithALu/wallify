@@ -1,6 +1,6 @@
 package com.example.wallify.feature.wallify.home
 
-import ImageMasonryList
+import com.example.wallify.feature.wallify.home.widgets.ImageMasonryList
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,7 +31,6 @@ import com.example.wallify.feature.wallify.home.viewmodel.HomeViewModel
 import com.example.wallify.feature.wallify.home.widgets.TAppbarHome
 import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.navigation.BottomAppBarr
-import com.example.wallify.navigation.MainNavigation
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable

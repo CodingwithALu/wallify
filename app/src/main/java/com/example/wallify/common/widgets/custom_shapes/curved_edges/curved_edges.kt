@@ -15,16 +15,15 @@ object TCustomCurvedEdges : Shape {
     ): Outline {
         val path = Path().apply {
             lineTo(0f, size.height)
-
-            quadraticBezierTo(
+            quadraticTo(
                 0f, size.height - 20f,
                 30f, size.height - 20f
             )
-            quadraticBezierTo(
+            quadraticTo(
                 0f, size.height - 20f,
                 size.width - 30f, size.height - 20f
             )
-            quadraticBezierTo(
+            quadraticTo(
                 size.width, size.height - 20f,
                 size.width, size.height
             )
