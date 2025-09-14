@@ -52,7 +52,6 @@ fun ProductSetsScreen(
             getBitmapFromUrl(context, items.url)
         }
     }
-
     Scaffold(
         topBar = {
             if (showBox){

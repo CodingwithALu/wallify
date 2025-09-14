@@ -74,7 +74,7 @@ fun TRoundedImage(
                 painter = localPainter,
                 contentDescription = null,
                 contentScale = fit,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }

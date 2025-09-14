@@ -1,6 +1,7 @@
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,8 +13,8 @@ import com.example.wallify.feature.personalization.setting.SignInGoogle
 @Composable
 fun SettingScreen(
     navController: NavController
-){
-    Scaffold (
+) {
+    Scaffold(
         topBar = {
             WAppBarCenter(
                 title = {
@@ -27,21 +28,27 @@ fun SettingScreen(
                 }
             )
         }
-    ) {innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)
-            .fillMaxSize()) {
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
             // profile
-            SignInGoogle()
+            item {
+                SignInGoogle()
+            }
             // Wallify Pro
-            SettingItem(
-                title = "Wallify Pro",
-                subtitle = "Unlock all features",
-                imageItem = R.drawable.public_01,
-                onClickItem = {
-
-                },
-                showBackground = true
-            )
+            items (10) {
+                SettingItem(
+                    title = "Wallify Pro",
+                    subtitle = "Unlock all features",
+                    imageItem = R.drawable.flash,
+                    onClickItem = {
+                    },
+                    showBackground = true
+                )
+            }
             // List function
 
         }

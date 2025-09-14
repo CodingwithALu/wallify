@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.streak.StreakListScreen
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -87,6 +88,12 @@ fun MainNavigation(navController: NavHostController) {
             val product = backStackEntry.arguments?.getString("item")
             val items = Gson().fromJson(product, Image::class.java)
             ProductSetsScreen(items, navController)
+        }
+        composable("${Screen.StreakList.route}/{item}"){ backStackEntry ->
+            val product = backStackEntry.arguments?.getString("item")
+            val items = Gson().fromJson(product, Image::class.java)
+            StreakListScreen(items,
+                navController = navController)
         }
     }
 }

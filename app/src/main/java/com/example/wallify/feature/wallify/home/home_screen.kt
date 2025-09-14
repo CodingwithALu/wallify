@@ -32,6 +32,7 @@ import com.example.wallify.feature.wallify.home.widgets.TAppbarHome
 import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.constants.TSizes
+import com.example.wallify.utlis.route.Screen
 
 @Composable
 fun HomeScreen(
@@ -84,7 +85,10 @@ fun HomeScreen(
                     TAppbarHome(
                         modifier = Modifier
                             .height(32.dp)
-                            .width(32.dp)
+                            .width(32.dp),
+                        onAvatarClick = {
+                            navController.navigate(Screen.Setting.route)
+                        }
                     )
                 },
                 showTopBar = showTopBar,

@@ -93,10 +93,6 @@ fun BottomAppBarr(
                                     .weight(1f)
                                     .clickable {
                                         selectedIndex = index
-                                        Log.d(
-                                            "Navigation",
-                                            "Click vào: ${item.label}, selectedIndex: $selectedIndex"
-                                        )
                                         navController.navigate(item.label)
                                     }
                             ) {

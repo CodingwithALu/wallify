@@ -30,13 +30,13 @@ fun WAppBarCenter(
 ) {
     // kotlin
     CenterAlignedTopAppBar(
-        modifier = modifier.padding(horizontal = TSizes.md)
+        modifier = modifier.padding(horizontal = TSizes.xs)
             .height(56.dp),
         navigationIcon = {
             when {
                 showBackArrow -> {
                     Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_32dp),
+                        painter = painterResource(R.drawable.chevron_back),
                         contentDescription = "Back",
                         modifier = Modifier.clickable{
                             leadingOnPressed?.invoke()
