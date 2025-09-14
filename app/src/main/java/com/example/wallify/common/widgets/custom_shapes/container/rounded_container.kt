@@ -20,7 +20,7 @@ fun TRoundedContainer(
     modifier: Modifier = Modifier,
     width: Dp? = null,
     height: Dp? = null,
-    radius: Dp = TSizes.lg,
+    radius: Dp = TSizes.md,
     showBorder: Boolean = false,
     borderColor: Color = onSurfaceDark,
     backgroundColor: Color = onBackgroundDark,

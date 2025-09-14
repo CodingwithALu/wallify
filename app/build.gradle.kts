@@ -75,4 +75,5 @@ dependencies {
     implementation(libs.retrofit)
     // Gson Converter for Retrofit
     implementation(libs.converter.gson)
+    implementation(libs.androidx.datastore.preferences)
 }

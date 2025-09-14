@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +32,8 @@ fun OnBoardingPage(imageRes: Int, title: String, subTitle: String) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Image(painter = painterResource(imageRes), contentDescription = null)
+        Image(painter = painterResource(imageRes), contentDescription = null,
+            contentScale = ContentScale.Crop)
         Column (
             modifier = Modifier.fillMaxSize()
                 .padding(horizontal = TSizes.defaultSpace),

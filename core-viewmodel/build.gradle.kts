@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     // OkHttp cho HTTP requests
     implementation(libs.okhttp)
+    implementation(libs.gson)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.play.services.auth)
     implementation(libs.androidx.datastore.preferences)

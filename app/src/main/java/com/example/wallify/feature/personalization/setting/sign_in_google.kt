@@ -1,7 +1,7 @@
 package com.example.wallify.feature.personalization.setting
 
 import TCircularImage
-import TRoundedImage
+import com.example.wallify.common.widgets.images.TRoundedImage
 import WTitleItems
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,12 +19,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.core_viewmodel.controller.authentiacations.LoginViewModel
+import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
 import com.example.wallify.R
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
@@ -35,7 +36,7 @@ import com.google.android.gms.common.api.ApiException
 
 @Composable
 fun SignInGoogle(
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val gso = Builder(DEFAULT_SIGN_IN)
@@ -44,7 +45,6 @@ fun SignInGoogle(
         .requestServerAuthCode(context.getString(R.string.default_web_client_id))
         .build()
     val googleSignInClient = GoogleSignIn.getClient(context, gso)
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -57,13 +57,12 @@ fun SignInGoogle(
             val userName = account.displayName
             val email = account.email
             viewModel.loginWithGoogle(
-                context = context,
                 idToken = idToken ?: "",
                 accessToken = accessToken ?: "",
                 userName = userName ?: "",
                 email = email ?: "",
                 avatarUrl = avatarUrl ?: ""
-            ){
+            ) {
 
             }
         } catch (e: Exception) {
@@ -72,9 +71,6 @@ fun SignInGoogle(
         }
     }
     val googleLoginInfo by viewModel.googleLoginInfo.collectAsState()
-    LaunchedEffect(Unit) {
-        viewModel.restoreGoogleLoginInfo(context)
-    }
     TRoundedContainer(
         modifier = Modifier
             .aspectRatio(1.6f)
@@ -87,16 +83,20 @@ fun SignInGoogle(
             ) {
                 TRoundedImage(
                     drawableResId = R.drawable.wallhaven_o53v3m,
-                    fit = ContentScale.Crop
+                    fit = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
                 )
-                if (googleLoginInfo.isLoggedIn){
+                if (googleLoginInfo.isLoggedIn) {
                     TCircularImage(
                         image = viewModel.userAvatars,
                         isNetworkImage = true,
                         fit = ContentScale.Crop,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
-                            .padding(vertical = TSizes.sm)
+                            .padding(vertical = TSizes.xs)
+                            .height(56.dp)
+                            .width(56.dp)
                     )
                     WTitleItems(
                         title = viewModel.userNames,
@@ -104,22 +104,25 @@ fun SignInGoogle(
                     )
                     TSearchContainer(
                         onTap = {
-                            viewModel.logout(context){}
+                            viewModel.logout()
                         },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .height(60.dp)
                             .padding(bottom = TSizes.sm),
-                        text = "Log out"
+                        text = "Log out",
+                        textColor = Color.Black
                     )
                 } else {
                     TCircularImage(
-                        drawableResId = R.drawable.avater_profile,
+                        drawableResId = R.drawable.person_circle_sharp,
                         image = "",
                         fit = ContentScale.Crop,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                             .padding(vertical = TSizes.sm)
+                            .height(56.dp)
+                            .width(56.dp)
                     )
                     WTitleItems(
                         title = "Save & Sync Your Favorites",
@@ -143,7 +146,8 @@ fun SignInGoogle(
                                     .height(32.dp)
                             )
                         },
-                        text = "Sign in with Google"
+                        text = "Sign in with Google",
+                        textColor = Color.Black,
                     )
                 }
             }

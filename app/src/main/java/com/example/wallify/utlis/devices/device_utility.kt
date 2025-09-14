@@ -1,5 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.wallify.utlis.devices
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
@@ -73,12 +76,14 @@ object TDeviceUtils {
     }
 
     // Get the status bar height in pixels
+    @SuppressLint("InternalInsetResource")
     fun getStatusBarHeight(context: Context): Int {
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
         return if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId) else 0
     }
 
     // Get the navigation bar height in pixels
+    @SuppressLint("InternalInsetResource")
     fun getNavigationBarHeight(context: Context): Int {
         val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
         return if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId) else 0

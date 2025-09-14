@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.wallify.R
 import com.example.wallify.common.widgets.shimmer.TShimmerEffect
 import com.example.wallify.ui.theme.onErrorLightHighContrast
 import com.example.wallify.ui.theme.onSurfaceLightHighContrast
@@ -54,12 +55,14 @@ fun TCircularImage(
                 is AsyncImagePainter.State.Loading -> {
                     TShimmerEffect()
                 }
+
                 is AsyncImagePainter.State.Error -> {
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Image error"
                     )
                 }
+
                 else -> {
 
                 }

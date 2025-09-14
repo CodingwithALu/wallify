@@ -1,3 +1,6 @@
+package com.example.wallify.feature.wallify.home.widgets
+
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,6 +29,7 @@ import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 
 
+@SuppressLint("FrequentlyChangingValue")
 @Composable
 fun ImageMasonryList(categories: List<Image>,
                      onScroll: (isScrollingUp: Boolean) -> Unit,

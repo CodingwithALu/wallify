@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.TextUnit
@@ -31,7 +32,7 @@ fun TSearchContainer(
     modifier: Modifier = Modifier,
     icon: @Composable (() -> Unit)? = null,
     showBackground: Boolean = true,
-    showBorder: Boolean = true,
+    showBorder: Boolean = false,
     onTap: (() -> Unit)? = null,
     paddingHorizontal: Dp = TSizes.defaultSpace,
     containerPadding: Dp = TSizes.md,
@@ -72,19 +73,14 @@ fun TSearchContainer(
         ) {
             if (icon != null) {
                 icon()
-            } else {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search",
-                    tint = textColor
-                )
             }
-            Spacer(modifier = Modifier.width(TSizes.spaceBtwItems))
-            Text(
-                text = text,
-                color = textColor,
-                fontSize = fontSize
-            )
         }
+        Spacer(modifier = Modifier.width(TSizes.spaceBtwItems))
+        Text(
+            text = text,
+            color = textColor,
+            fontSize = fontSize,
+            textAlign = TextAlign.Center
+        )
     }
 }

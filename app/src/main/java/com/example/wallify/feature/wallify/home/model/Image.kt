@@ -14,7 +14,9 @@ data class Image(
     val upload_date: Date,
     val is_premium: Int,
     val id_cate: Int,
-    val id_user: Int
+    val id_user: Int,
+    val streak: Int? = null,
+    val price: Int? = null
 
 )
 
