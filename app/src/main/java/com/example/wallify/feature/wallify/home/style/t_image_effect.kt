@@ -1,5 +1,6 @@
 package com.example.wallify.common.widgets.shimmer
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.wallify.utlis.constants.TSizes
 
+@SuppressLint("FrequentlyChangingValue")
 @Composable
 fun TImageVerticalEffect(
     onScroll: (isScrollingUp: Boolean) -> Unit

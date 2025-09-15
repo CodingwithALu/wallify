@@ -27,7 +27,7 @@ fun StreakItemScreen(
             fit = ContentScale.Crop,
             modifier = Modifier
                 .clip(RoundedCornerShape(TSizes.md))
-                .padding(TSizes.xs / 4),
+                .padding(TSizes.xs / 2),
             onPressed = {
                 onClick()
             }

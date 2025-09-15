@@ -62,9 +62,9 @@ fun WProductCardVertical(
                 .size(28.dp)
         ) {
             Icon(
-                painter = painterResource(R.drawable.favorite),
+                painter = painterResource(R.drawable.heart),
                 contentDescription = "favorite",
-                tint = if (isFavorite) Color.Red else Color.White
+                tint = if (isFavorite) Color.White else Color.Gray,
             )
         }
         Text(

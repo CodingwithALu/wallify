@@ -102,7 +102,8 @@ val AppTypography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.Medium,
-        fontSize = 10.sp
-    )
+        fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
+        fontSize = 14.sp
+    ),
 )

@@ -70,7 +70,9 @@ fun MainNavigation(navController: NavHostController) {
             CollectionScreen(navController = navController)
         }
         composable(Screen.Favorite.route){
-            FavoritesScreen()
+            FavoritesScreen(
+                navController
+            )
         }
         composable(Screen.Setting.route){
             SettingScreen(navController = navController)

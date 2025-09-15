@@ -43,9 +43,9 @@ fun BottomAppBarr(
 ) {
     val navItems = listOf(
         BottomNavItem(Screen.Home.route, icon = null, imageRes = R.drawable.home),
-        BottomNavItem(Screen.Streak.route, icon = null, imageRes = R.drawable.public_01),
-        BottomNavItem(Screen.Collection.route, icon = null, imageRes = R.drawable.cards_star),
-        BottomNavItem(Screen.Favorite.route, icon = null, imageRes = R.drawable.favorite)
+        BottomNavItem(Screen.Streak.route, icon = null, imageRes = R.drawable.flash),
+        BottomNavItem(Screen.Collection.route, icon = null, imageRes = R.drawable.layers),
+        BottomNavItem(Screen.Favorite.route, icon = null, imageRes = R.drawable.heart)
     )
     var selectedIndex by remember {
         mutableIntStateOf(0)
@@ -72,7 +72,7 @@ fun BottomAppBarr(
             BottomAppBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
+                    .height(96.dp)
                     .clip(RoundedCornerShape(TSizes.lg)),
                 containerColor = Color.Transparent,
                 tonalElevation = 0.dp
@@ -82,7 +82,8 @@ fun BottomAppBarr(
                         Modifier
                             .fillMaxWidth()
                             .height(64.dp)
-                            .background(Color.Transparent),
+                            .background(Color.Transparent)
+                            .align (Alignment.Top),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
@@ -91,6 +92,7 @@ fun BottomAppBarr(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .weight(1f)
+                                    .align(Alignment.Top)
                                     .clickable {
                                         selectedIndex = index
                                         navController.navigate(item.label)

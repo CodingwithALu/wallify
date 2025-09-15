@@ -22,8 +22,7 @@ fun CenterGripButton(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(24.dp)
-            .clickable { onClick() },
+            .height(24.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
@@ -31,7 +30,11 @@ fun CenterGripButton(
                 .offset(y = 14.dp)
                 .size(width = 48.dp, height = 18.dp)
                 .shadow(elevation = 4.dp, shape = RoundedCornerShape(1.dp))
-                .background(Color(0xFF23202E).copy(alpha = alpha), shape = RoundedCornerShape(12.dp)),
+                .background(
+                    Color(0xFF23202E).copy(alpha = alpha),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .clickable { onClick() },
             contentAlignment = Alignment.TopCenter
         ) {
             Icon(

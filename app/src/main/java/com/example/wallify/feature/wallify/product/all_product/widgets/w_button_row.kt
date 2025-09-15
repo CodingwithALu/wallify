@@ -18,8 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.R
+import com.example.wallify.feature.wallify.favorites.FavoritesViewModel
 import com.example.wallify.feature.wallify.home.model.Image
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +35,10 @@ fun ButtonRow(
     navController: NavController,
     animatedAlpha: Float = 1f,
 ) {
+    val viewModel: FavoritesViewModel = hiltViewModel()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val favorites by viewModel.favorites.collectAsState()
+    val isFavorite = favorites.any { it.id == item.id }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,28 +57,31 @@ fun ButtonRow(
                 downloadImage(item.url, navController)
             }) {
                 Icon(
-                    painter = painterResource(R.drawable.download_24dp),
+                    painter = painterResource(R.drawable.elements_down),
                     contentDescription = "Download",
                     tint = Color.White.copy(alpha = animatedAlpha)
                 )
             }
             IconButton(onClick = {}) {
                 Icon(
-                    painter = painterResource(R.drawable.share_24dp),
+                    painter = painterResource(R.drawable.share_54dp),
                     contentDescription = "Share",
                     tint = Color.White.copy(alpha = animatedAlpha)
                 )
             }
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                if (isFavorite) viewModel.removeFavorite(item)
+                else viewModel.saveFavorite(item)
+            }) {
                 Icon(
-                    painter = painterResource(R.drawable.thumb_down_24dp),
+                    painter = painterResource(R.drawable.heart),
                     contentDescription = "Dislike",
-                    tint = Color.White.copy(alpha = animatedAlpha)
+                    tint = if (isFavorite) Color.White.copy(alpha = animatedAlpha) else Color.Gray.copy(alpha = animatedAlpha)
                 )
             }
             IconButton(onClick = { showBottomSheet = true }) {
                 Icon(
-                    painter = painterResource(R.drawable.wallpaper_24dp),
+                    painter = painterResource(R.drawable.wallpaper_slideshow_54dp),
                     contentDescription = "Set Wallpaper",
                     tint = Color.White.copy(alpha = animatedAlpha)
                 )
@@ -81,7 +89,7 @@ fun ButtonRow(
         }
     }
     AnimatedVisibility(
-            visible = false,
+        visible = false,
     enter = slideInVertically(initialOffsetY = { -it }),
     exit = slideOutVertically(targetOffsetY = { -it }),
     ) {

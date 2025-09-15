@@ -31,13 +31,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.wallify.common.widgets.appbar.TAppBar
 import com.example.wallify.common.widgets.products.WProductCardVertical
+import com.example.wallify.common.widgets.shimmer.AnimationLoader
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.feature.wallify.product.all_product.widgets.ButtonRow
 import com.example.wallify.feature.wallify.product.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 import java.lang.Float.min
+import com.example.wallify.R
 
-@SuppressLint("FrequentlyChangingValue")
+@SuppressLint("FrequentlyChangingValue", "ResourceType")
 @Composable
 fun AllProductScreen(
     item: Image,
@@ -57,7 +59,13 @@ fun AllProductScreen(
     } else {
         0f
     }
+    val alphaTopBar: Float = if (listState.firstVisibleItemIndex == lastPosition.value.first) {
+        0f + min(0f, listState.firstVisibleItemScrollOffset / fadeOutOffset.toFloat())
+    } else {
+        1f
+    }
     val animatedAlpha by animateFloatAsState(targetValue = alpha)
+    val animatedAlphaTopBar by animateFloatAsState(targetValue = alphaTopBar)
     val coroutineScope = rememberCoroutineScope()
     var showImage by remember { mutableStateOf(false) }
     // BottomSheet
@@ -82,6 +90,7 @@ fun AllProductScreen(
                     leadingOnPressed = {
                         navController.popBackStack()
                     },
+                    animatedAlpha = animatedAlphaTopBar
                 )
             }
         }
@@ -127,17 +136,26 @@ fun AllProductScreen(
                             }
                         })
                 }
-                if (isLoading || allImages.isEmpty()) {
-                    items(9) {
-                        ProductVerticalEffect()
+                when {
+                    isLoading -> {
+                        items(9) {
+                            ProductVerticalEffect()
+                        }
                     }
-                } else {
-                    items(allImages) { product ->
-                        WProductCardVertical(
-                            product,
-                            onclick = { item ->
-                                images = item
-                            })
+                    allImages.isEmpty() ->
+                        item(span = { GridItemSpan(3) }) {
+                            AnimationLoader(
+                                resIdRes = R.raw.empty,
+                            )
+                        }
+                    else -> {
+                        items(allImages) { product ->
+                            WProductCardVertical(
+                                product,
+                                onclick = { item ->
+                                    images = item
+                                })
+                        }
                     }
                 }
             }

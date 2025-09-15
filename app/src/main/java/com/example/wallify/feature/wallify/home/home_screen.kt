@@ -1,5 +1,6 @@
 package com.example.wallify.feature.wallify.home
 
+import android.annotation.SuppressLint
 import com.example.wallify.feature.wallify.home.widgets.ImageMasonryList
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.common.widgets.appbar.TTabBar
+import com.example.wallify.common.widgets.shimmer.AnimationLoader
 import com.example.wallify.common.widgets.shimmer.TImageVerticalEffect
 import com.example.wallify.common.widgets.shimmer.TabRowEffect
 import com.example.wallify.feature.wallify.home.viewmodel.HomeViewModel
@@ -33,7 +35,9 @@ import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
+import com.example.wallify.R
 
+@SuppressLint("ResourceType")
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -83,12 +87,10 @@ fun HomeScreen(
             VerticalTopBar(
                 topBar = {
                     TAppbarHome(
-                        modifier = Modifier
-                            .height(32.dp)
-                            .width(32.dp),
                         onAvatarClick = {
                             navController.navigate(Screen.Setting.route)
-                        }
+                        },
+                        showNotification = true
                     )
                 },
                 showTopBar = showTopBar,
@@ -126,22 +128,30 @@ fun HomeScreen(
                 ) { page ->
                     val category = categories[page]
                     val images = imagesByCategory[category.id_cate] ?: emptyList()
-                    if (images.isEmpty() || isLoading) {
-                        TImageVerticalEffect(
-                            onScroll = { isScrollingUp ->
-                                showTopBar = isScrollingUp
-                                showBottomBar = !isScrollingUp
-                            }
-                        )
-                    } else {
-                        ImageMasonryList(
-                            categories = images,
-                            navController = navController,
-                            onScroll = { isScrollingUp ->
-                                showTopBar = isScrollingUp
-                                showBottomBar = !isScrollingUp
-                            }
-                        )
+                    when{
+                        isLoading -> {
+                            TImageVerticalEffect(
+                                onScroll = { isScrollingUp ->
+                                    showTopBar = isScrollingUp
+                                    showBottomBar = !isScrollingUp
+                                }
+                            )
+                        }
+                        images.isEmpty() -> {
+                            AnimationLoader(
+                                resIdRes = R.raw.empty
+                            )
+                        }
+                        else -> {
+                            ImageMasonryList(
+                                categories = images,
+                                navController = navController,
+                                onScroll = { isScrollingUp ->
+                                    showTopBar = isScrollingUp
+                                    showBottomBar = !isScrollingUp
+                                }
+                            )
+                        }
                     }
                 }
             }

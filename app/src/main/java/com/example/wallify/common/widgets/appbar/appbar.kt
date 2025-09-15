@@ -1,7 +1,9 @@
 package com.example.wallify.common.widgets.appbar
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,21 +29,21 @@ fun TAppBar(
     leadingIcon: ImageVector? = null,
     actions: List<@Composable RowScope.() -> Unit>? = null,
     leadingOnPressed: (() -> Unit)? = null,
-    horizontalPadding: Dp = TSizes.sm,
+    animatedAlpha: Float = 0f,
 ) {
+    val dark = isSystemInDarkTheme()
     TopAppBar(
         modifier = Modifier
-            .height(56.dp)
-            .padding(horizontal = horizontalPadding),
+            .height(50.dp),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent
+            containerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(animatedAlpha),
+            scrolledContainerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(animatedAlpha)
         ),
         navigationIcon = {
             when {
                 showBackArrow -> {
                     Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_32dp),
+                        painter = painterResource(R.drawable.chevron_back),
                         contentDescription = "Back",
                         modifier = Modifier.clickable {
                             leadingOnPressed?.invoke()
