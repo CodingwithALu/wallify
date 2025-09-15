@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.core_viewmodel.repository.AuthenticationRepository
 import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.data_store.DataStoreUser
+import com.example.core_viewmodel.utils.data_store.OnboardingDataStore
 import com.example.core_viewmodel.utils.helper.NetworkManager
 import dagger.Module
 import dagger.Provides
@@ -36,5 +37,10 @@ object AppModule {
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStoreUser {
         return DataStoreUser(context)
+    }
+    @Provides
+    @Singleton
+    fun provideOnboardingDataStore(@ApplicationContext context: Context): OnboardingDataStore {
+        return OnboardingDataStore(context)
     }
 }

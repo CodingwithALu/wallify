@@ -85,7 +85,7 @@ fun SignInGoogle(
                 contentAlignment = Alignment.Center
             ) {
                 TRoundedImage(
-                    drawableResId = R.drawable.wallhaven_d8gygl,
+                    drawableResId = R.drawable.wallhaven_w5yw3r,
                     fit = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -132,7 +132,7 @@ fun SignInGoogle(
                                 )
                             }
                         },
-                        text = if (googleLoginInfo.isLoggedIn) "Log out" else "Sign in with Google",
+                        text = if (googleLoginInfo.isLoggedIn) "Sign out" else "Sign in with Google",
                         textColor = Color.Black
                     )
                 }

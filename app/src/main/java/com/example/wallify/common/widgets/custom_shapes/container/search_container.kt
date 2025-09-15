@@ -55,7 +55,7 @@ fun TSearchContainer(
                 .fillMaxWidth()
                 .background(
                     color = if (showBackground) {
-                        if (dark) backgroundDark.copy(alpha = 0.5f) else backgroundLight.copy(alpha = 0.5f)
+                        if (dark) backgroundDark.copy(alpha = 0.8f) else backgroundLight.copy(alpha = 0.8f)
                     } else Color.Transparent,
                     shape = RoundedCornerShape(borderRadius)
                 )

@@ -48,7 +48,6 @@ fun SettingScreen(
                     imageItem = R.drawable.flash,
                     onClickItem = {
                     },
-                    showBackground = true
                 )
             }
             // List function
@@ -66,7 +65,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "My Uploads",
                     subtitle = "View and manage your uploads",
-                    imageItem = R.drawable.download_24dp,
+                    imageItem = R.drawable.elements_upload,
                     onClickItem = {
                         navController.navigate("my_uploads")
                     }
@@ -86,7 +85,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Download History",
                     subtitle = "View your download history",
-                    imageItem = R.drawable.download,
+                    imageItem = R.drawable.elements_download,
                     onClickItem = {
                         navController.navigate("download_history")
                     }
@@ -96,7 +95,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Sync Favorites",
                     subtitle = "Sync your favorites across devices",
-                    imageItem = R.drawable.heart,
+                    imageItem = R.drawable.sync_38dp,
                     onClickItem = {
                         navController.navigate("app_settings")
                     }
@@ -111,7 +110,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Follow Us",
                     subtitle = "Stay connected with us",
-                    imageItem = R.drawable.share_48dp,
+                    imageItem = R.drawable.view_object_track_38dp,
                     onClickItem = {
                         navController.navigate("app_settings")
                     }
@@ -121,7 +120,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Rate Wallify",
                     subtitle = "Leave a review on the Play Store",
-                    imageItem = R.drawable.share_48dp,
+                    imageItem = R.drawable.star,
                     onClickItem = {
                         navController.navigate("app_settings")
                     }
@@ -131,7 +130,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Help & Support",
                     subtitle = "Get assistance and support",
-                    imageItem = R.drawable.arrow_down_circle,
+                    imageItem = R.drawable.help_38dp,
                     onClickItem = {
                         navController.navigate("app_settings")
                     }
@@ -141,7 +140,7 @@ fun SettingScreen(
                 SettingItem(
                     title = "Privacy Policy",
                     subtitle = "Read our privacy policy",
-                    imageItem = R.drawable.elements,
+                    imageItem = R.drawable.privacy_tip_38dp,
                     onClickItem = {
                         navController.navigate("app_settings")
                     }

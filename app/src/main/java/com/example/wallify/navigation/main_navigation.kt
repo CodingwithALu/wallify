@@ -5,7 +5,6 @@ import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
 import StreakScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import com.example.wallify.feature.wallify.home.HomeScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,35 +19,25 @@ import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
+import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.feature.wallify.streak.StreakListScreen
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
     val onboardingViewModel: OnBoardingViewModel = hiltViewModel()
-    val context = LocalContext.current
     val isFirstTimeState = onboardingViewModel.isFirstTime.collectAsState()
     val isFirstTime = isFirstTimeState.value
-
-    LaunchedEffect(Unit) {
-        onboardingViewModel.loadIsFirstTime(context)
-    }
-
-    // Loading UI khi chưa có dữ liệu
     if (isFirstTime == null) {
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+            FastCircularProgressIndicator()
         }
         return
     }
-
     val startDestination = if (isFirstTime) Screen.OnBoarding.route else Screen.Home.route
-
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.OnBoarding.route) {
             OnBoardingScreen(

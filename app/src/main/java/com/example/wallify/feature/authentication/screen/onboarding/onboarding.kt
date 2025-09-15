@@ -13,10 +13,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wallify.R
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
 import com.example.wallify.feature.authentication.screen.onboarding.widgets.OnBoardingDotNavigation
@@ -31,7 +29,6 @@ fun OnBoardingScreen(
     onSkip: () -> Unit = {},
     viewModel: OnBoardingViewModel
 ){
-    val local = LocalContext.current
     val pageCount = 3
     val currentPage = viewModel.currentPageIndex
     Scaffold {innerPadding ->
@@ -61,7 +58,7 @@ fun OnBoardingScreen(
                     .align(Alignment.TopEnd)
                     .padding(top = 48.dp, end = 24.dp),
                 onSkip = {
-                    viewModel.skipPage(context = local) {
+                    viewModel.skipPage {
                         onSkip()
                     }
 
@@ -86,7 +83,7 @@ fun OnBoardingScreen(
                         .padding(horizontal = 48.dp)
                         .background(color = onBackgroundLight),
                     onClick = {
-                        viewModel.nextPage(context = local) { onSkip() }
+                        viewModel.nextPage { onSkip() }
                     }
                 )
             }
