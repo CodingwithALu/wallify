@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,6 +45,7 @@ import com.example.wallify.common.widgets.images.TRoundedImage
 import com.example.wallify.feature.wallify.home.widgets.TAppbarHome
 import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.feature.wallify.streak.controller.StreakViewModel
+import com.example.wallify.feature.wallify.streak.widgets.CenterFocusedCarousel
 import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
@@ -77,7 +76,7 @@ fun StreakScreen(navController: NavController) {
         if (listState.isScrollInProgress) {
             val isScrollingUp = currentIndex < lastIndex ||
                     (currentIndex == lastIndex && currentOffset < lastOffset)
-            val isScrollingDown = currentIndex < 2
+            val isScrollingDown = currentIndex < 1
             showTopBar = isScrollingDown
             showBottomBar = !isScrollingUp
             lastPosition.value = Pair(currentIndex, currentOffset)
@@ -99,11 +98,7 @@ fun StreakScreen(navController: NavController) {
             if(showTopBar){
                 VerticalTopBar(
                     topBar = {
-                        TAppbarHome(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .width(32.dp)
-                        )
+                        TAppbarHome()
                     },
                     showTopBar = showTopBar,
                     modifier = Modifier.padding(
@@ -115,52 +110,22 @@ fun StreakScreen(navController: NavController) {
                 state = listState,
                 columns = GridCells.Fixed(2),
             ) {
-                // Title
-                item(span = { GridItemSpan(2) }) {
-                    TSectionHeading(
-                        title = "Claim Your Coin",
-                        showActionButton = false,
-                        modifier = Modifier.padding(horizontal = TSizes.xs)
-                            .height(26.dp),
-                        startText = TSizes.xs
-                    )
-                }
                 // coin
                 item(span = { GridItemSpan(2) }) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1.4f)
-                            .padding(horizontal = TSizes.xs)
+                            .padding(horizontal = TSizes.sm)
                             .clip(RoundedCornerShape(TSizes.spaceBtwItems)),
                         contentAlignment = Alignment.Center
                     ) {
-                        TRoundedImage(
-                            drawableResId = R.drawable.wallhaven_y8lqo7,
-                            fit = ContentScale.Crop,
+                        CenterFocusedCarousel(
+                            images = if (streaks.size >= 5) streaks.subList(
+                                0,
+                                5
+                            ) else streaks
                         )
-                        Column(
-                            modifier = Modifier,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Bottom
-                        ) {
-                            Text(
-                                text = "Daily Streak Coins",
-                                fontSize = TSizes.fontSizeLg,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(TSizes.sm))
-                            TSearchContainer(
-                                modifier = Modifier.height(56.dp),
-                                icon = {
-                                    Image(
-                                        painter = painterResource(R.drawable.electric_bolt_48dp),
-                                        contentDescription = "public_01"
-                                    )
-                                },
-                                text = "Watch Ad & Claim 1 Coin",
-                            )
-                        }
                     }
                 }
                 // Streak Collections

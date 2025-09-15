@@ -24,7 +24,7 @@ import com.example.wallify.common.widgets.shimmer.TShimmerEffect
 fun TRoundedImage(
     modifier: Modifier = Modifier,
     imageUrl: String = "",
-    fit: ContentScale = ContentScale.Fit,
+    fit: ContentScale = ContentScale.Crop,
     isNetworkImage: Boolean = false,
     onPressed: (() -> Unit)? = null,
     drawableResId: Int? = null

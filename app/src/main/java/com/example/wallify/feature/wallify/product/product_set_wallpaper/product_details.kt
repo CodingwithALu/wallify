@@ -120,7 +120,7 @@ fun ProductSetsScreen(
                             },
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.lock_56dp),
+                                painter = painterResource(R.drawable.elements_lock),
                                 contentDescription = null
                             )
                         }

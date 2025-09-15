@@ -8,7 +8,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -82,72 +85,55 @@ fun SignInGoogle(
                 contentAlignment = Alignment.Center
             ) {
                 TRoundedImage(
-                    drawableResId = R.drawable.wallhaven_o53v3m,
+                    drawableResId = R.drawable.wallhaven_w5yw3r,
                     fit = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
                 )
-                if (googleLoginInfo.isLoggedIn) {
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = TSizes.defaultSpace)
+                        .fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     TCircularImage(
-                        image = viewModel.userAvatars,
-                        isNetworkImage = true,
+                        image = if (googleLoginInfo.isLoggedIn) viewModel.userAvatars else "",
+                        isNetworkImage = if (googleLoginInfo.isLoggedIn) true else false,
+                        drawableResId = if (googleLoginInfo.isLoggedIn) null else R.drawable.person_circle_sharp,
                         fit = ContentScale.Crop,
                         modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(vertical = TSizes.xs)
                             .height(56.dp)
                             .width(56.dp)
                     )
                     WTitleItems(
-                        title = viewModel.userNames,
-                        subTitle = viewModel.emails
+                        title = if (googleLoginInfo.isLoggedIn) viewModel.userNames else "Save & Sync Your Favorites",
+                        subTitle = if (googleLoginInfo.isLoggedIn) viewModel.emails else "Sign in below to get started"
                     )
+                    Spacer(modifier = Modifier.height(TSizes.lg))
                     TSearchContainer(
                         onTap = {
-                            viewModel.logout()
+                            if (googleLoginInfo.isLoggedIn) {
+                                viewModel.logout()
+                            } else {
+                                val signInIntent = googleSignInClient.signInIntent
+                                launcher.launch(signInIntent)
+                            }
                         },
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .height(60.dp)
-                            .padding(bottom = TSizes.sm),
-                        text = "Log out",
-                        textColor = Color.Black
-                    )
-                } else {
-                    TCircularImage(
-                        drawableResId = R.drawable.person_circle_sharp,
-                        image = "",
-                        fit = ContentScale.Crop,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(vertical = TSizes.sm)
-                            .height(56.dp)
-                            .width(56.dp)
-                    )
-                    WTitleItems(
-                        title = "Save & Sync Your Favorites",
-                        subTitle = "Sign in below to get started"
-                    )
-                    TSearchContainer(
-                        onTap = {
-                            val signInIntent = googleSignInClient.signInIntent
-                            launcher.launch(signInIntent)
-                        },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .height(60.dp)
-                            .padding(bottom = TSizes.sm),
+                            .height(54.dp),
                         icon = {
-                            Image(
-                                painter = painterResource(R.drawable.google_icon),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .width(32.dp)
-                                    .height(32.dp)
-                            )
+                            if (!googleLoginInfo.isLoggedIn) {
+                                Image(
+                                    painter = painterResource(R.drawable.google_icon),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .width(32.dp)
+                                        .height(32.dp)
+                                )
+                            }
                         },
-                        text = "Sign in with Google",
-                        textColor = Color.Black,
+                        text = if (googleLoginInfo.isLoggedIn) "Sign out" else "Sign in with Google",
+                        textColor = Color.Black
                     )
                 }
             }

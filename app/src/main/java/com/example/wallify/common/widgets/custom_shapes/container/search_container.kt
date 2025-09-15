@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,29 +37,25 @@ fun TSearchContainer(
     showBackground: Boolean = true,
     showBorder: Boolean = false,
     onTap: (() -> Unit)? = null,
-    paddingHorizontal: Dp = TSizes.defaultSpace,
     containerPadding: Dp = TSizes.md,
     borderRadius: Dp = TSizes.defaultSpace,
     borderColor: Color = outlineVariantDark,
     backgroundLight: Color = onSurfaceDark,
     backgroundDark: Color = scrimDark,
-    textColor: Color = surfaceBrightDark,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    isDarkMode: Boolean = false,
+    textColor: Color = Color.White,
 ) {
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
+    val dark = isSystemInDarkTheme()
     Box(
         modifier = modifier
             .clickable(enabled = onTap != null) { onTap?.invoke() }
-            .padding(horizontal = paddingHorizontal)
+            .padding(horizontal = TSizes.defaultSpace)
     ) {
         Row(
             modifier = Modifier
-                .width(screenWidth)
+                .fillMaxWidth()
                 .background(
                     color = if (showBackground) {
-                        if (isDarkMode) backgroundDark else backgroundLight
+                        if (dark) backgroundDark.copy(alpha = 0.8f) else backgroundLight.copy(alpha = 0.8f)
                     } else Color.Transparent,
                     shape = RoundedCornerShape(borderRadius)
                 )
@@ -74,13 +73,15 @@ fun TSearchContainer(
             if (icon != null) {
                 icon()
             }
+            Spacer(modifier = Modifier.width(TSizes.sm))
+            Text(
+                text = text,
+                color = textColor,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+                    .fillMaxHeight()
+            )
         }
-        Spacer(modifier = Modifier.width(TSizes.spaceBtwItems))
-        Text(
-            text = text,
-            color = textColor,
-            fontSize = fontSize,
-            textAlign = TextAlign.Center
-        )
     }
 }

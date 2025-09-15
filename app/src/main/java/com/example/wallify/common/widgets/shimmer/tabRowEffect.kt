@@ -16,14 +16,14 @@ import com.example.wallify.utlis.constants.TSizes
 fun TabRowEffect() {
     Row(
         modifier = Modifier.fillMaxWidth()
-            .padding(start = TSizes.lg),
+            .padding(start = TSizes.xs),
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(4) {
             TShimmerEffect(
                 modifier = Modifier.height(32.dp)
                     .weight(1f))
-            if (it < 3) Spacer(modifier = Modifier.width(8.dp))
+            if (it < 3) Spacer(modifier = Modifier.width(14.dp))
         }
     }
 }

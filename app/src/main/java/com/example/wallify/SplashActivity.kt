@@ -1,5 +1,6 @@
 package com.example.wallify
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.wallify.ui.theme.AppTheme
 import com.example.wallify.utlis.constants.TSizes
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

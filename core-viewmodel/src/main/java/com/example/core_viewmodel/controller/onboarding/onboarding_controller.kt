@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.core_viewmodel.utils.data_store.getFirstTime
-import com.example.core_viewmodel.utils.data_store.setFirstTime
+import com.example.core_viewmodel.utils.data_store.OnboardingDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,14 +13,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnBoardingViewModel @Inject constructor(): ViewModel() {
+class OnBoardingViewModel @Inject constructor(
+    private val onboardingDataStore: OnboardingDataStore
+): ViewModel() {
     var currentPageIndex by mutableIntStateOf(0)
         private set
     private val _isFirstTime = MutableStateFlow<Boolean?>(null)
     val isFirstTime: StateFlow<Boolean?> = _isFirstTime.asStateFlow()
-    fun loadIsFirstTime(context: Context) {
+    init {
+        loadIsFirstTime()
+    }
+    fun loadIsFirstTime() {
         viewModelScope.launch {
-            getFirstTime(context).collect {
+            onboardingDataStore.getFirstTime().collect {
                 _isFirstTime.value = it
             }
         }
@@ -34,20 +38,20 @@ class OnBoardingViewModel @Inject constructor(): ViewModel() {
         currentPageIndex = index
     }
 
-    fun nextPage(context: Context, navigateToLogin: () -> Unit) {
+    fun nextPage(navigateToLogin: () -> Unit) {
         if (currentPageIndex == 2) {
             viewModelScope.launch {
-                setFirstTime(context, false)
+                onboardingDataStore.setFirstTime(false)
                 navigateToLogin()
             }
         } else {
             currentPageIndex += 1
         }
     }
-    fun skipPage(context: Context, navigateToLogin: () -> Unit) {
+    fun skipPage(navigateToLogin: () -> Unit) {
         viewModelScope.launch {
             currentPageIndex = 2
-            setFirstTime(context, false)
+            onboardingDataStore.setFirstTime(false)
             navigateToLogin()
         }
     }

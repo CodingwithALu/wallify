@@ -23,7 +23,6 @@ fun TRoundedContainer(
     radius: Dp = TSizes.md,
     showBorder: Boolean = false,
     borderColor: Color = onSurfaceDark,
-    backgroundColor: Color = onBackgroundDark,
     padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable () -> Unit = {},
     onTap: () -> Unit = {}
@@ -32,7 +31,6 @@ fun TRoundedContainer(
         .clickable { onTap() }
         .padding(padding)
         .clip(RoundedCornerShape(radius))
-        .background(backgroundColor)
     if (showBorder) {
         m = m.border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(radius))
     }
