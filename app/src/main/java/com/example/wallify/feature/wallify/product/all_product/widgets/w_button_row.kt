@@ -38,7 +38,7 @@ fun ButtonRow(
     val viewModel: FavoritesViewModel = hiltViewModel()
     var showBottomSheet by remember { mutableStateOf(false) }
     val favorites by viewModel.favorites.collectAsState()
-    val isFavorite = favorites.any { it.id == item.id }
+    val isFavorite = favorites.any { it.id_image == item.id_image }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,7 +54,7 @@ fun ButtonRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {
-                downloadImage(item.url, navController)
+                downloadImage(item.subImage.first().url, navController)
             }) {
                 Icon(
                     painter = painterResource(R.drawable.elements_down),
@@ -140,14 +140,14 @@ fun downloadImage(url: String, navController: NavController) {
                     inputStream.copyTo(outputStream)
                 }
                 launch(Dispatchers.Main) {
-                    Toast.makeText(context, "Tải ảnh thành công!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Image downloaded successfully!", Toast.LENGTH_SHORT).show()
                 }
             } ?: launch(Dispatchers.Main) {
-                Toast.makeText(context, "Lỗi khi lưu ảnh!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to save image!", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             launch(Dispatchers.Main) {
-                Toast.makeText(context, "Lỗi tải ảnh!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to download image!", Toast.LENGTH_SHORT).show()
             }
         }
     }

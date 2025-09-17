@@ -14,7 +14,7 @@ interface HomeApi {
     @GET("categories")
     suspend fun getCategories(): List<Category>
 
-    @GET("images/by-category/{id_cate}")
+    @GET("images/category/{id_cate}")
     suspend fun getImagesByCategory(@Path("id_cate") idCate: Int): List<Image>
 
     @GET("images")

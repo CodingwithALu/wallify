@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,12 +23,14 @@ fun CollectionItemScreen(
         onTap = {
             navController
         },
-        padding = PaddingValues(horizontal = TSizes.spaceBtwItems),
+        padding = PaddingValues(horizontal = TSizes.sm),
         content = {
-            Box (modifier = Modifier,
+            Box (modifier = Modifier
+                .width(280.dp)
+                .height(180.dp),
                 contentAlignment = Alignment.Center) {
                 TRoundedImage(
-                    drawableResId = R.drawable.wallhaven_og33jl,
+                    drawableResId = R.drawable.wallhaven_dg21em,
                     fit = ContentScale.Crop
                 )
                 WTitleItems(
@@ -36,10 +39,12 @@ fun CollectionItemScreen(
                 )
                 if (showPrimary) {
                     TCircularImage(
-                        drawableResId = R.drawable.enhanced_encryption,
+                        drawableResId = R.drawable.lock_56dp,
                         image = "",
                         modifier = Modifier.align(Alignment.BottomEnd)
                             .padding(TSizes.defaultSpace)
+                            .width(48.dp)
+                            .height(48.dp),
                     )
                 }
             }

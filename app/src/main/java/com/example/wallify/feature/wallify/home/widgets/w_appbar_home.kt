@@ -81,8 +81,9 @@ fun TAppbarHome(
                     modifier = Modifier
                         .height(32.dp)
                         .width(32.dp),
-                    image = googleLoginInfo.avatar,
+                    image = if (googleLoginInfo.isLoggedIn) googleLoginInfo.avatar else "",
                     isNetworkImage = googleLoginInfo.isLoggedIn,
+                    drawableResId = if (googleLoginInfo.isLoggedIn) null else R.drawable.person_circle_sharp,
                     onClick = onAvatarClick,
                     fit = ContentScale.Crop
                 )

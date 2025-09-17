@@ -72,7 +72,7 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "HD, ${item.width} x ${item.height} px, ${item.sizeMB} kb",
+                        text = "HD, ${item.subImage.first().width} x ${item.subImage.first().height} px, ${item.subImage.first().sizeMB} kb",
                     )
                 }
             }
@@ -101,7 +101,7 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "4K, ${item.width} x ${item.height} px, ${item.sizeMB} MB",
+                        text = "4K, ${item.subImage.first().width} x ${item.subImage.first().height} px, ${item.subImage.first().sizeMB} MB",
                         modifier = Modifier
                             .fillMaxWidth()
                     )

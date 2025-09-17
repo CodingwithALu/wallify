@@ -36,14 +36,14 @@ fun WProductCardVertical(
     viewModel: FavoritesViewModel = hiltViewModel()
 ){
     val favorites by viewModel.favorites.collectAsState()
-    val isFavorite = favorites.any { it.id == item.id }
+    val isFavorite = favorites.any { it.id_image == item.id_image }
 
     Box(modifier = Modifier
         .height(280.dp)
         .width(80.dp)
         .background(Color.Black)) {
         TRoundedImage(
-            imageUrl = item.url,
+            imageUrl = item.subImage.first().url,
             isNetworkImage = true,
             onPressed = { onclick(item) },
             fit = ContentScale.Crop,

@@ -1,12 +1,11 @@
-import android.R
+package com.example.wallify.feature.personalization.setting.widgets
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
-import com.example.wallify.ui.theme.onBackgroundDark
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
@@ -34,15 +32,16 @@ fun SettingItem(
 ) {
     val dark = isSystemInDarkTheme()
     TRoundedContainer(
-        modifier = Modifier.padding(horizontal = TSizes.lg),
-        onTap = {
-            onClickItem()
-        },
         height = 72.dp,
         content = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        onClickItem()
+                    }
+                    .padding(horizontal = TSizes.lg)
             ) {
                 Image(
                     painter = painterResource(imageItem),

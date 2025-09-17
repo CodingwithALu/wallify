@@ -61,8 +61,6 @@ fun StreakScreen(navController: NavController) {
     // viewModel
     val viewModel: StreakViewModel = hiltViewModel()
     val streaks by viewModel.streak.collectAsState()
-    val streakByPrice by viewModel.streakByPrice.collectAsState()
-    val isLoading = viewModel.isLoading
     LaunchedEffect(
         listState.isScrollInProgress,
         listState.firstVisibleItemIndex,

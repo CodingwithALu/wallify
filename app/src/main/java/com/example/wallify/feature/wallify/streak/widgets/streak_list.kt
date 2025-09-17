@@ -1,4 +1,4 @@
-package com.example.wallify.feature.wallify.streak
+package com.example.wallify.feature.wallify.streak.widgets
 
 import BottomSheetSet
 import StreakItemScreen
@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.core_model.UserModel.Companion.empty
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.feature.wallify.streak.controller.StreakViewModel
 
@@ -33,7 +32,7 @@ fun StreakListScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     var streak by remember { mutableStateOf<Image>(item) }
     LaunchedEffect(item) {
-        viewModel.fetchStreakByPrice(item.price?.toInt() ?: 0)
+        viewModel.fetchStreakByPrice(item.id_point?: 0)
     }
     Scaffold { innerPadding ->
         Column(

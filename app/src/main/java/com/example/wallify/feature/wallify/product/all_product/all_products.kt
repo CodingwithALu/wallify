@@ -4,6 +4,7 @@ import BottomSheetSet
 import CenterGripButton
 import ProductVerticalEffect
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -75,7 +76,8 @@ fun AllProductScreen(
         }
     }
     LaunchedEffect(images) {
-        viewModel.fetchRelatedImages(images.id)
+        Log.d("ProductViewModel", "fetchRelatedImages id: ${images.id_image}")
+        viewModel.fetchRelatedImages(images.id_image)
     }
     Scaffold(
         topBar = {
@@ -96,12 +98,13 @@ fun AllProductScreen(
         }
     ) { innerPadding ->
         AsyncImage(
-            model = images.url,
+            model = images.subImage.first().url,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
         )
+        Log.d("AllProductScreen", "AllProductScreen: ${allImages.size}")
         LazyVerticalGrid(
             state = listState,
             columns = GridCells.Fixed(3),
@@ -151,7 +154,7 @@ fun AllProductScreen(
                     else -> {
                         items(allImages) { product ->
                             WProductCardVertical(
-                                product,
+                                item = product,
                                 onclick = { item ->
                                     images = item
                                 })

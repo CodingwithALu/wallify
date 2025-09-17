@@ -47,7 +47,6 @@ fun TSearchContainer(
     val dark = isSystemInDarkTheme()
     Box(
         modifier = modifier
-            .clickable(enabled = onTap != null) { onTap?.invoke() }
             .padding(horizontal = TSizes.defaultSpace)
     ) {
         Row(
@@ -59,6 +58,7 @@ fun TSearchContainer(
                     } else Color.Transparent,
                     shape = RoundedCornerShape(borderRadius)
                 )
+                .clickable(enabled = onTap != null) { onTap?.invoke() }
                 .then(
                     if (showBorder) Modifier.border(
                         width = 1.dp,

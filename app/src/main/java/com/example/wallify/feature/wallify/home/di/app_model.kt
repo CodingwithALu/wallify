@@ -24,7 +24,7 @@ object HomeModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:3000/")
+            .baseUrl("https://laulu.io.vn/hmoob_store_api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

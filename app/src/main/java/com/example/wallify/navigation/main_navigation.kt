@@ -23,7 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.home.model.Image
-import com.example.wallify.feature.wallify.streak.StreakListScreen
+import com.example.wallify.feature.wallify.streak.widgets.StreakListScreen
 
 @Composable
 fun MainNavigation(navController: NavHostController) {

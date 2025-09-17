@@ -2,13 +2,11 @@ package com.example.wallify.feature.wallify.product.product_set_wallpaper
 
 import WAppBarCenter
 import android.app.WallpaperManager
-import android.content.ContentValues
 import android.graphics.Bitmap
-import android.os.Build
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -28,11 +26,9 @@ import coil.compose.AsyncImage
 import com.example.wallify.R
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.getBitmapFromUrl
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
 
 @Composable
 fun ProductSetsScreen(
@@ -40,6 +36,7 @@ fun ProductSetsScreen(
     navController: NavController,
 ) {
     val context = LocalContext.current
+    val dark = isSystemInDarkTheme()
     var showBox by remember { mutableStateOf(true) }
     val wallpaperManager = WallpaperManager.getInstance(context)
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -47,9 +44,9 @@ fun ProductSetsScreen(
     val scope = rememberCoroutineScope()
 
     // Load bitmap asynchronously
-    LaunchedEffect(items.url) {
+    LaunchedEffect(items.subImage.first().url) {
         bitmap = withContext(Dispatchers.IO) {
-            getBitmapFromUrl(context, items.url)
+            getBitmapFromUrl(context, items.subImage.first().url)
         }
     }
     Scaffold(
@@ -69,7 +66,7 @@ fun ProductSetsScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
-                model = items.url,
+                model = items.subImage.first().url,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -113,7 +110,7 @@ fun ProductSetsScreen(
                                     isLoading = false
                                     Toast.makeText(
                                         context,
-                                        if (result) "Áp dụng ảnh nền màn hình khóa thành công!" else "Lỗi áp dụng ảnh nền",
+                                        if (result) "Lock screen wallpaper applied successfully!" else "Failed to apply lock screen wallpaper.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -121,7 +118,7 @@ fun ProductSetsScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.elements_lock),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                         IconButton(
@@ -144,7 +141,7 @@ fun ProductSetsScreen(
                                     isLoading = false
                                     Toast.makeText(
                                         context,
-                                        if (result) "Áp dụng ảnh nền màn hình chính thành công!" else "Lỗi áp dụng ảnh nền",
+                                        if (result) "Home screen wallpaper applied successfully!" else "Failed to apply home screen wallpaper.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -176,7 +173,7 @@ fun ProductSetsScreen(
                                         isLoading = false
                                         Toast.makeText(
                                             context,
-                                            if (result) "Áp dụng ảnh nền cho cả hai màn hình thành công!" else "Lỗi áp dụng ảnh nền",
+                                            if (result) "Wallpaper applied to both screens successfully!" else "Failed to apply wallpaper to both screens.",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }

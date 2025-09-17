@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface ProductApi {
     // related image
-    @GET("/images/related/{image_id}")
+    @GET("images/related/{image_id}")
     suspend fun getRelatedImages(@Path("image_id") imageId: Int): List<Image>
 }
 class ProductRepository(

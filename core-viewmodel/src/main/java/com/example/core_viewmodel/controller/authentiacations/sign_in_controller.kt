@@ -1,6 +1,5 @@
 package com.example.core_viewmodel.controller.authentiacations
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,12 +27,10 @@ class AuthViewModel @Inject constructor(
     var emails by mutableStateOf("")
         private set
     var userAvatars by mutableStateOf("")
-    var password by mutableStateOf("")
     var userNames by mutableStateOf("")
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
     var successMessage by mutableStateOf<String?>(null)
-    // Sử dụng StateFlow để cập nhật tự động
     private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, "", "", ""))
     val googleLoginInfo: StateFlow<GoogleLoginInfo> = _googleLoginInfo
     init {

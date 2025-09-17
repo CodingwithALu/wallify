@@ -1,4 +1,4 @@
-package com.example.wallify.feature.personalization.setting
+package com.example.wallify.feature.personalization.setting.widgets
 
 import TCircularImage
 import com.example.wallify.common.widgets.images.TRoundedImage
@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +32,7 @@ import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
 import com.example.wallify.R
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
+import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.utlis.constants.TSizes
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
@@ -98,7 +99,7 @@ fun SignInGoogle(
                 ) {
                     TCircularImage(
                         image = if (googleLoginInfo.isLoggedIn) viewModel.userAvatars else "",
-                        isNetworkImage = if (googleLoginInfo.isLoggedIn) true else false,
+                        isNetworkImage = googleLoginInfo.isLoggedIn,
                         drawableResId = if (googleLoginInfo.isLoggedIn) null else R.drawable.person_circle_sharp,
                         fit = ContentScale.Crop,
                         modifier = Modifier
@@ -132,8 +133,7 @@ fun SignInGoogle(
                                 )
                             }
                         },
-                        text = if (googleLoginInfo.isLoggedIn) "Sign out" else "Sign in with Google",
-                        textColor = Color.Black
+                        text = if (googleLoginInfo.isLoggedIn) "Sign out" else "Sign in with Google"
                     )
                 }
             }

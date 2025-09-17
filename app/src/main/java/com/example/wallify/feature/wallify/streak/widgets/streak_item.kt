@@ -22,7 +22,7 @@ fun StreakItemScreen(
         modifier = Modifier.aspectRatio(0.6f)
     ) {
         TRoundedImage(
-            imageUrl = item.url,
+            imageUrl = item.subImage.first().url,
             isNetworkImage = true,
             fit = ContentScale.Crop,
             modifier = Modifier
@@ -39,7 +39,7 @@ fun StreakItemScreen(
         if (showPoint){
             StreakPoint(
                 modifier = Modifier.align(Alignment.TopEnd),
-                coin = item.price?.toInt() ?: 0
+                coin = item.id_point?: 0
             )
         }
     }

@@ -113,7 +113,7 @@ fun ImageCard(category: Image, modifier: Modifier = Modifier,
             }
     ) {
         AsyncImage(
-            model = category.url,
+            model = category.subImage.first().url,
             contentDescription = category.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize()
