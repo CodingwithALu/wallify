@@ -12,10 +12,12 @@ import androidx.navigation.NavController
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.R
 import com.example.wallify.common.widgets.images.TRoundedImage
+import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun CollectionItemScreen(
+    item: Image,
     showPrimary: Boolean = false,
     navController: NavController
 ){
@@ -30,12 +32,13 @@ fun CollectionItemScreen(
                 .height(180.dp),
                 contentAlignment = Alignment.Center) {
                 TRoundedImage(
-                    drawableResId = R.drawable.wallhaven_dg21em,
+                    isNetworkImage = true,
+                    imageUrl = item.subImage.first().url,
                     fit = ContentScale.Crop
                 )
                 WTitleItems(
-                    title = "Wavy Craze",
-                    subTitle = "Pree Collections"
+                    title = item.title,
+                    subTitle = item.description
                 )
                 if (showPrimary) {
                     TCircularImage(

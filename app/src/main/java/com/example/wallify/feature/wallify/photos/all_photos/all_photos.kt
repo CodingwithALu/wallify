@@ -1,10 +1,10 @@
-package com.example.wallify.feature.wallify.product.all_product
+@file:Suppress("UNCHECKED_CAST")
 
-import BottomSheetSet
+package com.example.wallify.feature.wallify.photos.all_photos
+
 import CenterGripButton
 import ProductVerticalEffect
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,30 +27,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.wallify.common.widgets.appbar.TAppBar
-import com.example.wallify.common.widgets.products.WProductCardVertical
-import com.example.wallify.common.widgets.shimmer.AnimationLoader
-import com.example.wallify.feature.wallify.home.model.Image
-import com.example.wallify.feature.wallify.product.all_product.widgets.ButtonRow
-import com.example.wallify.feature.wallify.product.viewmodel.ProductViewModel
+import com.example.wallify.feature.wallify.photos.viewmodel.PhotosViewModel
 import kotlinx.coroutines.launch
 import java.lang.Float.min
-import com.example.wallify.R
+import com.example.wallify.common.widgets.products.WProductCardVertical
+import com.example.wallify.feature.wallify.photos.all_photos.widgets.ButtonRow
+import com.example.wallify.utlis.route.Screen
 
 @SuppressLint("FrequentlyChangingValue", "ResourceType")
 @Composable
-fun AllProductScreen(
-    item: Image,
+fun AllPhotosScreen(
+    id: String?,
     navController: NavController
 ) {
     //viewModel
-    val viewModel: ProductViewModel = hiltViewModel()
-    val allImages by viewModel.allImages.collectAsState()
-    var images by remember { mutableStateOf(item) }
+    val viewModel: PhotosViewModel = hiltViewModel()
+    val photo by viewModel.photo.collectAsState()
+    val allImages by viewModel.allPhotos.collectAsState()
     val isLoading = viewModel.isLoading
+    val context = LocalContext.current
     // State
     val listState = rememberLazyGridState()
     val lastPosition = remember { mutableStateOf(Pair(0, 0)) }
@@ -70,23 +70,31 @@ fun AllProductScreen(
     val coroutineScope = rememberCoroutineScope()
     var showImage by remember { mutableStateOf(false) }
     // BottomSheet
+    LaunchedEffect(photo) {
+        viewModel.fetchPhotoById(id!!)
+    }
+    LaunchedEffect(photo) {
+        if (photo != null) {
+            if (photo!!.tags.isNotEmpty()) {
+                viewModel.fetchRelatedPhotosForQuery(photo!!.tags.mapNotNull { it.title })
+            }
+        }
+    }
     LaunchedEffect(animatedAlpha) {
         if (animatedAlpha < 0.01f) {
             listState.animateScrollToItem(3)
         }
     }
-    LaunchedEffect(images) {
-        Log.d("ProductViewModel", "fetchRelatedImages id: ${images.id_image}")
-        viewModel.fetchRelatedImages(images.id_image)
-    }
     Scaffold(
         topBar = {
-            if (!showImage) {
+            if (!showImage && photo != null) {
                 TAppBar(
                     title = {
-                        Text(
-                            text = images.title,
-                        )
+                        if (photo!!.description?.isNotEmpty() == true) {
+                            Text(
+                                text = photo!!.description!!
+                            )
+                        }
                     },
                     showBackArrow = true,
                     leadingOnPressed = {
@@ -97,14 +105,15 @@ fun AllProductScreen(
             }
         }
     ) { innerPadding ->
-        AsyncImage(
-            model = images.subImage.first().url,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-        Log.d("AllProductScreen", "AllProductScreen: ${allImages.size}")
+        if (photo != null) {
+            AsyncImage(
+                model = photo!!.urls.regular,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
         LazyVerticalGrid(
             state = listState,
             columns = GridCells.Fixed(3),
@@ -124,11 +133,14 @@ fun AllProductScreen(
             }
             if (!showImage) {
                 item(span = { GridItemSpan(3) }) {
-                    ButtonRow(
-                        item = images,
-                        navController = navController,
-                        animatedAlpha = animatedAlpha
-                    )
+                    if (photo != null) {
+                        ButtonRow(
+                            item = photo!!,
+                            navController = navController,
+                            animatedAlpha = animatedAlpha,
+                            context = context
+                        )
+                    }
                 }
                 item(span = { GridItemSpan(3) }) {
                     CenterGripButton(
@@ -140,24 +152,20 @@ fun AllProductScreen(
                         })
                 }
                 when {
-                    isLoading -> {
+                    isLoading || allImages.isEmpty() -> {
                         items(9) {
                             ProductVerticalEffect()
                         }
                     }
-                    allImages.isEmpty() ->
-                        item(span = { GridItemSpan(3) }) {
-                            AnimationLoader(
-                                resIdRes = R.raw.empty,
-                            )
-                        }
+
                     else -> {
-                        items(allImages) { product ->
+                        items(allImages) { item ->
                             WProductCardVertical(
-                                item = product,
-                                onclick = { item ->
-                                    images = item
-                                })
+                                item = item,
+                                onclick = {
+                                    navController.navigate("${Screen.PhotosList.route}/${item.id}")
+                                }
+                            )
                         }
                     }
                 }

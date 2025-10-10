@@ -76,6 +76,9 @@ fun FavoritesScreen(
                     items(favorites) { item ->
                         WProductCardVertical(
                             item = item,
+                            onclick = {
+                                navController.navigate("${Screen.PhotosList.route}/${item.id}")
+                            }
                         )
                     }
                 }

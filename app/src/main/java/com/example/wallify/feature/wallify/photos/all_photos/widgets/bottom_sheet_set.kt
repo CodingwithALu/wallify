@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,16 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 import com.example.wallify.R
+import com.example.wallify.feature.wallify.home.model.Photos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetSet(
-    item: Image,
+    item: Photos,
     navController: NavController,
     onDismiss: (Boolean) -> Unit,
 
@@ -52,9 +50,7 @@ fun BottomSheetSet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        val gson = Gson()
-                        val items = Uri.encode(gson.toJson(item))
-                        navController.navigate("${Screen.ProductDetails.route}/$items")
+                        navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.regular)}")
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -72,7 +68,7 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "HD, ${item.subImage.first().width} x ${item.subImage.first().height} px, ${item.subImage.first().sizeMB} kb",
+                        text = "HD, ${item.width} x ${item.height} px, ${item.blur_hash} kb",
                     )
                 }
             }
@@ -81,9 +77,7 @@ fun BottomSheetSet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        val gson = Gson()
-                        val items = Uri.encode(gson.toJson(item))
-                        navController.navigate("${Screen.ProductDetails.route}/$items")
+                        navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.raw)}")
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -101,7 +95,7 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "4K, ${item.subImage.first().width} x ${item.subImage.first().height} px, ${item.subImage.first().sizeMB} MB",
+                        text = "4K, ${item.width} x ${item.height} px, ${item.blur_hash} MB",
                         modifier = Modifier
                             .fillMaxWidth()
                     )

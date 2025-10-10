@@ -1,5 +1,4 @@
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,26 +6,23 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.R
-import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
+import com.example.wallify.feature.personalization.setting.controller.SettingViewModel
 import com.example.wallify.feature.personalization.setting.widgets.SettingItem
 import com.example.wallify.feature.personalization.setting.widgets.SignInGoogle
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
+import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
 
 @Composable
 fun SettingScreen(
-    navController: NavController
+    navController: NavController,
 ) {
+    val viewModel: SettingViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
     Scaffold(
         topBar = {
             WAppBarCenter(
@@ -148,7 +144,16 @@ fun SettingScreen(
                     }
                 )
             }
+            item {
+                SettingItem(
+                    title = "Send Feedback",
+                    subtitle = "Contribute your ideas to the developer",
+                    imageItem = R.drawable.outgoing_mail_56dp,
+                    onClickItem = {
+                        viewModel.sendFeedback(authViewModel.emails)
+                    }
+                )
+            }
         }
     }
 }
-

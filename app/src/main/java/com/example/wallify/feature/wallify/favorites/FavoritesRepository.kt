@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.home.model.Photos
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -15,12 +16,12 @@ class FavoritesRepository (
 ) {
     val Context.favoritesDataStore by preferencesDataStore(name = "favorites_prefs")
     val FAVORITE_IMAGES_KEY = stringPreferencesKey("favorite_images")
-    suspend fun saveFavoriteImage(image: Image) {
+    suspend fun saveFavoriteImage(photo: Photos) {
         val gson = Gson()
         val currentListJson = context.favoritesDataStore.data.first()[FAVORITE_IMAGES_KEY] ?: "[]"
-        val currentList = gson.fromJson(currentListJson, Array<Image>::class.java).toMutableList()
-        if (currentList.none { it.id_image == image.id_image }) {
-            currentList.add(image)
+        val currentList = gson.fromJson(currentListJson, Array<Photos>::class.java).toMutableList()
+        if (currentList.none { it.id == photo.id }) {
+            currentList.add(photo)
         }
         val newListJson = gson.toJson(currentList)
         context.favoritesDataStore.edit { prefs ->
@@ -28,21 +29,21 @@ class FavoritesRepository (
         }
     }
     // Remove image from favorites
-    suspend fun removeFavoriteImage(image: Image) {
+    suspend fun removeFavoriteImage(photo: Photos) {
         val gson = Gson()
         val currentListJson = context.favoritesDataStore.data.first()[FAVORITE_IMAGES_KEY] ?: "[]"
-        val currentList = gson.fromJson(currentListJson, Array<Image>::class.java).toMutableList()
-        val newList = currentList.filter { it.id_image != image.id_image }
+        val currentList = gson.fromJson(currentListJson, Array<Photos>::class.java).toMutableList()
+        val newList = currentList.filter { it.id != photo.id }
         val newListJson = gson.toJson(newList)
         context.favoritesDataStore.edit { prefs ->
             prefs[FAVORITE_IMAGES_KEY] = newListJson
         }
     }
     // Get all favorite images
-    suspend fun getFavoriteImages(): Flow<List<Image>> =
+    suspend fun getFavoriteImages(): Flow<List<Photos>> =
         context.favoritesDataStore.data.map { prefs ->
             val gson = Gson()
             val currentListJson = prefs[FAVORITE_IMAGES_KEY] ?: "[]"
-            gson.fromJson(currentListJson, Array<Image>::class.java).toList()
+            gson.fromJson(currentListJson, Array<Photos>::class.java).toList()
         }
 }

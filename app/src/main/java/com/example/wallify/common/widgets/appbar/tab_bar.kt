@@ -14,11 +14,12 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import com.example.wallify.feature.wallify.home.model.Category
 import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.home.model.Topics
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun TTabBar(
-    tabs: List<Category>,
+    tabs: List<Topics>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     appBarHeight: Dp = TSizes.xl,

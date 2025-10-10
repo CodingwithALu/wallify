@@ -22,7 +22,7 @@ import com.example.wallify.ui.theme.primaryLight
 fun FastCircularProgressIndicator(
     modifier: Modifier = Modifier,
     strokeWidth: Float = 4f,
-    speed: Float = 2f // bình thường là 1f, tăng lên sẽ nhanh hơn
+    speed: Float = 2f
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "rotation")
     val angle by infiniteTransition.animateFloat(

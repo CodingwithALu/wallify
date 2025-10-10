@@ -1,7 +1,7 @@
 package com.example.wallify.navigation
 
 import SettingScreen
-import com.example.wallify.feature.wallify.product.all_product.AllProductScreen
+import com.example.wallify.feature.wallify.photos.all_photos.AllPhotosScreen
 import StreakScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,7 @@ import androidx.navigation.compose.composable
 import com.example.wallify.feature.authentication.screen.onboarding.OnBoardingScreen
 import com.example.wallify.feature.wallify.collections.CollectionScreen
 import com.example.wallify.feature.wallify.favorites.FavoritesScreen
-import com.example.wallify.feature.wallify.product.product_set_wallpaper.ProductSetsScreen
+import com.example.wallify.feature.wallify.photos.product_set_wallpaper.PhotosSetsScreen
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.search.SearchScreen
 import com.example.wallify.feature.wallify.streak.widgets.StreakListScreen
 
 @Composable
@@ -67,24 +68,26 @@ fun MainNavigation(navController: NavHostController) {
             SettingScreen(navController = navController)
         }
         // allProduct
-        composable("${Screen.ProductList.route}/{item}") { backStackEntry ->
-            val categoryJson = backStackEntry.arguments?.getString("item")
-            val item = Gson().fromJson(categoryJson, Image::class.java)
-            AllProductScreen(
-                item,
+        composable("${Screen.PhotosList.route}/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            AllPhotosScreen(
+                id,
                 navController)
         }
         // ProductSets
         composable("${Screen.ProductDetails.route}/{item}"){ backStackEntry ->
-            val product = backStackEntry.arguments?.getString("item")
-            val items = Gson().fromJson(product, Image::class.java)
-            ProductSetsScreen(items, navController)
+            val url = backStackEntry.arguments?.getString("item")
+            PhotosSetsScreen(url, navController)
         }
         composable("${Screen.StreakList.route}/{item}"){ backStackEntry ->
             val product = backStackEntry.arguments?.getString("item")
             val items = Gson().fromJson(product, Image::class.java)
             StreakListScreen(items,
                 navController = navController)
+        }
+        // search
+        composable(Screen.Search.route){
+            SearchScreen()
         }
     }
 }

@@ -53,13 +53,13 @@ fun StreakListScreen(
             }
         }
         if (showBottomSheet){
-            BottomSheetSet(
-                item = streak,
-                navController = navController,
-                onDismiss = {
-                    showBottomSheet = it
-                }
-            )
+//            BottomSheetSet(
+//                item = streak,
+//                navController = navController,
+//                onDismiss = {
+//                    showBottomSheet = it
+//                }
+//            )
         }
     }
 }

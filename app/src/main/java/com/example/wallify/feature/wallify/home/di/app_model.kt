@@ -1,11 +1,14 @@
 package com.example.wallify.feature.wallify.home.di
 
 import android.content.Context
+import com.example.wallify.feature.personalization.setting.reponsitory.SettingRepository
+import com.example.wallify.feature.wallify.collections.reponsitory.CollectionApi
+import com.example.wallify.feature.wallify.collections.reponsitory.CollectionRepository
 import com.example.wallify.feature.wallify.favorites.FavoritesRepository
 import com.example.wallify.feature.wallify.home.repository.HomeApi
 import com.example.wallify.feature.wallify.home.repository.HomeRepository
-import com.example.wallify.feature.wallify.product.repository.ProductApi
-import com.example.wallify.feature.wallify.product.repository.ProductRepository
+import com.example.wallify.feature.wallify.photos.repository.ProductApi
+import com.example.wallify.feature.wallify.photos.repository.ProductRepository
 import com.example.wallify.feature.wallify.streak.reponsitory.StreakApi
 import com.example.wallify.feature.wallify.streak.reponsitory.StreakRepository
 import dagger.Module
@@ -51,8 +54,8 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideRelatedImageRepository(productApi: ProductApi): ProductRepository {
-        return ProductRepository(productApi)
+    fun provideRelatedImageRepository(productApi: ProductApi, @ApplicationContext context: Context): ProductRepository {
+        return ProductRepository(productApi, context)
     }
     // streak
     @Provides
@@ -70,5 +73,22 @@ object HomeModule {
     fun provideFavoriteRepository(@ApplicationContext context: Context): FavoritesRepository {
         return FavoritesRepository(context)
     }
-
+    // collections
+    @Provides
+    @Singleton
+    fun providerCollectionApi(retrofit: Retrofit): CollectionApi {
+        return retrofit.create(CollectionApi::class.java)
+    }
+    // fetch Images from collections
+    @Provides
+    @Singleton
+    fun providerFetchImageFromCollections(collectionApi: CollectionApi): CollectionRepository {
+        return CollectionRepository(collectionApi)
+    }
+    // setting repository
+    @Provides
+    @Singleton
+    fun provideSettingRepository(@ApplicationContext context: Context): SettingRepository {
+        return SettingRepository(context)
+    }
 }
