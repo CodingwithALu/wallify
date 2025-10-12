@@ -1,4 +1,4 @@
-package com.example.wallify.feature.wallify.home.di
+package com.example.wallify.feature.wallify.di
 
 import android.content.Context
 import com.example.wallify.feature.personalization.setting.reponsitory.SettingRepository
@@ -9,6 +9,8 @@ import com.example.wallify.feature.wallify.home.repository.HomeApi
 import com.example.wallify.feature.wallify.home.repository.HomeRepository
 import com.example.wallify.feature.wallify.photos.repository.ProductApi
 import com.example.wallify.feature.wallify.photos.repository.ProductRepository
+import com.example.wallify.feature.wallify.search.repository.SearchApi
+import com.example.wallify.feature.wallify.search.repository.SearchRepository
 import com.example.wallify.feature.wallify.streak.reponsitory.StreakApi
 import com.example.wallify.feature.wallify.streak.reponsitory.StreakRepository
 import dagger.Module
@@ -90,5 +92,17 @@ object HomeModule {
     @Singleton
     fun provideSettingRepository(@ApplicationContext context: Context): SettingRepository {
         return SettingRepository(context)
+    }
+    // search photos
+    @Provides
+    @Singleton
+    fun providerSearchApi(retrofit: Retrofit) : SearchApi {
+        return retrofit.create(SearchApi::class.java)
+    }
+    // fetch photos
+    @Provides
+    @Singleton
+    fun providerSearchRepository(searchApi: SearchApi) : SearchRepository {
+        return SearchRepository(searchApi)
     }
 }

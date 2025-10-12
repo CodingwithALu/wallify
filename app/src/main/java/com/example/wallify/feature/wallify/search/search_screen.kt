@@ -1,8 +1,8 @@
 package com.example.wallify.feature.wallify.search
-
-import android.R
+import android.net.wifi.aware.ParcelablePeerHandle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -25,34 +25,28 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.wallify.R
+import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
+import com.example.wallify.feature.wallify.search.controller.SearchViewModel
 
 @Composable
 fun SearchScreen(
     recentSearches: List<String> = listOf("abc", "popular", "bokeh", "Phone wallpaper"),
-    trendingSearches: List<String> = listOf(
-        "bamboo forest",
-        "israel",
-        "canon",
-        "andorra",
-        "art class"
-    ),
-    trendingTopics: List<Pair<String, String?>> = listOf(
-        "People" to "https://images.unsplash.com/photo-1",
-        "Animals" to "https://images.unsplash.com/photo-2",
-        "Experimental" to null,
-        "Wallpapers" to "https://images.unsplash.com/photo-3",
-        "Film" to "https://images.unsplash.com/photo-4"
-    ),
-    trendingCollections: List<String> = listOf(
-        "School Supplies by Fanette G", "Cheers Society", "Astrophotography", "Golden Glow", "blue."
-    ),
-    onSearch: (String) -> Unit = {}
 ) {
+    val viewmodel : SearchViewModel = hiltViewModel()
+    val searchPhotos by viewmodel.searchPhotos.collectAsState()
+    val  isLoading = viewmodel.isLoading
     var searchQuery by remember { mutableStateOf("") }
+    LaunchedEffect(searchQuery) {
+        viewmodel.searchPhotos(searchQuery)
+    }
     Scaffold { innerPadding ->
+        if (isLoading){
+            FastCircularProgressIndicator()
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -104,70 +98,16 @@ fun SearchScreen(
             ) {
                 items(recentSearches) { it ->
                     OutlinedButton(
-                        onClick = { onSearch(it) },
+                        onClick = {  },
                         shape = RoundedCornerShape(12.dp)
                     ) { Text(it) }
                 }
             }
-
-            Spacer(Modifier.height(20.dp))
-            Text("Trending Searches", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(trendingSearches) { it ->
-                    OutlinedButton(
-                        onClick = { onSearch(it) },
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_up_float),
-                            contentDescription = null,
-                            tint = Color.Gray,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(it)
+            // list Photos
+            if(searchPhotos.isNotEmpty()){
+                LazyColumn {
+                    items(searchPhotos) { photo ->
                     }
-                }
-            }
-
-            Spacer(Modifier.height(20.dp))
-            Text("Trending Topics", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(trendingTopics) { it ->
-                    val (topic, imageUrl) = it
-                    OutlinedButton(
-                        onClick = { onSearch(topic) },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.height(44.dp)
-                    ) {
-                        if (imageUrl != null) {
-                            // You can use CoilImage or AsyncImage for real image loading
-                            Surface(
-                                shape = CircleShape,
-                                color = Color.LightGray,
-                                modifier = Modifier.size(24.dp)
-                            ) {}
-                            Spacer(Modifier.width(4.dp))
-                        }
-                        Text(topic)
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(20.dp))
-            Text("Trending Collections", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(trendingCollections) {
-                    OutlinedButton(
-                        onClick = { onSearch(it) },
-                        shape = RoundedCornerShape(12.dp)
-                    ) { Text(it) }
                 }
             }
         }
