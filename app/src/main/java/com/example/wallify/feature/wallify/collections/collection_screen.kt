@@ -3,6 +3,7 @@ package com.example.wallify.feature.wallify.collections
 import CollectionItemScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -63,23 +64,13 @@ fun CollectionScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(collection) { it ->
-                    // pro Collections
-                    // title
-                    TSectionHeading(
-                        title = it.title,
-                        showActionButton = true,
-                        modifier = Modifier.padding(horizontal = TSizes.sm)
+                items(collection) { item ->
+                    CollectionItemScreen(
+                        item = item,
+                        onClick = {
+                            navController.navigate("${Screen.CollectionPhotos.route}/${item.id}")
+                        }
                     )
-//                    LazyRow {
-//                        items(it.) { item ->
-//                            CollectionItemScreen(
-//                                item = item,
-//                                showPrimary = true,
-//                                navController
-//                            )
-//                        }
-//                    }
                 }
             }
         }

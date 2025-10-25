@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,7 +30,6 @@ import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
 import com.example.wallify.R
 import com.example.wallify.common.widgets.custom_shapes.container.TRoundedContainer
 import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
-import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.utlis.constants.TSizes
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.*
@@ -66,9 +63,7 @@ fun SignInGoogle(
                 userName = userName ?: "",
                 email = email ?: "",
                 avatarUrl = avatarUrl ?: ""
-            ) {
-
-            }
+            )
         } catch (e: Exception) {
             // Xử lý lỗi
             Log.d("SignInGoogle", "Access Token: ${e.message}")

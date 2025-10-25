@@ -42,7 +42,7 @@ fun WProductCardVertical(
     Box(modifier = Modifier
         .height(280.dp)
         .width(80.dp)
-        .background(Color.Black)) {
+        .background(Color.Transparent)) {
         TRoundedImage(
             imageUrl = item.urls.small,
             isNetworkImage = true,
@@ -69,7 +69,7 @@ fun WProductCardVertical(
             )
         }
         Text(
-            text = item.description ?: "No Description",
+            text = item.description ?: "",
             color = Color.White,
             fontSize = 13.sp,
             maxLines = 1,

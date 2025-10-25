@@ -1,13 +1,19 @@
 package com.example.wallify.feature.wallify.search
-import android.net.wifi.aware.ParcelablePeerHandle
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -15,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -23,30 +28,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.wallify.R
+import androidx.navigation.NavController
+import com.example.wallify.common.widgets.products.WProductCardVertical
 import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.search.controller.SearchViewModel
+import com.example.wallify.utlis.constants.TSizes
+import com.example.wallify.utlis.route.Screen
 
 @Composable
 fun SearchScreen(
-    recentSearches: List<String> = listOf("abc", "popular", "bokeh", "Phone wallpaper"),
+    navController: NavController
 ) {
-    val viewmodel : SearchViewModel = hiltViewModel()
+    val viewmodel: SearchViewModel = hiltViewModel()
     val searchPhotos by viewmodel.searchPhotos.collectAsState()
-    val  isLoading = viewmodel.isLoading
+    val recentSearches by viewmodel.searchHistory.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    // get keyboard controller and focus manager
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(searchQuery) {
         viewmodel.searchPhotos(searchQuery)
     }
     Scaffold { innerPadding ->
-        if (isLoading){
-            FastCircularProgressIndicator()
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,6 +82,18 @@ fun SearchScreen(
                     modifier = Modifier
                         .weight(1f),
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            // khi nhấn Enter / Search trên IME: lưu lịch sử, gọi tìm kiếm, ẩn bàn phím và clear focus
+                            if (searchQuery.isNotBlank()) {
+                                // ViewModel methods already launch their own coroutines
+                                viewmodel.saveSearchQuery(searchQuery)
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                            }
+                        }
+                    ),
                     decorationBox = { innerTextField ->
                         if (searchQuery.isEmpty()) {
                             Text("Search photos and illustrations", color = Color.Gray)
@@ -78,35 +102,62 @@ fun SearchScreen(
                     }
                 )
                 if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { searchQuery = "" }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear", tint = Color.Gray)
+                    Icon(
+                        Icons.Default.Clear,
+                        contentDescription = "Clear",
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { searchQuery = "" }
+                            ))
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+            // list Photos
+            if (searchPhotos.isNotEmpty()) {
+                LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+                    items(searchPhotos) { photo ->
+                        WProductCardVertical(
+                            item = photo,
+                            onclick = {
+                                navController.navigate("${Screen.PhotosList.route}/${photo.id}")
+                            }
+                        )
                     }
                 }
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            // Recent Searches
-            Text("Recent Searches · ", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { /* Clear recent searches */ }) {
-                    Text("Clear", color = Color(0xFFED2C5C))
+            } else {
+                if (recentSearches.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("History Searches ", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text(
+                            "Clear All",
+                            fontSize = 14.sp,
+                            color = Color.Blue,
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = {
+                                        viewmodel.clearSearchResults()
+                                    }
+                                )
+                        )
+                    }
                 }
-            }
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(recentSearches) { it ->
-                    OutlinedButton(
-                        onClick = {  },
-                        shape = RoundedCornerShape(12.dp)
-                    ) { Text(it) }
-                }
-            }
-            // list Photos
-            if(searchPhotos.isNotEmpty()){
-                LazyColumn {
-                    items(searchPhotos) { photo ->
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(recentSearches) { it ->
+                        SearchItem(
+                            it,
+                            onClickSave = {
+                                viewmodel.searchPhotos(it)
+                            },
+                            onClickRemove = {
+                                viewmodel.removeSearchQuery(it)
+                            })
                     }
                 }
             }
@@ -114,3 +165,33 @@ fun SearchScreen(
     }
 }
 
+@Composable
+fun SearchItem(
+    it: String,
+    onClickSave: () -> Unit,
+    onClickRemove: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable(
+                onClick = {
+                    onClickSave()
+                }
+            )
+            .fillMaxWidth()
+            .padding(TSizes.xs),
+        horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(it)
+        Icon(
+            Icons.Default.Clear,
+            contentDescription = "Remove",
+            tint = Color.Gray,
+            modifier = Modifier
+                .clickable(
+                    onClick = {
+                        onClickRemove() // invoke the lambda
+                    }
+                )
+        )
+    }
+}

@@ -59,5 +59,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.lottie.compose)
     implementation (libs.hilt.android)
+    // retrofit
+    implementation(libs.retrofit)
     kapt (libs.hilt.android.compiler)
 }

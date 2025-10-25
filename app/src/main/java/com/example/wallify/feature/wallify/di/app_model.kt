@@ -102,7 +102,7 @@ object HomeModule {
     // fetch photos
     @Provides
     @Singleton
-    fun providerSearchRepository(searchApi: SearchApi) : SearchRepository {
-        return SearchRepository(searchApi)
+    fun providerSearchRepository(searchApi: SearchApi, @ApplicationContext context: Context) : SearchRepository {
+        return SearchRepository(searchApi, context)
     }
 }

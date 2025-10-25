@@ -45,7 +45,6 @@ fun HomeScreen(
     // show pager
     val pagerState = rememberPagerState(pageCount = { topics.size })
     var showTopBar by rememberSaveable { mutableStateOf(true) }
-    var showBottomBar by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(topics) {
         val firstId: String? = topics.firstOrNull()?.id
         if (firstId != null) {
@@ -69,7 +68,7 @@ fun HomeScreen(
     Scaffold (
         bottomBar = {
             BottomAppBarr(
-                showBar = showBottomBar,
+                showBar = true,
                 navController = navController
             )
         }
@@ -104,7 +103,6 @@ fun HomeScreen(
                         TImageVerticalEffect(
                             onScroll = { isScrollingUp ->
                                 showTopBar = isScrollingUp
-                                showBottomBar = !isScrollingUp
                             }
                         )
                     }
@@ -131,7 +129,6 @@ fun HomeScreen(
                             TImageVerticalEffect(
                                 onScroll = { isScrollingUp ->
                                     showTopBar = isScrollingUp
-                                    showBottomBar = !isScrollingUp
                                 }
                             )
                         }
@@ -141,7 +138,6 @@ fun HomeScreen(
                                 navController = navController,
                                 onScroll = { isScrollingUp ->
                                     showTopBar = isScrollingUp
-                                    showBottomBar = !isScrollingUp
                                 }
                             )
                         }

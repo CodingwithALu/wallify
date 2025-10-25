@@ -3,44 +3,36 @@ package com.example.core_model
 import com.google.firebase.firestore.DocumentSnapshot
 
 data class UserModel(
-    val id: String,
-    val username: String,
+    val idToken: String,
     val email: String,
     val firstName: String,
     val lastName: String,
-    val phoneNumber: String,
-    val profilePicture: String
+    val urlProfile: String,
+    val urlBackground: String? = ""
 ) {
 
     val fullName: String
         get() = "$firstName $lastName"
 
-    // Định nghĩa hàm format phone nếu bạn có formatter riêng
-    val formattedPhoneNumber: String
-        get() = formatPhoneNumber(phoneNumber)
-
     companion object {
         fun empty() = UserModel(
-            id = "",
-            username = "",
+            idToken = "",
             email = "",
             firstName = "",
             lastName = "",
-            phoneNumber = "",
-            profilePicture = ""
+            urlProfile = "",
+            urlBackground = ""
         )
 
         // Tạo UserModel từ Firestore snapshot
         fun fromSnapshot(document: DocumentSnapshot): UserModel {
             val data = document.data ?: return empty()
             return UserModel(
-                id = document.id,
+                idToken = document.id,
                 firstName = data["FirstName"] as? String ?: "",
                 lastName = data["LastName"] as? String ?: "",
-                username = data["Username"] as? String ?: "",
                 email = data["Email"] as? String ?: "",
-                phoneNumber = data["PhoneNumber"] as? String ?: "",
-                profilePicture = data["ProfilePicture"] as? String ?: ""
+                urlProfile = data["ProfilePicture"] as? String ?: ""
             )
         }
 
@@ -60,10 +52,8 @@ data class UserModel(
     fun toMap(): Map<String, Any> = mapOf(
         "FirstName" to firstName,
         "LastName" to lastName,
-        "Username" to username,
         "Email" to email,
-        "PhoneNumber" to phoneNumber,
-        "ProfilePicture" to profilePicture
+        "ProfilePicture" to urlProfile
     )
 }
 

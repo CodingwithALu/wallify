@@ -22,8 +22,13 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     private val _searchPhotos = MutableStateFlow<List<Photos>>(emptyList())
     val searchPhotos : StateFlow<List<Photos>> = _searchPhotos
+    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
+    val searchHistory = _searchHistory
     var isLoading by mutableStateOf(false)
         private set
+    init {
+        getSearchHistory()
+    }
     // search photos
     fun searchPhotos(query: String){
         viewModelScope.launch {
@@ -40,6 +45,29 @@ class SearchViewModel @Inject constructor(
                 _searchPhotos.value = emptyList()
                 isLoading = false
             }
+        }
+    }
+    fun getSearchHistory(){
+        viewModelScope.launch {
+            _searchHistory.value = searchRepository.getSearchHistory()
+        }
+    }
+    fun saveSearchQuery(query: String){
+        viewModelScope.launch {
+            searchRepository.saveSearchQuery(query)
+            getSearchHistory()
+        }
+    }
+    fun removeSearchQuery(query: String){
+        viewModelScope.launch {
+            searchRepository.removeSearchQuery(query)
+            getSearchHistory()
+        }
+    }
+    fun clearSearchResults(){
+        viewModelScope.launch {
+            searchRepository.clearSearchHistory()
+            getSearchHistory()
         }
     }
 }

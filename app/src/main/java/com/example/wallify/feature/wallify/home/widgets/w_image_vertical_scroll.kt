@@ -33,7 +33,7 @@ import com.google.gson.Gson
 @SuppressLint("FrequentlyChangingValue")
 @Composable
 fun ImageMasonryList(topics: List<Photos>,
-                     onScroll: (isScrollingUp: Boolean) -> Unit,
+                     onScroll: (isScrollingUp: Boolean) -> Unit = {},
                      navController: NavController) {
     val listState = rememberLazyListState()
     val lastPosition = remember { mutableStateOf(Pair(0, 0)) }

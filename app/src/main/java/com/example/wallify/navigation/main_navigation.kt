@@ -1,5 +1,6 @@
 package com.example.wallify.navigation
 
+import CollectionPhotosScreen
 import SettingScreen
 import com.example.wallify.feature.wallify.photos.all_photos.AllPhotosScreen
 import StreakScreen
@@ -87,7 +88,15 @@ fun MainNavigation(navController: NavHostController) {
         }
         // search
         composable(Screen.Search.route){
-            SearchScreen()
+            SearchScreen(navController = navController)
+        }
+        //
+        composable ( "${Screen.CollectionPhotos.route}/{id}" ){ backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            CollectionPhotosScreen(
+                id = id,
+                navController = navController
+            )
         }
     }
 }

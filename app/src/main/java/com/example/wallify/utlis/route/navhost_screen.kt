@@ -11,6 +11,7 @@ sealed class Screen(val route: String) {
     object ProductDetails : Screen("product_details")
     object StreakList : Screen("streak_list")
     object Search : Screen("search")
+    object CollectionPhotos: Screen("collection_photos")
 }
 
 val routesToHideBottomBar = listOf(

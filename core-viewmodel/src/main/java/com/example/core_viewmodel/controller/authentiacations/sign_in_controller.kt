@@ -27,53 +27,63 @@ class AuthViewModel @Inject constructor(
     var emails by mutableStateOf("")
         private set
     var userAvatars by mutableStateOf("")
+        private set
     var userNames by mutableStateOf("")
+        private set
+    var firstName by mutableStateOf("")
+        private set
+    var lastName by mutableStateOf("")
+        private set
     var isLoading by mutableStateOf(false)
-    var errorMessage by mutableStateOf<String?>(null)
-    var successMessage by mutableStateOf<String?>(null)
-    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, "", "", ""))
+        private set
+    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false))
     val googleLoginInfo: StateFlow<GoogleLoginInfo> = _googleLoginInfo
+
     init {
         restoreGoogleLoginInfo()
     }
+
     fun restoreGoogleLoginInfo() {
         viewModelScope.launch {
             dataStoreUser.getGoogleLoginInfo().collectLatest { info ->
                 _googleLoginInfo.value = info
-                emails = info.email
-                userNames = info.userName
-                userAvatars = info.avatar
             }
         }
     }
 
-    fun loginWithGoogle(idToken: String, accessToken: String, userName: String, email: String, avatarUrl: String, onNavigate: () -> Unit) {
+    fun loginWithGoogle(
+        idToken: String,
+        accessToken: String,
+        userName: String,
+        email: String,
+        avatarUrl: String
+    ) {
         viewModelScope.launch {
             isLoading = true
-            errorMessage = null
             try {
                 if (!networkManager.checkConnection()) {
-                    errorMessage = "No Internet Connection"
                     isLoading = false
                     return@launch
                 }
                 val authResult = authenticationRepository.signInWithGoogle(idToken, accessToken)
                 userNames = userName
+                val parts = userName.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+                firstName = if (parts.isNotEmpty()) parts.first() else ""
+                lastName = if (parts.size > 1) parts.drop(1).joinToString(" ") else ""
                 emails = email
                 userAvatars = avatarUrl
-                dataStoreUser.saveGoogleLoginInfo( true, email, userName, avatarUrl)
+                dataStoreUser.saveGoogleLoginInfo(true)
                 val firebaseUser = authResult.user
-                userRepository.saveUserToServer(
-                    googleId = firebaseUser?.uid ?: "",
-                    name = userName,
-                    email = email,
-                    url = avatarUrl
+                userRepository.createNewUser(
+                    idToken = firebaseUser?.uid ?: "",
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = emails,
+                    urlProfile = userAvatars
                 )
                 isLoading = false
-                onNavigate()
             } catch (e: Exception) {
                 isLoading = false
-                errorMessage = e.message
             }
         }
     }
@@ -84,16 +94,15 @@ class AuthViewModel @Inject constructor(
             emails = ""
             userAvatars = ""
             userNames = ""
-            successMessage = null
-            errorMessage = null
+            // clear splitted names on logout
+            firstName = ""
+            lastName = ""
             try {
                 authenticationRepository.logout()
                 dataStoreUser.clearGoogleLoginInfo()
                 isLoading = false
-                successMessage = "Bạn đã đăng xuất thành công."
             } catch (e: Exception) {
                 isLoading = false
-                errorMessage = e.message
             }
         }
     }
