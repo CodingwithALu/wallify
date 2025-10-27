@@ -1,7 +1,7 @@
 package com.example.wallify.feature.wallify.home.widgets
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,12 +27,11 @@ import coil.compose.AsyncImage
 import com.example.wallify.feature.wallify.home.model.Photos
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
-import com.google.gson.Gson
 
 
 @SuppressLint("FrequentlyChangingValue")
 @Composable
-fun ImageMasonryList(topics: List<Photos>,
+fun ImageMasonryList(photos: List<Photos>,
                      onScroll: (isScrollingUp: Boolean) -> Unit = {},
                      navController: NavController) {
     val listState = rememberLazyListState()
@@ -63,7 +62,7 @@ fun ImageMasonryList(topics: List<Photos>,
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(TSizes.xs)
     ) {
-        items(topics.chunked(4)) { chunk ->
+        items(photos.chunked(4)) { chunk ->
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TSizes.xs)
             ) {

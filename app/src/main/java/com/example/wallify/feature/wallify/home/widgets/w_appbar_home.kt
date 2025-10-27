@@ -52,6 +52,7 @@ fun TAppbarHome(
     val dark = isSystemInDarkTheme()
     val viewModel: AuthViewModel = hiltViewModel()
     val googleLoginInfo by viewModel.googleLoginInfo.collectAsState()
+    val use by viewModel.user.collectAsState()
     val coin = 0
     Box(
         modifier = Modifier
@@ -81,7 +82,7 @@ fun TAppbarHome(
                     modifier = Modifier
                         .height(32.dp)
                         .width(32.dp),
-                    image = if (googleLoginInfo.isLoggedIn) googleLoginInfo.avatar else "",
+                    image = if (googleLoginInfo.isLoggedIn) use?.urlProfile?: "" else "",
                     isNetworkImage = googleLoginInfo.isLoggedIn,
                     drawableResId = if (googleLoginInfo.isLoggedIn) null else R.drawable.person_circle_sharp,
                     onClick = onAvatarClick,

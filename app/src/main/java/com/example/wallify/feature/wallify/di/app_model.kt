@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.di
 
 import android.content.Context
+import com.example.wallify.feature.personalization.setting.reponsitory.SettingApi
 import com.example.wallify.feature.personalization.setting.reponsitory.SettingRepository
 import com.example.wallify.feature.wallify.collections.reponsitory.CollectionApi
 import com.example.wallify.feature.wallify.collections.reponsitory.CollectionRepository
@@ -87,11 +88,16 @@ object HomeModule {
     fun providerFetchImageFromCollections(collectionApi: CollectionApi): CollectionRepository {
         return CollectionRepository(collectionApi)
     }
+    @Provides
+    @Singleton
+    fun provideSettingApi(retrofit: Retrofit): SettingApi {
+        return retrofit.create(SettingApi::class.java)
+    }
     // setting repository
     @Provides
     @Singleton
-    fun provideSettingRepository(@ApplicationContext context: Context): SettingRepository {
-        return SettingRepository(context)
+    fun provideSettingRepository(retrofit: SettingApi, @ApplicationContext context: Context): SettingRepository {
+        return SettingRepository(retrofit, context)
     }
     // search photos
     @Provides

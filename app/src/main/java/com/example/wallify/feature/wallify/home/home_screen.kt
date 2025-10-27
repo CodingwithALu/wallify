@@ -31,6 +31,8 @@ import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @SuppressLint("ResourceType")
 @Composable
@@ -39,32 +41,32 @@ fun HomeScreen(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     val topics by viewModel.topics.collectAsState()
-    val imagesByCategory by viewModel.photosByTopics.collectAsState()
+    val photoByTopics by viewModel.photosByTopics.collectAsState()
     val isLoading = viewModel.isLoading
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     // show pager
     val pagerState = rememberPagerState(pageCount = { topics.size })
     var showTopBar by rememberSaveable { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(topics) {
-        val firstId: String? = topics.firstOrNull()?.id
-        if (firstId != null) {
-            viewModel.fetchPhotosForTopics(firstId)
-            pagerState.scrollToPage(selectedTabIndex)
+        if (topics.isNotEmpty()) {
+            if (selectedTabIndex !in topics.indices) selectedTabIndex = 0
+            val categoryId = topics[selectedTabIndex].id
+            viewModel.fetchPhotosForTopics(categoryId)
+            coroutineScope.launch { pagerState.scrollToPage(selectedTabIndex) }
         }
-    }
-    LaunchedEffect(selectedTabIndex) {
-        pagerState.scrollToPage(selectedTabIndex)
     }
     LaunchedEffect(pagerState.currentPage) {
-        selectedTabIndex = pagerState.currentPage
-    }
-    LaunchedEffect(selectedTabIndex) {
-        val categoryId: String? = topics.getOrNull(selectedTabIndex)?.id
-        if (categoryId != null) {
-            viewModel.fetchPhotosForTopics(categoryId)
-            pagerState.scrollToPage(selectedTabIndex)
+        val newIndex = pagerState.currentPage
+        if (newIndex != selectedTabIndex) {
+            selectedTabIndex = newIndex
+            val categoryId = topics.getOrNull(selectedTabIndex)?.id
+            if (categoryId != null) {
+                viewModel.fetchPhotosForTopics(categoryId)
+            }
         }
     }
+
     Scaffold (
         bottomBar = {
             BottomAppBarr(
@@ -111,7 +113,14 @@ fun HomeScreen(
                     TTabBar(
                         tabs = topics,
                         selectedTabIndex = selectedTabIndex,
-                        onTabSelected = { index -> selectedTabIndex = index }
+                        onTabSelected = { index ->
+                            // khi bấm tab: cập nhật index, scroll pager và fetch dữ liệu cho tab đó
+                            selectedTabIndex = index
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                            topics.getOrNull(index)?.id?.let { viewModel.fetchPhotosForTopics(it) }
+                        }
                     )
                 }
             }
@@ -122,9 +131,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) { page ->
-                    val category = topics[page]
-                    val images = imagesByCategory[category.id] ?: emptyList()
-                    when{
+                    when {
                         isLoading -> {
                             TImageVerticalEffect(
                                 onScroll = { isScrollingUp ->
@@ -133,8 +140,9 @@ fun HomeScreen(
                             )
                         }
                         else -> {
+                            val photosToShow = if (page == pagerState.currentPage) photoByTopics else emptyList()
                             ImageMasonryList(
-                                topics = images,
+                                photos = photosToShow,
                                 navController = navController,
                                 onScroll = { isScrollingUp ->
                                     showTopBar = isScrollingUp

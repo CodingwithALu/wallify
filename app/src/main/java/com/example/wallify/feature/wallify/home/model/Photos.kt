@@ -32,7 +32,57 @@ data class Photos(
     val views: Int = 0,
     val downloads: Int = 0,
     val topics: List<Topic> = emptyList()
-)
+) {
+    companion object {
+        fun empty(): Photos {
+            return Photos(
+                id = "",
+                slug = "",
+                alternativeSlugs = AlternativeSlugs.empty(), // assume default ctor exists
+                createdAt = "",
+                updatedAt = "",
+                promotedAt = null,
+                width = 0,
+                height = 0,
+                color = null,
+                blur_hash = null,
+                description = null,
+                altDescription = null,
+                breadcrumbs = emptyList(),
+                urls = Urls( // minimal placeholders; match your Urls data class constructor
+                    raw = "",
+                    full = "",
+                    regular = "",
+                    small = "",
+                    thumb = "",
+                    smallS3 = ""
+                ),
+                links = PhotoLinks( // minimal placeholders; match your PhotoLinks constructor
+                    self = "",
+                    html = "",
+                    download = "",
+                    downloadLocation = ""
+                ),
+                likes = 0,
+                likedByUser = false,
+                bookmarked = false,
+                currentUserCollections = emptyList(),
+                sponsorship = null,
+                topicSubmissions = null,
+                assetType = null,
+                user = null,
+                exif = null,
+                location = null,
+                meta = null,
+                publicDomain = false,
+                tags = emptyList(),
+                views = 0,
+                downloads = 0,
+                topics = emptyList()
+            )
+        }
+    }
+}
 
 data class Topic(
     val id: String,

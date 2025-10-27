@@ -5,6 +5,8 @@ package com.example.wallify.feature.wallify.photos.all_photos
 import CenterGripButton
 import ProductVerticalEffect
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,13 +40,23 @@ import java.lang.Float.min
 import com.example.wallify.common.widgets.products.WProductCardVertical
 import com.example.wallify.feature.wallify.photos.all_photos.widgets.ButtonRow
 import com.example.wallify.utlis.route.Screen
+import okhttp3.internal.concurrent.TaskRunner
 
 @SuppressLint("FrequentlyChangingValue", "ResourceType")
 @Composable
 fun AllPhotosScreen(
-    id: String?,
-    navController: NavController
+    id: String?, navController: NavController
 ) {
+    BackHandler {
+        navController.navigate(Screen.Home.route){
+            {
+                popUpTo (navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+        }
+    }
     //viewModel
     val viewModel: PhotosViewModel = hiltViewModel()
     val photo by viewModel.photo.collectAsState()
@@ -69,15 +81,12 @@ fun AllPhotosScreen(
     val animatedAlphaTopBar by animateFloatAsState(targetValue = alphaTopBar)
     val coroutineScope = rememberCoroutineScope()
     var showImage by remember { mutableStateOf(false) }
-    // BottomSheet
-    LaunchedEffect(photo) {
-        viewModel.fetchPhotoById(id!!)
+    LaunchedEffect(id) {
+        viewModel.fetchPhotoById(id.toString())
     }
     LaunchedEffect(photo) {
-        if (photo != null) {
-            if (photo!!.tags.isNotEmpty()) {
-                viewModel.fetchRelatedPhotosForQuery(photo!!.tags.mapNotNull { it.title })
-            }
+        if (photo.tags.isNotEmpty()) {
+            viewModel.fetchRelatedPhotosForQuery(photo.tags.mapNotNull { it.title })
         }
     }
     LaunchedEffect(animatedAlpha) {
@@ -87,33 +96,31 @@ fun AllPhotosScreen(
     }
     Scaffold(
         topBar = {
-            if (!showImage && photo != null) {
+            if (!showImage) {
                 TAppBar(
                     title = {
-                        if (photo!!.description?.isNotEmpty() == true) {
+                        if (photo.description?.isNotEmpty() == true) {
                             Text(
-                                text = photo!!.description!!
+                                text = photo.description!!
                             )
                         }
-                    },
-                    showBackArrow = true,
-                    leadingOnPressed = {
-                        navController.popBackStack()
-                    },
-                    animatedAlpha = animatedAlphaTopBar
+                    }, showBackArrow = true, leadingOnPressed = {
+                        navController.navigate(Screen.Home.route){
+                            popUpTo (navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }, animatedAlpha = animatedAlphaTopBar
                 )
             }
-        }
-    ) { innerPadding ->
-        if (photo != null) {
-            AsyncImage(
-                model = photo!!.urls.regular,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-        }
+        }) { innerPadding ->
+        AsyncImage(
+            model = photo.urls.regular,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
         LazyVerticalGrid(
             state = listState,
             columns = GridCells.Fixed(3),
@@ -128,24 +135,20 @@ fun AllPhotosScreen(
                         .clickable {
                             showImage = !showImage
                         }
-                        .aspectRatio(if (!showImage) 0.7f else 0.1f)
-                )
+                        .aspectRatio(if (!showImage) 0.7f else 0.1f))
             }
             if (!showImage) {
                 item(span = { GridItemSpan(3) }) {
-                    if (photo != null) {
-                        ButtonRow(
-                            item = photo!!,
-                            navController = navController,
-                            animatedAlpha = animatedAlpha,
-                            context = context
-                        )
-                    }
+                    ButtonRow(
+                        item = photo,
+                        navController = navController,
+                        animatedAlpha = animatedAlpha,
+                        context = context
+                    )
                 }
                 item(span = { GridItemSpan(3) }) {
                     CenterGripButton(
-                        alpha = animatedAlpha,
-                        onClick = {
+                        alpha = animatedAlpha, onClick = {
                             coroutineScope.launch {
                                 listState.animateScrollToItem(index = 3)
                             }
@@ -161,11 +164,9 @@ fun AllPhotosScreen(
                     else -> {
                         items(allImages) { item ->
                             WProductCardVertical(
-                                item = item,
-                                onclick = {
+                                item = item, onclick = {
                                     navController.navigate("${Screen.PhotosList.route}/${item.id}")
-                                }
-                            )
+                                })
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.wallify.common.widgets.appbar
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Tab
 import androidx.compose.material3.ScrollableTabRow

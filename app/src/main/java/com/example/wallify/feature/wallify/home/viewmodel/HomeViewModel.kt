@@ -19,23 +19,21 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
     private val networkManager: NetworkManager
-): ViewModel(){
+) : ViewModel() {
     private val _topics = MutableStateFlow<List<Topics>>(emptyList())
     val topics: StateFlow<List<Topics>> = _topics
-    private val _photosByTopics = MutableStateFlow<Map<String, List<Photos>>>(emptyMap())
-    val photosByTopics: StateFlow<Map<String, List<Photos>>> = _photosByTopics
+    private val _photosByTopics = MutableStateFlow<List<Photos>>(emptyList())
+    val photosByTopics: StateFlow<List<Photos>> = _photosByTopics
     var isLoading by mutableStateOf(false)
         private set
-    var errorMessage by mutableStateOf<String?>(null)
-        private set
-
     init {
         fetchTopics()
     }
+
     fun fetchTopics() {
         viewModelScope.launch {
             isLoading = true
-            if (!networkManager.checkConnection()){
+            if (!networkManager.checkConnection()) {
                 isLoading = false
                 return@launch
             }
@@ -43,7 +41,7 @@ class HomeViewModel @Inject constructor(
                 val result = homeRepository.fetchCategories()
                 _topics.value = result
                 isLoading = false
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _topics.value = emptyList()
                 isLoading = false
             }
@@ -59,14 +57,10 @@ class HomeViewModel @Inject constructor(
             }
             try {
                 val photos = homeRepository.fetchPhotosByTopics(idCate)
-                _photosByTopics.value = _photosByTopics.value.toMutableMap().apply {
-                    put(idCate, photos)
-                }
+                _photosByTopics.value = photos
                 isLoading = false
             } catch (e: Exception) {
-                _photosByTopics.value = _photosByTopics.value.toMutableMap().apply {
-                    put(idCate, emptyList())
-                }
+                _photosByTopics.value = emptyList()
                 isLoading = false
             }
         }

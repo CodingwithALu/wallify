@@ -1,10 +1,12 @@
 package com.example.core_viewmodel.controller.authentiacations
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core_model.UserModel
 import com.example.core_viewmodel.repository.AuthenticationRepository
 import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.data_store.DataStoreUser
@@ -24,29 +26,24 @@ class AuthViewModel @Inject constructor(
     private val dataStoreUser: DataStoreUser,
     private val networkManager: NetworkManager
 ) : ViewModel() {
-    var emails by mutableStateOf("")
-        private set
-    var userAvatars by mutableStateOf("")
-        private set
-    var userNames by mutableStateOf("")
-        private set
-    var firstName by mutableStateOf("")
-        private set
-    var lastName by mutableStateOf("")
-        private set
     var isLoading by mutableStateOf(false)
         private set
-    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false))
+    private val _user = MutableStateFlow<UserModel?>(null)
+    val user: StateFlow<UserModel?> = _user
+    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, ""))
     val googleLoginInfo: StateFlow<GoogleLoginInfo> = _googleLoginInfo
-
     init {
         restoreGoogleLoginInfo()
     }
-
     fun restoreGoogleLoginInfo() {
         viewModelScope.launch {
             dataStoreUser.getGoogleLoginInfo().collectLatest { info ->
                 _googleLoginInfo.value = info
+                if (_googleLoginInfo.value.isLoggedIn) {
+                    fetchUserByIdToken(_googleLoginInfo.value.userId)
+                } else{
+                    _user.value = UserModel.empty()
+                }
             }
         }
     }
@@ -66,20 +63,17 @@ class AuthViewModel @Inject constructor(
                     return@launch
                 }
                 val authResult = authenticationRepository.signInWithGoogle(idToken, accessToken)
-                userNames = userName
                 val parts = userName.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
-                firstName = if (parts.isNotEmpty()) parts.first() else ""
-                lastName = if (parts.size > 1) parts.drop(1).joinToString(" ") else ""
-                emails = email
-                userAvatars = avatarUrl
-                dataStoreUser.saveGoogleLoginInfo(true)
+                val firstName = if (parts.isNotEmpty()) parts.first() else ""
+                val lastName = if (parts.size > 1) parts.drop(1).joinToString(" ") else ""
                 val firebaseUser = authResult.user
+                dataStoreUser.saveGoogleLoginInfo(true, firebaseUser?.uid ?: "", accessToken)
                 userRepository.createNewUser(
                     idToken = firebaseUser?.uid ?: "",
                     firstName = firstName,
                     lastName = lastName,
-                    email = emails,
-                    urlProfile = userAvatars
+                    email = email,
+                    urlProfile = avatarUrl
                 )
                 isLoading = false
             } catch (e: Exception) {
@@ -91,15 +85,27 @@ class AuthViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             isLoading = true
-            emails = ""
-            userAvatars = ""
-            userNames = ""
-            // clear splitted names on logout
-            firstName = ""
-            lastName = ""
             try {
                 authenticationRepository.logout()
                 dataStoreUser.clearGoogleLoginInfo()
+                isLoading = false
+            } catch (e: Exception) {
+                isLoading = false
+            }
+        }
+    }
+
+    // fetch user by id token
+    fun fetchUserByIdToken(idToken: String) {
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                if (!networkManager.checkConnection()) {
+                    isLoading = false
+                    return@launch
+                }
+                val fetchedUser = userRepository.fetchUserByIdToken(idToken)
+                _user.value = fetchedUser
                 isLoading = false
             } catch (e: Exception) {
                 isLoading = false

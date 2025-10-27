@@ -111,7 +111,21 @@ data class AlternativeSlugs(
     val de: String?,
     val pt: String?,
     val id: String?
-)
+){
+   companion object {
+       fun empty() = AlternativeSlugs(
+           en = null,
+           es = null,
+           ja = null,
+           fr = null,
+           it = null,
+           ko = null,
+           de = null,
+           pt = null,
+           id = null
+       )
+   }
+}
 
 data class Urls(
     val raw: String,
