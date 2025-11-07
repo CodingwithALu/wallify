@@ -1,7 +1,7 @@
 package com.example.wallify.feature.wallify.home.widgets
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,20 +19,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.home.model.Photos
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
-import com.google.gson.Gson
 
 
 @SuppressLint("FrequentlyChangingValue")
 @Composable
-fun ImageMasonryList(categories: List<Image>,
-                     onScroll: (isScrollingUp: Boolean) -> Unit,
+fun ImageMasonryList(photos: List<Photos>,
+                     onScroll: (isScrollingUp: Boolean) -> Unit = {},
                      navController: NavController) {
     val listState = rememberLazyListState()
     val lastPosition = remember { mutableStateOf(Pair(0, 0)) }
@@ -62,7 +62,7 @@ fun ImageMasonryList(categories: List<Image>,
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(TSizes.xs)
     ) {
-        items(categories.chunked(4)) {chunk ->
+        items(photos.chunked(4)) { chunk ->
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(TSizes.xs)
             ) {
@@ -101,28 +101,28 @@ fun ImageMasonryList(categories: List<Image>,
     }
 }
 @Composable
-fun ImageCard(category: Image, modifier: Modifier = Modifier,
+fun ImageCard(photos: Photos, modifier: Modifier = Modifier,
               navController: NavController) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(TSizes.md))
             .clickable {
-                val gson = Gson()
-                val categoryJson = Uri.encode(gson.toJson(category))
-                navController.navigate("${Screen.ProductList.route}/$categoryJson")
+                navController.navigate("${Screen.PhotosList.route}/${photos.id}")
             }
     ) {
         AsyncImage(
-            model = category.url,
-            contentDescription = category.title,
+            model = photos.urls.regular,
+            contentDescription = photos.description,
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize()
         )
-        if (category.title.isNotEmpty()) {
+        if (photos.description?.isNotEmpty() == true) {
             Text(
-                text = category.title,
+                text = photos.description,
                 color = Color.White,
                 fontSize = 20.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.BottomStart)

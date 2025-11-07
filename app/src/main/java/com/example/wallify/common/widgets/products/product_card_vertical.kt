@@ -28,24 +28,25 @@ import com.example.wallify.feature.wallify.favorites.FavoritesViewModel
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.wallify.feature.wallify.home.model.Photos
 
 @Composable
 fun WProductCardVertical(
-    item: Image,
-    onclick: (Image) -> Unit = {},
-    viewModel: FavoritesViewModel = hiltViewModel()
+    item: Photos,
+    onclick: () -> Unit = { },
 ){
+    val viewModel: FavoritesViewModel = hiltViewModel()
     val favorites by viewModel.favorites.collectAsState()
     val isFavorite = favorites.any { it.id == item.id }
 
     Box(modifier = Modifier
         .height(280.dp)
         .width(80.dp)
-        .background(Color.Black)) {
+        .background(Color.Transparent)) {
         TRoundedImage(
-            imageUrl = item.url,
+            imageUrl = item.urls.small,
             isNetworkImage = true,
-            onPressed = { onclick(item) },
+            onPressed = { onclick() },
             fit = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
@@ -68,7 +69,7 @@ fun WProductCardVertical(
             )
         }
         Text(
-            text = item.title,
+            text = item.description ?: "",
             color = Color.White,
             fontSize = 13.sp,
             maxLines = 1,

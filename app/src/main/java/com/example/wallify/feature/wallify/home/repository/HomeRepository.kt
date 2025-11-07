@@ -2,41 +2,26 @@ package com.example.wallify.feature.wallify.home.repository
 
 import com.example.wallify.feature.wallify.home.model.Banner
 import com.example.wallify.feature.wallify.home.model.Image
-import com.example.wallify.feature.wallify.home.model.Category
+import com.example.wallify.feature.wallify.home.model.Photos
+import com.example.wallify.feature.wallify.home.model.Topics
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface HomeApi {
-    // banner
-    @GET("banners")
-    suspend fun getBanners(): List<Banner>
-
-    @GET("categories")
-    suspend fun getCategories(): List<Category>
-
-    @GET("images/by-category/{id_cate}")
-    suspend fun getImagesByCategory(@Path("id_cate") idCate: Int): List<Image>
-
-    @GET("images")
-    suspend fun getAllImages(): List<Image>
+    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/topics")
+    suspend fun getTopics(): List<Topics>
+    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/topics/{id_or_slug}/photos")
+    suspend fun getPhotosByTopics(@Path("id_or_slug") idTopic: String): List<Photos>
 }
 
 class HomeRepository(
     private val api: HomeApi
 ) {
-    // banner
-    suspend fun fetchBanners(): List<Banner> {
-        return api.getBanners()
-    }
-    suspend fun fetchCategories(): List<Category> {
-        return api.getCategories()
+    suspend fun fetchCategories(): List<Topics> {
+        return api.getTopics()
     }
 
-    suspend fun fetchImagesByCategory(idCate: Int): List<Image> {
-        return api.getImagesByCategory(idCate)
-    }
-
-    suspend fun fetchAllImages(): List<Image> {
-        return api.getAllImages()
+    suspend fun fetchPhotosByTopics(id: String): List<Photos> {
+        return api.getPhotosByTopics(id)
     }
 }

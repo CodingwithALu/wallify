@@ -2,6 +2,7 @@ package com.example.core_viewmodel.di
 
 import android.content.Context
 import com.example.core_viewmodel.repository.AuthenticationRepository
+import com.example.core_viewmodel.repository.UserApi
 import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.data_store.DataStoreUser
 import com.example.core_viewmodel.utils.data_store.OnboardingDataStore
@@ -11,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -21,11 +23,15 @@ object AppModule {
     fun provideAuthenticationRepository(): AuthenticationRepository {
         return AuthenticationRepository()
     }
-
     @Provides
     @Singleton
-    fun provideUserRepository(): UserRepository {
-        return UserRepository()
+    fun userApi(retrofit: Retrofit): UserApi {
+        return retrofit.create(UserApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideUserRepository(userApi: UserApi): UserRepository {
+        return UserRepository(userApi)
     }
 
     @Provides

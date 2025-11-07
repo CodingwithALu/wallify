@@ -1,22 +1,51 @@
-import androidx.compose.foundation.layout.Column
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.R
-import com.example.wallify.feature.personalization.setting.SignInGoogle
+import com.example.wallify.feature.personalization.setting.controller.SettingViewModel
+import com.example.wallify.feature.personalization.setting.widgets.SettingItem
+import com.example.wallify.feature.personalization.setting.widgets.SignInGoogle
 import com.example.wallify.utlis.constants.TSizes
+import com.example.wallify.utlis.route.Screen
+import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
+import com.example.wallify.feature.personalization.setting.widgets.BottomSheetImageBackGround
 
 @Composable
 fun SettingScreen(
-    navController: NavController
+    navController: NavController,
 ) {
+    val viewModel: SettingViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val user by authViewModel.user.collectAsState()
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var selectedUri by remember { mutableStateOf<Uri?>(null) }
+    var showConfirmTick by remember { mutableStateOf(false) }
+    val uploadResult = viewModel.uploadResult
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedUri = uri
+        showConfirmTick = uri != null
+    }
     Scaffold(
         topBar = {
             WAppBarCenter(
@@ -39,7 +68,11 @@ fun SettingScreen(
         ) {
             // profile
             item {
-                SignInGoogle()
+                SignInGoogle(
+                    onClick = {
+                        showBottomSheet = !showBottomSheet
+                    }
+                )
             }
             item {
                 SettingItem(
@@ -57,7 +90,6 @@ fun SettingScreen(
                     subtitle = "Manage notification settings",
                     imageItem = R.drawable.elements,
                     onClickItem = {
-                        navController.navigate("app_settings")
                     }
                 )
             }
@@ -67,7 +99,6 @@ fun SettingScreen(
                     subtitle = "View and manage your uploads",
                     imageItem = R.drawable.elements_upload,
                     onClickItem = {
-                        navController.navigate("my_uploads")
                     }
                 )
             }
@@ -77,7 +108,7 @@ fun SettingScreen(
                     subtitle = "View your favorite wallpapers",
                     imageItem = R.drawable.heart,
                     onClickItem = {
-                        navController.navigate("favorites")
+                        navController.navigate(Screen.Favorite.route)
                     }
                 )
             }
@@ -87,7 +118,6 @@ fun SettingScreen(
                     subtitle = "View your download history",
                     imageItem = R.drawable.elements_download,
                     onClickItem = {
-                        navController.navigate("download_history")
                     }
                 )
             }
@@ -97,13 +127,12 @@ fun SettingScreen(
                     subtitle = "Sync your favorites across devices",
                     imageItem = R.drawable.sync_38dp,
                     onClickItem = {
-                        navController.navigate("app_settings")
                     }
                 )
             }
             item {
                 Divider(
-                    modifier = Modifier.padding(vertical = TSizes.sm)
+                    modifier = Modifier.padding(vertical = TSizes.md, horizontal = TSizes.lg)
                 )
             }
             item {
@@ -112,7 +141,6 @@ fun SettingScreen(
                     subtitle = "Stay connected with us",
                     imageItem = R.drawable.view_object_track_38dp,
                     onClickItem = {
-                        navController.navigate("app_settings")
                     }
                 )
             }
@@ -122,7 +150,6 @@ fun SettingScreen(
                     subtitle = "Leave a review on the Play Store",
                     imageItem = R.drawable.star,
                     onClickItem = {
-                        navController.navigate("app_settings")
                     }
                 )
             }
@@ -132,7 +159,6 @@ fun SettingScreen(
                     subtitle = "Get assistance and support",
                     imageItem = R.drawable.help_38dp,
                     onClickItem = {
-                        navController.navigate("app_settings")
                     }
                 )
             }
@@ -142,11 +168,46 @@ fun SettingScreen(
                     subtitle = "Read our privacy policy",
                     imageItem = R.drawable.privacy_tip_38dp,
                     onClickItem = {
-                        navController.navigate("app_settings")
+                    }
+                )
+            }
+            item {
+                SettingItem(
+                    title = "Send Feedback",
+                    subtitle = "Contribute your ideas to the developer",
+                    imageItem = R.drawable.outgoing_mail_56dp,
+                    onClickItem = {
+                        viewModel.sendFeedback(user?.email?:"")
                     }
                 )
             }
         }
+        if (showConfirmTick && selectedUri != null) {
+            Button(onClick = {
+                viewModel.updateUrlBackGround(user?.idToken!!, selectedUri)
+                showConfirmTick = false
+                selectedUri = null
+            }, modifier = Modifier.padding(16.dp)) {
+                Text("Xác nhận upload (✔)")
+            }
+        }
+        uploadResult?.let {
+            Text(
+                text = it,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        if (showBottomSheet){
+            BottomSheetImageBackGround(
+                onClick = { it ->
+                    showBottomSheet = it
+                },
+                upLoad = {
+                    launcher.launch("image/*")
+                    showBottomSheet = false
+                }
+            )
+        }
     }
 }
-

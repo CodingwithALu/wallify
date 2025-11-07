@@ -1,5 +1,6 @@
 package com.example.wallify.common.widgets.appbar
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Tab
 import androidx.compose.material3.ScrollableTabRow
@@ -14,11 +15,12 @@ import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import com.example.wallify.feature.wallify.home.model.Category
 import com.example.wallify.feature.wallify.home.model.Image
+import com.example.wallify.feature.wallify.home.model.Topics
 import com.example.wallify.utlis.constants.TSizes
 
 @Composable
 fun TTabBar(
-    tabs: List<Category>,
+    tabs: List<Topics>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     appBarHeight: Dp = TSizes.xl,

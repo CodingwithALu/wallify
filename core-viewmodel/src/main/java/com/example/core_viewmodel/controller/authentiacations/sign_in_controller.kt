@@ -1,11 +1,12 @@
 package com.example.core_viewmodel.controller.authentiacations
 
-import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core_model.UserModel
 import com.example.core_viewmodel.repository.AuthenticationRepository
 import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.data_store.DataStoreUser
@@ -25,16 +26,11 @@ class AuthViewModel @Inject constructor(
     private val dataStoreUser: DataStoreUser,
     private val networkManager: NetworkManager
 ) : ViewModel() {
-    var emails by mutableStateOf("")
-        private set
-    var userAvatars by mutableStateOf("")
-    var password by mutableStateOf("")
-    var userNames by mutableStateOf("")
     var isLoading by mutableStateOf(false)
-    var errorMessage by mutableStateOf<String?>(null)
-    var successMessage by mutableStateOf<String?>(null)
-    // Sử dụng StateFlow để cập nhật tự động
-    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, "", "", ""))
+        private set
+    private val _user = MutableStateFlow<UserModel?>(null)
+    val user: StateFlow<UserModel?> = _user
+    private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, ""))
     val googleLoginInfo: StateFlow<GoogleLoginInfo> = _googleLoginInfo
     init {
         restoreGoogleLoginInfo()
@@ -43,40 +39,45 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreUser.getGoogleLoginInfo().collectLatest { info ->
                 _googleLoginInfo.value = info
-                emails = info.email
-                userNames = info.userName
-                userAvatars = info.avatar
+                if (_googleLoginInfo.value.isLoggedIn) {
+                    fetchUserByIdToken(_googleLoginInfo.value.userId)
+                } else{
+                    _user.value = UserModel.empty()
+                }
             }
         }
     }
 
-    fun loginWithGoogle(idToken: String, accessToken: String, userName: String, email: String, avatarUrl: String, onNavigate: () -> Unit) {
+    fun loginWithGoogle(
+        idToken: String,
+        accessToken: String,
+        userName: String,
+        email: String,
+        avatarUrl: String
+    ) {
         viewModelScope.launch {
             isLoading = true
-            errorMessage = null
             try {
                 if (!networkManager.checkConnection()) {
-                    errorMessage = "No Internet Connection"
                     isLoading = false
                     return@launch
                 }
                 val authResult = authenticationRepository.signInWithGoogle(idToken, accessToken)
-                userNames = userName
-                emails = email
-                userAvatars = avatarUrl
-                dataStoreUser.saveGoogleLoginInfo( true, email, userName, avatarUrl)
+                val parts = userName.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+                val firstName = if (parts.isNotEmpty()) parts.first() else ""
+                val lastName = if (parts.size > 1) parts.drop(1).joinToString(" ") else ""
                 val firebaseUser = authResult.user
-                userRepository.saveUserToServer(
-                    googleId = firebaseUser?.uid ?: "",
-                    name = userName,
+                dataStoreUser.saveGoogleLoginInfo(true, firebaseUser?.uid ?: "", accessToken)
+                userRepository.createNewUser(
+                    idToken = firebaseUser?.uid ?: "",
+                    firstName = firstName,
+                    lastName = lastName,
                     email = email,
-                    url = avatarUrl
+                    urlProfile = avatarUrl
                 )
                 isLoading = false
-                onNavigate()
             } catch (e: Exception) {
                 isLoading = false
-                errorMessage = e.message
             }
         }
     }
@@ -84,19 +85,30 @@ class AuthViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             isLoading = true
-            emails = ""
-            userAvatars = ""
-            userNames = ""
-            successMessage = null
-            errorMessage = null
             try {
                 authenticationRepository.logout()
                 dataStoreUser.clearGoogleLoginInfo()
                 isLoading = false
-                successMessage = "Bạn đã đăng xuất thành công."
             } catch (e: Exception) {
                 isLoading = false
-                errorMessage = e.message
+            }
+        }
+    }
+
+    // fetch user by id token
+    fun fetchUserByIdToken(idToken: String) {
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                if (!networkManager.checkConnection()) {
+                    isLoading = false
+                    return@launch
+                }
+                val fetchedUser = userRepository.fetchUserByIdToken(idToken)
+                _user.value = fetchedUser
+                isLoading = false
+            } catch (e: Exception) {
+                isLoading = false
             }
         }
     }

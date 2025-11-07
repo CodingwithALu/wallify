@@ -7,14 +7,16 @@ sealed class Screen(val route: String) {
     object Collection : Screen("collection")
     object Favorite : Screen("favorite")
     object Setting : Screen("setting")
-    object ProductList : Screen("product_list")
+    object PhotosList : Screen("photos_list")
     object ProductDetails : Screen("product_details")
     object StreakList : Screen("streak_list")
+    object Search : Screen("search")
+    object CollectionPhotos: Screen("collection_photos")
 }
 
 val routesToHideBottomBar = listOf(
     Screen.OnBoarding.route,
-    "product_list",
+    "photos_list",
     "product_details",
     "setting"
 )

@@ -5,10 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface StreakApi {
-    @GET("/images/streak-point-price/first-by-price")
+    @GET("images/streak-point-price/first-by-point")
     suspend fun getStreakPointPrice(): List<Image>
-    @GET("/images/streak-point/{price}")
-    suspend fun getStreakPointByPrice(@Path("price") price: Int): List<Image>
+    @GET("images/streak-point/{id_point}")
+    suspend fun getStreakPointByPrice(@Path("id_point") price: Int): List<Image>
 }
 class StreakRepository(
     private val api: StreakApi
