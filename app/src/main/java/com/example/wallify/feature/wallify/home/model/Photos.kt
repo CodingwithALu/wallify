@@ -49,14 +49,7 @@ data class Photos(
                 description = null,
                 altDescription = null,
                 breadcrumbs = emptyList(),
-                urls = Urls( // minimal placeholders; match your Urls data class constructor
-                    raw = "",
-                    full = "",
-                    regular = "",
-                    small = "",
-                    thumb = "",
-                    smallS3 = ""
-                ),
+                urls = Urls.empty(),
                 links = PhotoLinks( // minimal placeholders; match your PhotoLinks constructor
                     self = "",
                     html = "",

@@ -1,6 +1,6 @@
 package com.example.wallify.feature.wallify.photos.all_photos.widgets
 
-import BottomSheetSet
+import BottomSheetSetAnDownload
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -30,6 +30,7 @@ import com.example.wallify.R
 import com.example.wallify.feature.wallify.favorites.FavoritesViewModel
 import com.example.wallify.feature.wallify.home.model.Photos
 import com.example.wallify.feature.wallify.photos.viewmodel.PhotosViewModel
+import com.example.wallify.utlis.route.Screen
 
 @SuppressLint("ObsoleteSdkInt")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,14 +79,17 @@ fun ButtonRow(
                     .background(Color.White.copy(alpha = 0.4f))
             ) {
                 IconButton(onClick = {
-                    photosViewModel.downloadImageWithNotification(item.urls.raw,
+                    photosViewModel.downloadImageWithNotification(
+                        item.urls.raw,
                         successMsg = "Image Downloaded Successfully",
-                        errorMsg = "Error Downloading Image")
+                        errorMsg = "Error Downloading Image"
+                    )
                 }) {
                     Icon(
-                        painter = painterResource(R.drawable.elements_down),
+                        painter = painterResource(R.drawable.download),
                         contentDescription = "Download",
-                        tint = Color.White.copy(alpha = animatedAlpha)
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -107,7 +111,8 @@ fun ButtonRow(
                     Icon(
                         painter = painterResource(R.drawable.share_54dp),
                         contentDescription = "Share",
-                        tint = Color.White.copy(alpha = animatedAlpha)
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -115,7 +120,11 @@ fun ButtonRow(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-                    .background(if(isFavorite)Color.White.copy(alpha = 0.9f) else Color.White.copy(alpha = 0.4f))
+                    .background(
+                        if (isFavorite) Color.White.copy(alpha = 0.9f) else Color.White.copy(
+                            alpha = 0.4f
+                        )
+                    )
             ) {
                 IconButton(onClick = {
                     if (isFavorite) viewModel.removeFavorite(item)
@@ -124,7 +133,10 @@ fun ButtonRow(
                     Icon(
                         painter = painterResource(R.drawable.heart),
                         contentDescription = "Dislike",
-                        tint =  Color.White.copy(alpha = animatedAlpha)
+                        tint = if (isFavorite) Color.Black.copy(alpha = animatedAlpha) else Color.White.copy(
+                            alpha = animatedAlpha
+                        ),
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -138,7 +150,8 @@ fun ButtonRow(
                     Icon(
                         painter = painterResource(R.drawable.wallpaper_slideshow_54dp),
                         contentDescription = "Set Wallpaper",
-                        tint = Color.White.copy(alpha = animatedAlpha)
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -146,8 +159,8 @@ fun ButtonRow(
     }
     AnimatedVisibility(
         visible = false,
-    enter = slideInVertically(initialOffsetY = { -it }),
-    exit = slideOutVertically(targetOffsetY = { -it }),
+        enter = slideInVertically(initialOffsetY = { -it }),
+        exit = slideOutVertically(targetOffsetY = { -it }),
     ) {
         Surface(
             shape = MaterialTheme.shapes.medium,
@@ -164,13 +177,22 @@ fun ButtonRow(
             }
         }
     }
-    if (showBottomSheet){
-        BottomSheetSet(
+    if (showBottomSheet) {
+        BottomSheetSetAnDownload(
+            title = "Set Wallpaper",
             item = item,
-            navController = navController,
+            onFullClick = {
+                navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.full)}")
+            },
+            onRawClick = {
+                navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.raw)}")
+            },
+            onRegularClick = {
+                navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.regular)}")
+            },
             onDismiss = { it ->
                 showBottomSheet = it
-            }
+            },
         )
     }
 }

@@ -1,6 +1,5 @@
 package com.example.core_viewmodel.controller.authentiacations
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,10 +12,12 @@ import com.example.core_viewmodel.utils.data_store.DataStoreUser
 import com.example.core_viewmodel.utils.data_store.GoogleLoginInfo
 import com.example.core_viewmodel.utils.helper.NetworkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,8 +29,8 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
     var isLoading by mutableStateOf(false)
         private set
-    private val _user = MutableStateFlow<UserModel?>(null)
-    val user: StateFlow<UserModel?> = _user
+    private val _user = MutableStateFlow(UserModel.empty())
+    val user: StateFlow<UserModel> = _user
     private val _googleLoginInfo = MutableStateFlow(GoogleLoginInfo(false, ""))
     val googleLoginInfo: StateFlow<GoogleLoginInfo> = _googleLoginInfo
     init {
@@ -104,9 +105,11 @@ class AuthViewModel @Inject constructor(
                     isLoading = false
                     return@launch
                 }
-                val fetchedUser = userRepository.fetchUserByIdToken(idToken)
-                _user.value = fetchedUser
-                isLoading = false
+                withContext(NonCancellable){
+                    val fetchedUser = userRepository.fetchUserByIdToken(idToken)
+                    _user.value = fetchedUser
+                    isLoading = false
+                }
             } catch (e: Exception) {
                 isLoading = false
             }

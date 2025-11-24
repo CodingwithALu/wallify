@@ -19,44 +19,43 @@ import com.example.wallify.feature.wallify.home.model.Photos
 import java.net.URL
 import android.os.Build
 import android.provider.MediaStore
+import com.example.wallify.feature.wallify.network.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface ProductApi {
-    //fetch Photo
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/photos/{id}")
+interface PhotosApi {
+    @GET("photos/{id}")
     suspend fun getPhotoById(@Path("id") id: String): Photos
-    // related image for collections
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/photos/random")
+    @GET("photos/random")
     suspend fun getRelatedPhotosForCollections(
         @Query("collections") topics: String,
         @Query("count") count: Int
     ): List<Photos>
-    // related image for topics
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/photos/random")
+    @GET("photos/random")
     suspend fun getRelatedPhotosForTopics(
         @Query("topics") topics: String,
         @Query("count") count: Int
     ): List<Photos>
-    // related image for query
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/photos/random")
+    @GET("photos/random")
     suspend fun getRelatedPhotosForQuery(
         @Query("query") topics: String,
         @Query("count") count: Int
     ): List<Photos>
 }
 class ProductRepository(
-    private val api: ProductApi,
+    private val api: PhotosApi = ApiClient.photos,
     val context: Context
 ) {
     // fetch photo by id
     suspend fun fetchPhotoById(id: String): Photos {
-        return api.getPhotoById(id)
-    }
+       return withContext(Dispatchers.IO){
+           api.getPhotoById(id)
+       }
 
+    }
     // related image from collections
     suspend fun fetchRelatedPhotosForCollections(
         imageId: List<String>,
@@ -67,7 +66,9 @@ class ProductRepository(
     }
     suspend fun fetchRelatedPhotosForQuery(queryId: List<String>, count: Int = 30): List<Photos> {
         val query = queryId.joinToString(",")
-        return api.getRelatedPhotosForQuery(query, count)
+        return withContext(Dispatchers.IO){
+            api.getRelatedPhotosForQuery(query, count)
+        }
     }
 
     // set wallpaper for home, lock, or both screens
@@ -93,64 +94,69 @@ class ProductRepository(
         val channelId = "wallpaper_channel"
         val notificationId = 1001
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU // Trước Android 13 không cần quyền này
-            ) {
-                val builder = NotificationCompat.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.logo_app)
-                    .setContentTitle("Wallpaper")
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val notificationManager =
-                        context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-                    val channel = android.app.NotificationChannel(
-                        channelId,
-                        "Wallpaper Notifications",
-                        android.app.NotificationManager.IMPORTANCE_DEFAULT
-                    )
-                    notificationManager.createNotificationChannel(channel)
-                }
-                NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    "Wallpaper Notifications",
+                    android.app.NotificationManager.IMPORTANCE_HIGH
+                )
+                channel.enableVibration(true)
+                channel.vibrationPattern = longArrayOf(0, 250, 250, 250)
+                channel.enableLights(true)
+                channel.lightColor = android.graphics.Color.BLUE
+                notificationManager.createNotificationChannel(channel)
             }
+
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.logo_app)
+                .setContentTitle("Wallpaper")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setAutoCancel(true)
+
+            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         } catch (e: SecurityException) {
-            // Handle permission denied gracefully
+            e.printStackTrace()
         }
     }
+
     @SuppressLint("ObsoleteSdkInt")
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showDownloadNotification(message: String) {
         val channelId = "download_channel"
         val notificationId = 2001
         try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
-            ) {
-                val builder = NotificationCompat.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.logo_app)
-                    .setContentTitle("Download")
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val notificationManager =
-                        context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
-                    val channel = android.app.NotificationChannel(
-                        channelId,
-                        "Download Notifications",
-                        android.app.NotificationManager.IMPORTANCE_DEFAULT
-                    )
-                    notificationManager.createNotificationChannel(channel)
-                }
-                NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = android.app.NotificationChannel(
+                    channelId,
+                    "Download Notifications",
+                    android.app.NotificationManager.IMPORTANCE_HIGH
+                )
+                channel.enableVibration(true)
+                channel.vibrationPattern = longArrayOf(0, 250, 250, 250)
+                channel.enableLights(true)
+                channel.lightColor = android.graphics.Color.BLUE
+                notificationManager.createNotificationChannel(channel)
             }
+
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.logo_app)
+                .setContentTitle("Download")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setAutoCancel(true)
+
+            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         } catch (e: SecurityException) {
-            // Handle permission denied gracefully
+            e.printStackTrace()
         }
     }
     suspend fun getBitmapFromUrl(url: String): Bitmap? {

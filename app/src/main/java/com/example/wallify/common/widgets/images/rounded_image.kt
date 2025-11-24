@@ -1,6 +1,5 @@
 package com.example.wallify.common.widgets.images
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,7 +22,7 @@ import com.example.wallify.common.widgets.shimmer.TShimmerEffect
 @Composable
 fun TRoundedImage(
     modifier: Modifier = Modifier,
-    imageUrl: String = "",
+    imageUrl: String? = "",
     fit: ContentScale = ContentScale.Crop,
     isNetworkImage: Boolean = false,
     onPressed: (() -> Unit)? = null,
@@ -36,7 +35,7 @@ fun TRoundedImage(
             .clickable(enabled = onPressed != null) { onPressed?.invoke() },
         contentAlignment = Alignment.Center
     ) {
-        if (isNetworkImage && imageUrl.isNotEmpty()) {
+        if (isNetworkImage && imageUrl != null) {
             val painter = rememberAsyncImagePainter(imageUrl)
             when (painter.state) {
                 is AsyncImagePainter.State.Loading -> {

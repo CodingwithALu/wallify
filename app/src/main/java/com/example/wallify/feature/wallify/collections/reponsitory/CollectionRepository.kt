@@ -2,25 +2,36 @@ package com.example.wallify.feature.wallify.collections.reponsitory
 
 import com.example.wallify.feature.wallify.home.model.Collections
 import com.example.wallify.feature.wallify.home.model.Photos
-import com.example.wallify.feature.wallify.home.model.Topics
+import com.example.wallify.feature.wallify.network.ApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface CollectionApi{
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/categories")
+    @GET("categories")
     suspend fun getCollection(): List<Collections>
-    @GET("https://aayqa9hmi0.execute-api.us-east-1.amazonaws.com/categories/{id}/photos")
+    @GET("categories/{id}")
+    suspend fun getCollectionById(@Path("id") idCollections: String): Collections
+    @GET("categories/{id}/photos")
     suspend fun fetchPhotosByCollectionId(@Path("id") idCollections: String): List<Photos>
 }
 class CollectionRepository (
-    private val api: CollectionApi
+    private val api: CollectionApi = ApiClient.collectionApi
 ) {
-    // Fetch Image From collections
     suspend fun fetchCollections(): List<Collections> {
-        return api.getCollection()
+        return withContext(Dispatchers.IO){
+            api.getCollection()
+        }
     }
-    // Fetch Photos By Collection Id
+    suspend fun fetchCollectionById(idCollections: String): Collections {
+        return withContext(Dispatchers.IO){
+            api.getCollectionById(idCollections)
+        }
+    }
     suspend fun fetchPhotosByCollectionId(idCollections: String): List<Photos> {
-        return api.fetchPhotosByCollectionId(idCollections)
+        return withContext(Dispatchers.IO){
+            api.fetchPhotosByCollectionId(idCollections = idCollections)
+        }
     }
 }

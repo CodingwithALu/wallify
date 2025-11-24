@@ -107,7 +107,7 @@ fun ImageCard(photos: Photos, modifier: Modifier = Modifier,
         modifier = modifier
             .clip(RoundedCornerShape(TSizes.md))
             .clickable {
-                navController.navigate("${Screen.PhotosList.route}/${photos.id}")
+                navController.navigate("${Screen.PhotosList.route}/${photos.id}/${Screen.Home.route}")
             }
     ) {
         AsyncImage(

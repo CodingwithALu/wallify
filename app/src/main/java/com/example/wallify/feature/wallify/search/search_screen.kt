@@ -1,11 +1,11 @@
 package com.example.wallify.feature.wallify.search
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -18,11 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +34,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.wallify.common.widgets.products.WProductCardVertical
-import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.search.controller.SearchViewModel
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
@@ -50,8 +46,6 @@ fun SearchScreen(
     val searchPhotos by viewmodel.searchPhotos.collectAsState()
     val recentSearches by viewmodel.searchHistory.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-
-    // get keyboard controller and focus manager
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -85,9 +79,7 @@ fun SearchScreen(
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            // khi nhấn Enter / Search trên IME: lưu lịch sử, gọi tìm kiếm, ẩn bàn phím và clear focus
                             if (searchQuery.isNotBlank()) {
-                                // ViewModel methods already launch their own coroutines
                                 viewmodel.saveSearchQuery(searchQuery)
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
@@ -112,8 +104,7 @@ fun SearchScreen(
                             ))
                 }
             }
-            Spacer(Modifier.height(16.dp))
-            // list Photos
+            Spacer(Modifier.height(TSizes.defaultSpace/2))
             if (searchPhotos.isNotEmpty()) {
                 LazyVerticalGrid(columns = GridCells.Fixed(3)) {
                     items(searchPhotos) { photo ->
@@ -129,7 +120,8 @@ fun SearchScreen(
                 if (recentSearches.isNotEmpty()) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding(TSizes.defaultSpace/2),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("History Searches ", fontWeight = FontWeight.Bold, fontSize = 18.sp)
@@ -164,7 +156,6 @@ fun SearchScreen(
         }
     }
 }
-
 @Composable
 fun SearchItem(
     it: String,

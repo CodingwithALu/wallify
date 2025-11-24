@@ -1,3 +1,5 @@
+package com.example.wallify.feature.wallify.streak.widgets
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -32,14 +34,10 @@ fun StreakItemScreen(
                 onClick()
             }
         )
-        WTitleItems(
-            title = item.title,
-            subTitle = item.description
-        )
         if (showPoint){
             StreakPoint(
                 modifier = Modifier.align(Alignment.TopEnd),
-                coin = item.id_point?: 0
+                coin = item.id_point ?: 0
             )
         }
     }

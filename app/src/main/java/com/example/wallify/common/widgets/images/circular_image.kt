@@ -1,5 +1,6 @@
+package com.example.wallify.common.widgets.images
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,16 +17,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.wallify.R
 import com.example.wallify.common.widgets.shimmer.TShimmerEffect
-import com.example.wallify.ui.theme.onErrorLightHighContrast
-import com.example.wallify.ui.theme.onSurfaceLightHighContrast
-import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.helpers.THelperFunctions
 
 @Composable

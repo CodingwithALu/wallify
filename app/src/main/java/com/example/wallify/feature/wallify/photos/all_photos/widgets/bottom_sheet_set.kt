@@ -1,4 +1,3 @@
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,20 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.wallify.utlis.constants.TSizes
-import com.example.wallify.utlis.route.Screen
-import com.google.gson.Gson
 import com.example.wallify.R
 import com.example.wallify.feature.wallify.home.model.Photos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetSet(
-    item: Photos,
-    navController: NavController,
+fun BottomSheetSetAnDownload(
+    title: String,
+    item: Photos = Photos.empty(),
     onDismiss: (Boolean) -> Unit,
-
+    onRegularClick: () -> Unit,
+    onRawClick: () -> Unit,
+    onFullClick: () -> Unit
     ) {
     ModalBottomSheet(
         onDismissRequest = { onDismiss(false) }
@@ -42,7 +40,7 @@ fun BottomSheetSet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Set Wallpaper",
+                text = title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = TSizes.xs)
             )
@@ -50,10 +48,11 @@ fun BottomSheetSet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.regular)}")
+                        onRegularClick()
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(TSizes.defaultSpace))
                 Icon(
                     painter = painterResource(R.drawable.image_54dp),
                     contentDescription = null
@@ -68,7 +67,7 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "HD, ${item.width} x ${item.height} px, ${item.blur_hash} kb",
+                        text = "HD, ${item.width} x ${item.height} px, REGULAR",
                     )
                 }
             }
@@ -77,10 +76,11 @@ fun BottomSheetSet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController.navigate("${Screen.ProductDetails.route}/${Uri.encode(item.urls.raw)}")
+                        onRawClick()
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(TSizes.defaultSpace))
                 Icon(
                     painter = painterResource(R.drawable.image_inset_54dp),
                     contentDescription = null
@@ -95,12 +95,43 @@ fun BottomSheetSet(
                             .fillMaxWidth()
                     )
                     Text(
-                        text = "4K, ${item.width} x ${item.height} px, ${item.blur_hash} MB",
+                        text = "4K, ${item.width} x ${item.height} px, RAW",
                         modifier = Modifier
                             .fillMaxWidth()
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(TSizes.xs))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onFullClick()
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.width(TSizes.defaultSpace))
+                Icon(
+                    painter = painterResource(R.drawable.image_inset_54dp),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(14.dp))
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Original",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Text(
+                        text = "4K, ${item.width} x ${item.height} px, FULL",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(TSizes.defaultSpace))
         }
     }
 }

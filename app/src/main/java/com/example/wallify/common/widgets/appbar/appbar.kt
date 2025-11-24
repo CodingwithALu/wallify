@@ -1,7 +1,13 @@
 package com.example.wallify.common.widgets.appbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -30,49 +36,63 @@ fun TAppBar(
     actions: List<@Composable RowScope.() -> Unit>? = null,
     leadingOnPressed: (() -> Unit)? = null,
     animatedAlpha: Float = 0f,
+    showTopBar: Boolean = true
 ) {
     val dark = isSystemInDarkTheme()
-    TopAppBar(
-        modifier = Modifier
-            .height(50.dp),
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(animatedAlpha),
-            scrolledContainerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(animatedAlpha)
-        ),
-        navigationIcon = {
-            when {
-                showBackArrow -> {
-                    Icon(
-                        painter = painterResource(R.drawable.chevron_back),
-                        contentDescription = "Back",
-                        modifier = Modifier.clickable {
-                            leadingOnPressed?.invoke()
-                        }
-                    )
-
-                }
-
-                leadingIcon != null -> {
-                    IconButton(onClick = { leadingOnPressed?.invoke() }) {
+    AnimatedVisibility(
+        visible = showTopBar,
+        enter = slideInVertically(
+            initialOffsetY = { -it },
+            animationSpec = tween(1200)
+        ) + fadeIn(animationSpec = tween(1200)),
+        exit = fadeOut(animationSpec = tween(600))
+    ) {
+        TopAppBar(
+            modifier = Modifier
+                .height(50.dp),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(
+                    animatedAlpha
+                ),
+                scrolledContainerColor = if (dark) Color.Black.copy(animatedAlpha) else Color.White.copy(
+                    animatedAlpha
+                )
+            ),
+            navigationIcon = {
+                when {
+                    showBackArrow -> {
                         Icon(
-                            imageVector = leadingIcon,
-                            contentDescription = "Leading Icon"
+                            painter = painterResource(R.drawable.chevron_back),
+                            contentDescription = "Back",
+                            modifier = Modifier.clickable {
+                                leadingOnPressed?.invoke()
+                            }
                         )
-                    }
-                }
 
-                else -> {}
+                    }
+
+                    leadingIcon != null -> {
+                        IconButton(onClick = { leadingOnPressed?.invoke() }) {
+                            Icon(
+                                imageVector = leadingIcon,
+                                contentDescription = "Leading Icon"
+                            )
+                        }
+                    }
+
+                    else -> {}
+                }
+            },
+            title = {
+                title?.invoke()
+            },
+            actions = {
+                actions?.forEach { action ->
+                    action()
+                }
             }
-        },
-        title = {
-            title?.invoke()
-        },
-        actions = {
-            actions?.forEach { action ->
-                action()
-            }
-        }
-    )
+        )
+    }
 }
 
 

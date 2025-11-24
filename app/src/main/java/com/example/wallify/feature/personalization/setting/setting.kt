@@ -1,3 +1,6 @@
+package com.example.wallify.feature.personalization.setting
+
+import WAppBarCenter
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,6 +12,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -33,13 +36,12 @@ import com.example.wallify.feature.personalization.setting.widgets.BottomSheetIm
 fun SettingScreen(
     navController: NavController,
 ) {
+    val userModel: AuthViewModel = hiltViewModel()
+    val user by userModel.user.collectAsState()
     val viewModel: SettingViewModel = hiltViewModel()
-    val authViewModel: AuthViewModel = hiltViewModel()
-    val user by authViewModel.user.collectAsState()
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var showConfirmTick by remember { mutableStateOf(false) }
-    val uploadResult = viewModel.uploadResult
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -69,8 +71,15 @@ fun SettingScreen(
             // profile
             item {
                 SignInGoogle(
+                    selectedUri = selectedUri,
+                    showConfirmTick,
                     onClick = {
                         showBottomSheet = !showBottomSheet
+                    },
+                    onClickUpLoad = {
+                        viewModel.updateUrlBackGround(user.idToken, selectedUri)
+                        showConfirmTick = false
+                        selectedUri = null
                     }
                 )
             }
@@ -177,27 +186,11 @@ fun SettingScreen(
                     subtitle = "Contribute your ideas to the developer",
                     imageItem = R.drawable.outgoing_mail_56dp,
                     onClickItem = {
-                        viewModel.sendFeedback(user?.email?:"")
+                        viewModel.sendFeedback(user.email)
                     }
                 )
             }
         }
-        if (showConfirmTick && selectedUri != null) {
-            Button(onClick = {
-                viewModel.updateUrlBackGround(user?.idToken!!, selectedUri)
-                showConfirmTick = false
-                selectedUri = null
-            }, modifier = Modifier.padding(16.dp)) {
-                Text("Xác nhận upload (✔)")
-            }
-        }
-        uploadResult?.let {
-            Text(
-                text = it,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-
         if (showBottomSheet){
             BottomSheetImageBackGround(
                 onClick = { it ->

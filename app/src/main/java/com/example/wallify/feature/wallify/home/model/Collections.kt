@@ -2,6 +2,7 @@ package com.example.wallify.feature.wallify.home.model
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+
 data class Collections(
     val id: String,
     val title: String,
@@ -17,7 +18,50 @@ data class Collections(
     val user: CollectionUser,
     @SerializedName("cover_photo") val coverPhoto: CollectionCoverPhoto?,
     @SerializedName("preview_photos") val previewPhotos: List<CollectionPreviewPhoto>
-) : Serializable
+) : Serializable {
+    companion object {
+        fun empty(): Collections {
+            return Collections(
+                id = "",
+                title = "",
+                description = null,
+                publishedAt = null,
+                lastCollectedAt = null,
+                updatedAt = null,
+                featured = false,
+                totalPhotos = 0,
+                isPrivate = false,
+                shareKey = null,
+                links = null,
+                user = CollectionUser(
+                    id = null,
+                    updatedAt = null,
+                    username = null,
+                    name = null,
+                    firstName = null,
+                    lastName = null,
+                    twitterUsername = null,
+                    portfolioUrl = null,
+                    bio = null,
+                    location = null,
+                    links = null,
+                    profileImage = null,
+                    instagramUsername = null,
+                    totalCollections = null,
+                    totalLikes = null,
+                    totalPhotos = null,
+                    totalPromotedPhotos = null,
+                    totalIllustrations = null,
+                    acceptedTos = null,
+                    forHire = null,
+                    social = null
+                ),
+                coverPhoto = null,
+                previewPhotos = emptyList()
+            )
+        }
+    }
+}
 
 data class CollectionLinks(
     val self: String?,
