@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.home
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import com.example.wallify.feature.wallify.home.widgets.ImageMasonryList
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.constants.TSizes
 import com.example.wallify.utlis.route.Screen
 import androidx.compose.runtime.rememberCoroutineScope
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @SuppressLint("ResourceType")
@@ -51,8 +53,6 @@ fun HomeScreen(
     LaunchedEffect(topics) {
         if (topics.isNotEmpty()) {
             if (selectedTabIndex !in topics.indices) selectedTabIndex = 0
-            val categoryId = topics[selectedTabIndex].id
-            viewModel.fetchPhotosForTopics(categoryId)
             coroutineScope.launch { pagerState.scrollToPage(selectedTabIndex) }
         }
     }
@@ -114,7 +114,6 @@ fun HomeScreen(
                         tabs = topics,
                         selectedTabIndex = selectedTabIndex,
                         onTabSelected = { index ->
-                            // khi bấm tab: cập nhật index, scroll pager và fetch dữ liệu cho tab đó
                             selectedTabIndex = index
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(index)

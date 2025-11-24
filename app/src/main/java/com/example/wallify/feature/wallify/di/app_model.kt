@@ -8,7 +8,8 @@ import com.example.wallify.feature.wallify.collections.reponsitory.CollectionRep
 import com.example.wallify.feature.wallify.favorites.FavoritesRepository
 import com.example.wallify.feature.wallify.home.repository.HomeApi
 import com.example.wallify.feature.wallify.home.repository.HomeRepository
-import com.example.wallify.feature.wallify.photos.repository.ProductApi
+import com.example.wallify.feature.wallify.network.ApiConstants
+import com.example.wallify.feature.wallify.photos.repository.PhotosApi
 import com.example.wallify.feature.wallify.photos.repository.ProductRepository
 import com.example.wallify.feature.wallify.search.repository.SearchApi
 import com.example.wallify.feature.wallify.search.repository.SearchRepository
@@ -30,7 +31,7 @@ object HomeModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://laulu.io.vn/hmoob_store_api/")
+            .baseUrl(ApiConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -51,14 +52,14 @@ object HomeModule {
     // related image
     @Provides
     @Singleton
-    fun provideRelatedImageApi(retrofit: Retrofit): ProductApi {
-        return retrofit.create(ProductApi::class.java)
+    fun provideRelatedImageApi(retrofit: Retrofit): PhotosApi {
+        return retrofit.create(PhotosApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideRelatedImageRepository(productApi: ProductApi, @ApplicationContext context: Context): ProductRepository {
-        return ProductRepository(productApi, context)
+    fun provideRelatedImageRepository(photosApi: PhotosApi, @ApplicationContext context: Context): ProductRepository {
+        return ProductRepository(photosApi, context)
     }
     // streak
     @Provides

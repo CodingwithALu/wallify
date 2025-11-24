@@ -1,7 +1,5 @@
 package com.example.wallify.feature.wallify.streak.widgets
 
-import BottomSheetSet
-import StreakItemScreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

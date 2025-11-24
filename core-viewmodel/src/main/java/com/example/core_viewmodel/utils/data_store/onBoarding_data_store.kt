@@ -13,9 +13,7 @@ val Context.onboardingDataStore by preferencesDataStore(name = "onboarding_prefs
 class OnboardingDataStore(
     private val context: Context
 ) {
-
     val IS_FIRST_TIME = booleanPreferencesKey("is_first_time")
-
     // Function set
     suspend fun setFirstTime(value: Boolean) {
         context.onboardingDataStore.edit { prefs ->

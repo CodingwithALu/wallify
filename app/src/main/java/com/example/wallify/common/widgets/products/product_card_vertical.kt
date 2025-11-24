@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wallify.R
 import com.example.wallify.feature.wallify.favorites.FavoritesViewModel
-import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wallify.feature.wallify.home.model.Photos

@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.collections
 
 import CollectionItemScreen
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,14 @@ fun CollectionScreen(navController: NavController) {
     val viewModel: CollectionViewModel = hiltViewModel()
     val collection by viewModel.collections.collectAsState()
     val isLoading = viewModel.isLoading
+    BackHandler {
+        navController.navigate(Screen.Home.route){
+            popUpTo (navController.graph.startDestinationId){
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }
     Scaffold(
         bottomBar = {
             BottomAppBarr(

@@ -5,7 +5,6 @@ package com.example.wallify.feature.wallify.photos.all_photos
 import CenterGripButton
 import ProductVerticalEffect
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -40,22 +39,16 @@ import java.lang.Float.min
 import com.example.wallify.common.widgets.products.WProductCardVertical
 import com.example.wallify.feature.wallify.photos.all_photos.widgets.ButtonRow
 import com.example.wallify.utlis.route.Screen
-import okhttp3.internal.concurrent.TaskRunner
 
 @SuppressLint("FrequentlyChangingValue", "ResourceType")
 @Composable
 fun AllPhotosScreen(
-    id: String?, navController: NavController
+    id: String?,
+    navController: NavController,
+    onClick: () -> Unit
 ) {
     BackHandler {
-        navController.navigate(Screen.Home.route){
-            {
-                popUpTo (navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
-        }
+        onClick()
     }
     //viewModel
     val viewModel: PhotosViewModel = hiltViewModel()
@@ -81,13 +74,8 @@ fun AllPhotosScreen(
     val animatedAlphaTopBar by animateFloatAsState(targetValue = alphaTopBar)
     val coroutineScope = rememberCoroutineScope()
     var showImage by remember { mutableStateOf(false) }
-    LaunchedEffect(id) {
+    LaunchedEffect(Unit) {
         viewModel.fetchPhotoById(id.toString())
-    }
-    LaunchedEffect(photo) {
-        if (photo.tags.isNotEmpty()) {
-            viewModel.fetchRelatedPhotosForQuery(photo.tags.mapNotNull { it.title })
-        }
     }
     LaunchedEffect(animatedAlpha) {
         if (animatedAlpha < 0.01f) {
@@ -105,12 +93,7 @@ fun AllPhotosScreen(
                             )
                         }
                     }, showBackArrow = true, leadingOnPressed = {
-                        navController.navigate(Screen.Home.route){
-                            popUpTo (navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        onClick()
                     }, animatedAlpha = animatedAlphaTopBar
                 )
             }
@@ -160,12 +143,16 @@ fun AllPhotosScreen(
                             ProductVerticalEffect()
                         }
                     }
-
                     else -> {
                         items(allImages) { item ->
                             WProductCardVertical(
                                 item = item, onclick = {
-                                    navController.navigate("${Screen.PhotosList.route}/${item.id}")
+                                    navController.navigate("${Screen.PhotosList.route}/${item.id}/${Screen.Home.route}"){
+                                        popUpTo (navController.graph.startDestinationId) {
+                                            inclusive = false
+                                        }
+                                        launchSingleTop = true
+                                    }
                                 })
                         }
                     }

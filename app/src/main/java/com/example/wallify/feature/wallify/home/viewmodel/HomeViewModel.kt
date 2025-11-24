@@ -10,9 +10,11 @@ import com.example.wallify.feature.wallify.home.model.Photos
 import com.example.wallify.feature.wallify.home.model.Topics
 import com.example.wallify.feature.wallify.home.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,9 +40,13 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
             try {
-                val result = homeRepository.fetchCategories()
-                _topics.value = result
-                isLoading = false
+                withContext(NonCancellable){
+                    val result = homeRepository.fetchCategories()
+                    _topics.value = result
+                    val photo = homeRepository.fetchPhotosByTopics(result.first().id)
+                    _photosByTopics.value = photo
+                    isLoading = false
+                }
             } catch (e: Exception) {
                 _topics.value = emptyList()
                 isLoading = false

@@ -1,16 +1,13 @@
 import android.annotation.SuppressLint
 import android.net.Uri
-import androidx.compose.foundation.Image
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -19,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,26 +27,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.wallify.common.widgets.custom_shapes.container.TSearchContainer
+import com.example.wallify.R
+import com.example.wallify.common.widgets.shimmer.AnimationLoader
 import com.example.wallify.common.widgets.texts.TSectionHeading
 import com.example.wallify.utlis.constants.TSizes
-import com.example.wallify.R
-import com.example.wallify.common.widgets.images.TRoundedImage
 import com.example.wallify.feature.wallify.home.widgets.TAppbarHome
 import com.example.wallify.feature.wallify.home.widgets.VerticalTopBar
 import com.example.wallify.feature.wallify.streak.controller.StreakViewModel
 import com.example.wallify.feature.wallify.streak.widgets.CenterFocusedCarousel
+import com.example.wallify.feature.wallify.streak.widgets.StreakItemScreen
 import com.example.wallify.navigation.BottomAppBarr
 import com.example.wallify.utlis.route.Screen
 import com.google.gson.Gson
 
-@SuppressLint("FrequentlyChangingValue")
+@SuppressLint("FrequentlyChangingValue", "ResourceType")
 @Composable
 fun StreakScreen(navController: NavController) {
     val dark = isSystemInDarkTheme()
@@ -61,6 +53,16 @@ fun StreakScreen(navController: NavController) {
     // viewModel
     val viewModel: StreakViewModel = hiltViewModel()
     val streaks by viewModel.streak.collectAsState()
+    BackHandler {
+        navController.navigate(Screen.Home.route) {
+            {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+        }
+    }
     LaunchedEffect(
         listState.isScrollInProgress,
         listState.firstVisibleItemIndex,
@@ -82,7 +84,7 @@ fun StreakScreen(navController: NavController) {
     }
     Scaffold(
         bottomBar = {
-            if(showBottomBar){
+            if (showBottomBar) {
                 BottomAppBarr(
                     showBar = true,
                     navController = navController
@@ -90,10 +92,12 @@ fun StreakScreen(navController: NavController) {
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
-            .padding(innerPadding)) {
-            if(showTopBar){
+                .padding(innerPadding)
+        ) {
+            if (showTopBar) {
                 VerticalTopBar(
                     topBar = {
                         TAppbarHome()
@@ -103,6 +107,11 @@ fun StreakScreen(navController: NavController) {
                         horizontal = TSizes.md,
                     )
                 )
+            }
+            if (streaks.isEmpty()) {
+                AnimationLoader(
+                    resIdRes = R.raw.cloud,
+                    )
             }
             LazyVerticalGrid(
                 state = listState,

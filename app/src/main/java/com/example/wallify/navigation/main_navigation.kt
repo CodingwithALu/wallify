@@ -1,7 +1,7 @@
 package com.example.wallify.navigation
 
 import CollectionPhotosScreen
-import SettingScreen
+import com.example.wallify.feature.personalization.setting.SettingScreen
 import com.example.wallify.feature.wallify.photos.all_photos.AllPhotosScreen
 import StreakScreen
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core_viewmodel.controller.onboarding.OnBoardingViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import com.example.core_model.UserModel
 import com.example.wallify.common.widgets.shimmer.FastCircularProgressIndicator
 import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.feature.wallify.search.SearchScreen
@@ -54,7 +55,7 @@ fun MainNavigation(navController: NavHostController) {
         composable(Screen.Home.route) {
             HomeScreen(navController = navController)
         }
-        composable(Screen.Streak.route){
+        composable(Screen.Stats.route){
             StreakScreen(navController = navController)
         }
         composable(Screen.Collection.route){
@@ -66,14 +67,23 @@ fun MainNavigation(navController: NavHostController) {
             )
         }
         composable(Screen.Setting.route){
-            SettingScreen(navController = navController)
+            SettingScreen(
+                navController = navController)
         }
         // allProduct
-        composable("${Screen.PhotosList.route}/{id}") { backStackEntry ->
+        composable("${Screen.PhotosList.route}/{id}/{route}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
+            val route = backStackEntry.arguments?.getString("route")
             AllPhotosScreen(
                 id,
-                navController)
+                navController){
+                navController.navigate(route ?: Screen.Home.route){
+                    popUpTo (navController.graph.startDestinationId) {
+                        inclusive = false
+                    }
+                    launchSingleTop = true
+                }
+            }
         }
         // ProductSets
         composable("${Screen.ProductDetails.route}/{item}"){ backStackEntry ->
@@ -90,7 +100,6 @@ fun MainNavigation(navController: NavHostController) {
         composable(Screen.Search.route){
             SearchScreen(navController = navController)
         }
-        //
         composable ( "${Screen.CollectionPhotos.route}/{id}" ){ backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             CollectionPhotosScreen(

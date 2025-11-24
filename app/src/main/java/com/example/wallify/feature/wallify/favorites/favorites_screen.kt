@@ -1,6 +1,7 @@
 package com.example.wallify.feature.wallify.favorites
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -36,6 +37,16 @@ import com.example.wallify.utlis.route.Screen
 fun FavoritesScreen(
     navController: NavController
 ) {
+    BackHandler {
+        navController.navigate(Screen.Home.route){
+            {
+                popUpTo (navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+        }
+    }
     val viewModel: FavoritesViewModel = hiltViewModel()
     val favorites by viewModel.favorites.collectAsState()
     val showBottomBar by remember { mutableStateOf(true) }
@@ -77,7 +88,7 @@ fun FavoritesScreen(
                         WProductCardVertical(
                             item = item,
                             onclick = {
-                                navController.navigate("${Screen.PhotosList.route}/${item.id}")
+                                navController.navigate("${Screen.PhotosList.route}/${item.id}/${Screen.Favorite.route}")
                             }
                         )
                     }

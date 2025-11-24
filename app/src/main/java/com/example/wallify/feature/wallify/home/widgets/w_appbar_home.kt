@@ -1,6 +1,6 @@
 package com.example.wallify.feature.wallify.home.widgets
 
-import TCircularImage
+import com.example.wallify.common.widgets.images.TCircularImage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,8 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,23 +22,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.packInts
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.core_model.UserModel
 import com.example.core_viewmodel.controller.authentiacations.AuthViewModel
 import com.example.wallify.R
-import com.example.wallify.feature.wallify.home.model.Image
 import com.example.wallify.utlis.constants.TSizes
-import okhttp3.internal.notify
-import org.checkerframework.checker.units.qual.mol
+import com.example.wallify.utlis.constants.TextString
 
 @Composable
 fun TAppbarHome(
@@ -51,8 +48,8 @@ fun TAppbarHome(
     ) {
     val dark = isSystemInDarkTheme()
     val viewModel: AuthViewModel = hiltViewModel()
+    val user by viewModel.user.collectAsState()
     val googleLoginInfo by viewModel.googleLoginInfo.collectAsState()
-    val use by viewModel.user.collectAsState()
     val coin = 0
     Box(
         modifier = Modifier
@@ -82,10 +79,9 @@ fun TAppbarHome(
                     modifier = Modifier
                         .height(32.dp)
                         .width(32.dp),
-                    image = if (googleLoginInfo.isLoggedIn) use?.urlProfile?: "" else "",
-                    isNetworkImage = googleLoginInfo.isLoggedIn,
-                    drawableResId = if (googleLoginInfo.isLoggedIn) null else R.drawable.person_circle_sharp,
-                    onClick = onAvatarClick,
+                    image = if (googleLoginInfo.isLoggedIn) user.urlProfile else TextString.urlDefaultAvatar,
+                    isNetworkImage = true,
+                    onClick = { onAvatarClick() },
                     fit = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(TSizes.xs))
@@ -114,6 +110,7 @@ fun TAppbarHome(
                     modifier = Modifier
                         .height(48.dp)
                         .width(48.dp)
+                        .clip(CircleShape)
                         .clickable { searchClick() },
                     painter = painterResource(id = R.drawable.search_normal),
                     contentDescription = "Bell",
@@ -124,6 +121,7 @@ fun TAppbarHome(
                         modifier = Modifier
                             .height(20.dp)
                             .width(20.dp)
+                            .clip(CircleShape)
                             .clickable { notify() },
                         painter = painterResource(id = R.drawable.elements),
                         contentDescription = "Bell",

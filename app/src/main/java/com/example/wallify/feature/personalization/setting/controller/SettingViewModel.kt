@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core_viewmodel.repository.UserRepository
 import com.example.core_viewmodel.utils.helper.NetworkManager
 import com.example.wallify.feature.personalization.setting.reponsitory.SettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,12 +25,15 @@ class SettingViewModel @Inject constructor(
     fun sendFeedback(userEmail: String) {
         repository.sendFeedback(userEmail)
     }
-
     // Changed: accept Uri and pass to repository
     fun updateUrlBackGround(userId: String, imageUri: Uri?) {
         if (imageUri == null) return
         viewModelScope.launch {
             isLoading = true
+            if (!networkManager.checkConnection()) {
+                isLoading = false
+                return@launch
+            }
             try {
                 val response = repository.updateUrlBackGround(userId, imageUri)
                 uploadResult = if (response.isSuccessful) response.body() else "Upload thất bại"

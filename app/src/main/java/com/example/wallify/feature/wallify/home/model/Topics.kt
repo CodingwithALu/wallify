@@ -134,8 +134,18 @@ data class Urls(
     val small: String,
     val thumb: String,
     val smallS3: String?
-)
-
+){
+    companion object {
+        fun empty() = Urls(
+            raw = "",
+            full = "",
+            regular = "",
+            small = "",
+            thumb = "",
+            smallS3 = null
+        )
+    }
+}
 data class PhotoLinks(
     val self: String,
     val html: String,

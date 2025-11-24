@@ -62,4 +62,6 @@ dependencies {
     // retrofit
     implementation(libs.retrofit)
     kapt (libs.hilt.android.compiler)
+    // coroutine
+    implementation(libs.kotlinx.coroutines.android.v1102)
 }

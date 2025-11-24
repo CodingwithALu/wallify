@@ -78,4 +78,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     // lottie
     implementation(libs.lottie.compose)
+    // coroutine
+    implementation(libs.kotlinx.coroutines.android.v1102)
 }
